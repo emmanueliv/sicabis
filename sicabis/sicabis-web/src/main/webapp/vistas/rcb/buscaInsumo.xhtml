@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Catálogo de Insumos</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputStylesheet name="css/rcb.css" />
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:panel id="basic" header="Agregar insumos" style="margin-bottom:20px;width: 100%">
+                <h:panelGrid  columns="2" style="width: 100%;">
+                        <p:outputLabel for="inpBuscaInsumo"  value="Clave:" />                                 
+                        <p:inputText id= "inpBuscaInsumo" value="#{insumosBean.buscaInsumo}" />                    
+                </h:panelGrid>
+                <br></br>   
+                <h:panelGrid  columns="1" style="width: 100%;">
+                    <h:panelGroup style="display:block; text-align:right"> 
+                        <b:commandButton value="Buscar"
+                                         onclick="ajax:insumosBean.buscarInsumo()"
+                                         look="info" icon="search"
+                                         update="tblInsumo inpBuscaInsumo"/>
+                    </h:panelGroup> 
+                    <p:separator/>
+                    <h:outputText  value="Lista de Insumos " />                  
+                </h:panelGrid>  
+                <p:dataTable id="tblInsumo" var="insumo" value="#{insumosBean.listaInsumos}" 
+                             rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                             rowsPerPageTemplate="10,15,20"
+                             emptyMessage="#{loginBean.mensajeTablaVacia}">  
+
+                    <f:facet name="{Exporters}">
+                        <h:commandLink immediate="true">
+                            <p:graphicImage name="images/excel.png" width="24"/>
+                            <p:dataExporter type="xls" target="tblInsumo" fileName="rcbDetalle" />
+                        </h:commandLink>                                
+                    </f:facet>
+                    <p:column style="width:30px"> 
+                        <p:rowToggler />
+                    </p:column>
+                    <p:column headerText="Id" styleClass="formatoTablas">
+                        <h:outputText value="#{insumo.idInsumo}" />
+                    </p:column>
+                    <p:column headerText="Clave" styleClass="formatoTablas">
+                        <h:outputText value="#{insumo.clave}" />
+                    </p:column>
+                    <p:column headerText="Descripción" styleClass="formatoTablas" >
+                        <h:outputText value="#{insumo.descripcion.substring(0,20)}" />
+                    </p:column>
+                    <p:column headerText="Unidad" styleClass="formatoTablas" >
+                        <h:outputText value="#{insumo.idUnidadPieza.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Nivel" styleClass="formatoTablas">
+                        <h:outputText value="#{insumo.idNivel.descripcion}" />
+                    </p:column>
+                    <p:column style="width:32px;text-align: center" styleClass="formatoTablas">
+                        <p:commandButton icon="fa fa-hand-o-up" actionListener="#{insumosBean.seleccionaInsumoDeDialogo(insumo)}" />
+                    </p:column>
+                    <p:rowExpansion >
+                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                            <h:panelGrid columns="1" >
+                                <h:outputText value="#{insumo.descripcion}" />
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </p:panel>           
+        </h:form>
+    </h:body>
+
+</html>

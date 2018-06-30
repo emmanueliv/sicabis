@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.alertasDpn}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Actualización Reporte Interactivo" url="actualizacionReporteInteractivo.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Actualización reporte interactivo</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConfigura">
+                        <b:panelGrid colSpans="2,4,2,4" id="panelFiltros">
+                            <h:outputText value="Fecha Inicial"/>
+                            <p:inputText id="fi" placeholder="yyyyMMdd" value="#{llenaConsumo.fechaS}" style="width: 100%; height: 34px;" />
+                            <h:outputText value="Fecha Final"/>
+                            <p:inputText id="ff" placeholder="yyyyMMdd" value="#{llenaConsumo.fechaF}" style="width: 100%; height: 34px;" />
+
+                            <h:outputText value="Query"/>
+                            <p:inputText id="query" placeholder="query" value="#{llenaConsumo.query}" style="width: 100%; height: 34px;" />
+                            <h:outputText id="label1" value="#{llenaConsumo.label1}"/>
+                            <h:outputText id="label2" value="#{llenaConsumo.label2}"/>
+                        </b:panelGrid>
+                        <br/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton id="buttonConsulta" value="Genera" look="info" icon="search" iconAlign="right"
+                                                 actionListener="#{llenaConsumo.llenaConsumo}" update="panelFiltros"/>
+                                <b:commandButton id="buttonQuery" value="Ejecuta consulta" look="info" icon="search" iconAlign="right"
+                                                 actionListener="#{llenaConsumo.ejecutaQuery}" update="panelFiltros"/>
+                                <b:commandButton id="buttonQueryInsert" value="Ejecuta insert/update/delete" look="info" icon="search" iconAlign="right"
+                                                 actionListener="#{llenaConsumo.ejecutaQueryIUD()}" update="panelFiltros"/>
+                                <b:commandButton id="buttonList" value="Obtiene Consumo" look="info" icon="search" iconAlign="right"
+                                                 actionListener="#{llenaConsumo.obtieneConsumo}" update="panelFiltros, tabla"/>
+                            </b:buttonGroup>
+                        </div>
+                        <p:dataTable id="tabla" value="#{llenaConsumo.consumoDiarioSiamList}"
+                                     emptyMessage="No hay registros" var="consumo"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15,0"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     paginatorPosition="bottom"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})">
+                            <f:facet name="header">
+                                Consumo
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xlsx" target="tabla" fileName="Coonsumo" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column headerText="Clave insumo" sortBy="#{consumo.claveInsumo}">
+                                <p:outputLabel value="#{consumo.claveInsumo}"/>
+                            </p:column>
+                            <p:column headerText="Clave unidad" sortBy="#{consumo.claveUnidad}">
+                                <p:outputLabel value="#{consumo.claveUnidad}"/>
+                            </p:column>
+                            <p:column headerText="Consumo" sortBy="#{consumo.consumo}">
+                                <p:outputLabel value="#{consumo.consumo}"/>
+                            </p:column>
+                            <p:column headerText="Fecha" sortBy="#{consumo.fecha}">
+                                <p:outputLabel value="#{consumo.fecha}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </p:outputLabel>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.alertasDpn}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

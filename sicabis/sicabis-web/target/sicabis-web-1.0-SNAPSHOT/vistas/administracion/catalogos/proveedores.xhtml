@@ -1,0 +1,321 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="breadCrumb">
+                    <p:breadCrumb>
+                        <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                        <p:menuitem value="Catálogos" url="../menuCatalogos.xhtml" />
+                        <p:menuitem value="Proveedores" url="proveedores.xhtml" disabled="true"/>
+                    </p:breadCrumb>
+                </h:form>
+                <h2>Proveedores</h2>
+                <br></br>
+                <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                    <b:tab title="Nuevo" rendered="#{!loginBean.accesos.proveedoresC}">
+                        <br></br>
+                        <h:form id="frmbNuevoDoc">
+                            <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                            <h3>Datos proveedor</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="datosProveedor">
+                                <h:outputText value="Nombre del proveedor:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.nombreProveedor}" 
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Número proveedor:" />
+                                <p:inputNumber value="#{proveedoresBean.proveedor.numeroProveedor}" decimalPlaces="0" minValue="0" thousandSeparator=""
+                                               inputStyle="width: 100%; height: 34px;">
+                                    <p:ajax event="blur" process="@this" update="@this, idmessages" listener="#{proveedoresBean.validaNumeroProveedor}" />
+                                </p:inputNumber>
+
+                                <h:outputText value="RFC:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.rfc}" 
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Razón Social"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.razonSocial}" 
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="No rupa:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.noRupa}" 
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Tipo de proveedor:"/>
+                                <p:selectOneMenu id="selectTipoProv" value="#{proveedoresBean.proveedor.idTipoProveedor}" style="width: 100%; height: 34px;" converter="selectConverter">
+                                    <f:selectItem itemLabel="Seleciona..." itemValue=""/>
+                                    <f:selectItems value="#{proveedoresBean.tipoProveedoresList}" var="tipoProv" 
+                                                   itemValue="#{tipoProv}" itemLabel="#{tipoProv.descripcion}"/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Correo:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.correo}" 
+                                             validator-message="El formato del campo Correo electrónico es incorrecto" />
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+                            <h3>Dirección</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="dirProveedor">
+                                <h:outputText value="Calle:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.calle}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Colonia:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.colonia}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="C.P.:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.cp}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Delegación:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.delegacion}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Ciudad:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.ciudad}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Localidad:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.localidad}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Teléfono:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.telefono2}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Teléfono:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.telefono3}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Fax:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.fax1}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Fax:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.fax2}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Fax:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.fax1}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Fax:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.fax2}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            </b:panelGrid>
+                            <div class="ui-fluid">
+                                <b:panelGrid id="notific" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" styleClass="ui-panelgrid-blank">
+                                    <h:outputText value="Notificaciones:"/>
+                                    <p:inputTextarea value="#{proveedoresBean.proveedor.notificaciones}" />
+                                    <h:outputText value="Observaciones:"/>
+                                    <p:inputTextarea value="#{proveedoresBean.proveedor.observaciones}" />
+                                </b:panelGrid>
+                            </div>
+                            <h3>Giro</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="giroProveedor">
+                                <h:outputText value="Giro:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.giro}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Descripción:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.giroDescripcion}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            </b:panelGrid>
+                            <h3>Representante legal</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="repLegalProveedor">
+                                <h:outputText value="Representante:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.representante}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Correo electrónico:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.repCorreoElectronico}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Número del acta o Escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.repNumActaEscritura}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Fecha del acta:"/>
+                                <p:calendar id="repFecActa" mask="true" showOn="button" inputStyle="width: 92%; height: 34px;"
+                                            value="#{proveedoresBean.proveedor.repFechaActa}" pattern="dd/MM/yyyy" />
+
+                                <h:outputText value="Número de la notaria:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.repNumNotaria}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Nombre del notario o corredor que expide el acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.repNombreNotario}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Sintesis del acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.repSintesisActa}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+                            <h3>Acta constitutiva</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="actaProveedor">
+                                <h:outputText value="Número del acta o Escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.numActaEscritura}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Fecha del acta:"/>
+                                <p:calendar id="fecActa" mask="true" showOn="button" inputStyle="width: 92%; height: 34px;"
+                                            value="#{proveedoresBean.proveedor.fechaActa}" pattern="dd/MM/yyyy" />
+
+                                <h:outputText value="Número de la notaria:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.numNotaria}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Nombre del notario o corredor que expide el acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.nombreNotario}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Sintesis del acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.sintesisActa}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Vigencia de la sociedad:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.vigenciaSociedad}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Objeto de la empresa:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.objetoEmpresa}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+                            <h3>Reforma a los estatutos</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,2,4" id="reformaProveedor">
+                                <h:outputText value="Número del acta o Escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.reformaNumActa}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Fecha del acta:"/>
+                                <p:calendar id="reformaFechaActa" mask="true" showOn="button" inputStyle="width: 92%; height: 34px;"
+                                            value="#{proveedoresBean.proveedor.reformaFechaActa}" pattern="dd/MM/yyyy" />
+
+                                <h:outputText value="Número de la notaria:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.reformaNumNotaria}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Nombre del notario o corredor que expide el acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.reformaNombreNotario}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+
+                                <h:outputText value="Sintesis del acta o escritura:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.reformaSintesisActa}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+                            <h3>MIPYMES</h3>
+                            <br/>
+                            <b:panelGrid colSpans="2,4,6" id="pymesProveedor">
+                                <h:outputText value="MIPYMES:"/>
+                                <p:selectOneRadio id="mipymes" value="#{proveedoresBean.proveedor.mipymes}" columns="1" layout="grid" >
+                                    <f:selectItem itemLabel="Si" itemValue="1"/>
+                                    <f:selectItem itemLabel="No" itemValue="0"/>
+                                </p:selectOneRadio>
+                                <h:outputText value=""/>
+
+                                <h:outputText value="Dar la opción para seleccionar alguna de las siguientes clasificaciones:"/>
+                                <p:selectOneRadio id="clasif" value="#{proveedoresBean.proveedor.micro}" columns="1" layout="grid" >
+                                    <f:selectItem itemLabel="Micro" itemValue="0"/>
+                                    <f:selectItem itemLabel="Pequeña" itemValue="1"/>
+                                    <f:selectItem itemLabel="Mediana" itemValue="2"/>
+                                </p:selectOneRadio>
+                                <h:outputText value=""/>
+
+                                <h:outputText value="Tope máximo combinado:"/>
+                                <b:inputText value="#{proveedoresBean.proveedor.topeMaximo}"
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" update=":frmbNuevoDoc"
+                                                     actionListener="#{proveedoresBean.guardarProveedor}" 
+                                                     process="datosProveedor,dirProveedor,notific,giroProveedor,repLegalProveedor,actaProveedor,reformaProveedor,pymesProveedor" />
+                                    <b:commandButton value="Limpiar" look="danger" icon="remove" iconAlign="right" 
+                                                     actionListener="#{proveedoresBean.cancel}" process="@none"/>
+                                </b:buttonGroup>
+                            </div>
+                            <br/>
+                        </h:form>
+                    </b:tab>
+                    <b:tab title="Proveedores">
+                        <h:form id="frmFiltros">
+                            <br></br>
+                            <b:panelGrid colSpans="2,4,2,4">
+                                <h:outputText value="Nombre del proveedor:" />
+                                <b:inputText value="#{proveedoresBean.nombreProveedorB}" />
+
+                                <h:outputText value="Número proveedor:" />
+                                <p:inputNumber value="#{proveedoresBean.numeroProveedorB}" decimalPlaces="0" minValue="0" thousandSeparator=""
+                                               inputStyle="width: 100%; height: 34px;"/>
+                            </b:panelGrid>
+
+                            <div style="display:block; text-align:right">
+                                <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                 process="@this, frmFiltros"
+                                                 actionListener="#{proveedoresBean.consultarProveedores}" 
+                                                 update="tablaTiosDoc,idmessages2" />
+                            </div>
+
+                            <p:separator/>
+                            <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true"/>
+
+                            <p:dataTable id="tablaTiosDoc" value="#{proveedoresBean.proveedoresList}"
+                                         emptyMessage="No hay registros" var="proveedor"
+                                         paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginatorPosition="bottom">
+
+                                <p:column headerText="Número proveedor">
+                                    <p:outputLabel value="#{proveedor.numeroProveedor}"/>
+                                </p:column>
+                                <p:column headerText="Nombre">
+                                    <p:outputLabel value="#{proveedor.nombreProveedor}"/>
+                                </p:column>
+                                <p:column headerText="Rfc" >
+                                    <p:outputLabel value="#{proveedor.rfc}"/>
+                                </p:column>
+                                <p:column headerText="Dirección" >
+                                    <p:outputLabel value="#{proveedor.direccion}"/>
+                                </p:column>
+                                <p:column headerText="Autorizado / No Autorizado" >
+                                    <p:outputLabel value="#{proveedor.autorizado == 1 ? 'Autorizado' : 'No Autorizado'}"/>
+                                </p:column>
+                                <p:column headerText="Opciones" >
+                                    <p:outputPanel style="text-align: center;">
+                                        <b:buttonGroup>
+                                            <!--modificar-->
+                                            <b:commandButton value="" look="primary" icon="search" iconAlign="right"
+                                                             actionListener="#{proveedoresBean.modificarRedirect(proveedor)}" 
+                                                             id="btnModificar"/>
+                                            <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                            <!--eliminar-->
+                                            <b:commandButton value="" look="danger" icon="remove" iconAlign="right" 
+                                                             actionListener="#{proveedoresBean.mostrarDialogo(proveedor)}" 
+                                                             update=":frmFiltros" id="btnEliminar" rendered="#{!loginBean.esConsulta}"/>
+                                            <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                        </b:buttonGroup>
+                                    </p:outputPanel>
+                                </p:column>
+                            </p:dataTable>
+                            <p:dialog closable="true" header="Esta seguro que desea eliminar el proveedor '#{proveedoresBean.nombreProveedor}'" showEffect="clip" 
+                                      resizable="true" widgetVar="dialogEliminaProveedor" modal="true" width="50%">
+                                <p:separator/>
+                                <b:buttonGroup>
+                                    <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{proveedoresBean.eliminarProveedor}" update=":frmFiltros" />
+                                    <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" actionListener="#{proveedoresBean.cancel}" update=":frmFiltros" /> 
+                                </b:buttonGroup>
+                            </p:dialog>
+                        </h:form>
+
+                    </b:tab>
+                </b:tabView>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

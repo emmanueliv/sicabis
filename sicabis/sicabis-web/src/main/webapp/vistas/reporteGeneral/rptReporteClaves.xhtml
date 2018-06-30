@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.rptReporteClaves}">
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte de Claves" url="rptReporteClaves.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Reporte de Claves</h2>
+                        <br></br>
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelDatos" > 
+                            <p:outputLabel for="rptC" value="Reportes:" />
+                            <p:selectOneMenu id="rptC" value="#{rptReporteClavesBean.noReporte}" style="width: 100%; height: 34px;">
+                                <f:selectItem itemLabel="Seleccione" itemValue="-1" />
+                                <f:selectItem itemValue="1" itemLabel="Reporte de claves sin existencia" />
+                                <f:selectItem itemValue="2" itemLabel="Reporte de claves con cobertura menor 30 dias" />
+                                <f:selectItem itemValue="3" itemLabel="Reporte de claves entregadas en CENADI menos 75 dias" />
+                                <f:selectItem itemValue="4" itemLabel="Resumen de claves con/sin entrega programada" />
+                                <f:selectItem itemValue="5" itemLabel="Resumen total de claves" />
+                            </p:selectOneMenu> 
+                            <h:outputLabel value="Fecha de Inicial:" style="font-size: 12px"/>
+                            <p:calendar id="fechaInicial" style="width: 100%; height: 34px;" mask="true" showOn="button"
+                                        value="#{rptReporteClavesBean.encabezadosReportesDTO.fechaInicial}" pattern="dd/MM/yyyy" />
+                        </b:panelGrid>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" process="panelDatos export" 
+                                             iconAlign="right" update="tablaRptClaves export" 
+                                             actionListener="#{rptReporteClavesBean.buscarLista}">
+                            </b:commandButton>
+                        </div>           
+                        <br></br>
+                        <div id="divTable" style="width: 100%;">
+                            <p:dataTable id="tablaRptClaves" var="rptClave" value="#{rptReporteClavesBean.listReporteClavesDTO}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20" >
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaRptClaves" fileName="Reporte Claves" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{rptClave.clave}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptClave.clave}" />
+                                </p:column>
+                                <p:column  headerText="Descripción" class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rptClave.descripcion.substring(0,20)}" />
+                                </p:column>
+                                <p:column headerText="Tipo Clave" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{rptClave.tipoClave}" />
+                                </p:column>
+                                <p:column headerText="Ingreso" class="formatoTablas" > 
+                                    <h:outputText value="#{rptClave.ingresi}" />
+                                </p:column>  
+                                <p:column headerText="Disponible en CENADI" class="formatoTablas" > 
+                                    <h:outputText value="#{rptClave.disponibleCenadi}" />
+                                </p:column>  
+                                <p:column headerText="Dias Cobertura" class="formatoTablas" > 
+                                    <h:outputText value="#{rptClave.coberturaDisponibleEntregaCenadi}" />
+                                </p:column>
+                                <p:column headerText="DPN" class="formatoTablas" > 
+                                    <h:outputText value="#{rptClave.DPN}" />
+                                </p:column>
+                                <p:rowExpansion>
+                                    <p:panel id="basic" header="Descripción Completa" style="margin-bottom:20px;width: 100%">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{rptClave.descripcion}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                            </p:dataTable>  
+                        </div>
+                        <br></br>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup id="export">
+                                <b:commandButton value="Exportar" icon="search" iconAlign="right" look="info" rendered="#{rptReporteClavesBean.brptactivo == 1}"
+                                                 action="#{rptReporteClavesBean.exportarExcel(rptReporteClavesBean.noReporte)}" 
+                                                 immediate="true" ajax="false" />
+                            </b:buttonGroup>
+                        </div>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reportes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este modulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.tiposDocumento}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogos" url="../menuCatalogos.xhtml" />
+                            <p:menuitem value="Tipos de documento" url="catTiposDocumento.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Tipos de documento</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.tiposDocumentoC}">
+                            <br></br>
+                            <h:form id="frmbNuevoDoc">
+                                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Nombre del documento:"/>
+                                    <b:inputText value="#{tiposDocumentoBean.tipoDocumento.nombre}" maxlength="100"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText value="Extención del documento:"/>
+                                    <b:inputText value="#{tiposDocumentoBean.tipoDocumento.extension}" maxlength="45"/>
+                                    <h:outputText value="Tarea:"/>
+                                    <p:selectOneMenu id="selectTarea" value="#{tiposDocumentoBean.tipoDocumento.idTarea}" style="width: 100%; height: 34px;" converter="selectConverter">
+                                        <f:selectItem itemLabel="Seleciona..." itemValue=""/>
+                                        <f:selectItems value="#{tiposDocumentoBean.tareaList}" var="tarea" 
+                                                       itemValue="#{tarea}" itemLabel="#{tarea.descripcion}"/>
+                                    </p:selectOneMenu>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                </b:panelGrid>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" actionListener="#{tiposDocumentoBean.guardarTipoDocumento}" update=":frmbNuevoDoc" />
+                                        <b:commandButton value="Limpiar" look="danger" icon="remove" iconAlign="right" actionListener="#{tiposDocumentoBean.cancel}" />
+                                    </b:buttonGroup>
+                                </div>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Documentos">
+                            <h:form id="frmFiltros">
+                                <br></br>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Nombre:" />
+                                    <b:inputText  value="#{tiposDocumentoBean.nombreDocumento}"
+                                                  style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                </b:panelGrid>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" actionListener="#{tiposDocumentoBean.consultarTiposDoc()}" 
+                                                     update=":formaTabla,idmessages2" />
+                                </div>
+                            </h:form>
+                            <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true"/>
+                            <h:form id="formaTabla">
+                                <p:dataTable id="tablaTiosDoc" value="#{tiposDocumentoBean.tipoDocumentosList}"
+                                             emptyMessage="No hay registros" var="tipoDocumento"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             paginatorPosition="bottom">
+
+                                    <p:column headerText="Nombre">
+                                        <p:outputLabel value="#{tipoDocumento.nombre}"/>
+                                    </p:column>
+                                    <p:column headerText="Extención" >
+                                        <p:outputLabel value="#{tipoDocumento.extension}"/>
+                                    </p:column>
+                                    <p:column headerText="Tarea" >
+                                        <p:outputLabel value="#{tipoDocumento.idTarea.descripcion}"/>
+                                    </p:column>
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" 
+                                                                 actionListener="#{tiposDocumentoBean.modificarRedirect(tipoDocumento)}" 
+                                                                 id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" iconAlign="right" 
+                                                                 actionListener="#{tiposDocumentoBean.mostrarDialogo(tipoDocumento)}" 
+                                                                 update=":formaTabla" id="btnEliminar" rendered="#{!loginBean.esConsulta}"/>
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el tipo de documento '#{tiposDocumentoBean.nombreDocumento}'" showEffect="clip" 
+                                          resizable="true" widgetVar="dialogEliminaDocumento" modal="true" width="50%">
+                                    <p:separator/>
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{tiposDocumentoBean.eliminarDocumento}" update=":formaTabla" />
+                                        <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" actionListener="#{tiposDocumentoBean.cancel}" update=":formaTabla" /> 
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.tiposDocumento}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

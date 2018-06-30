@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputStylesheet name="css/rcb.css" />
+        <!--        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>-->
+    </h:head>
+    <h:body>        
+        <h:form id="frmInsumPaciente">
+            <f:metadata>
+                <f:viewParam name="idSolicitud" value="#{solicitudesDetallePacienteInsumo.idSolicitud}"/>
+                <f:viewParam name="idPaciente" value="#{solicitudesDetallePacienteInsumo.idPaciente}"/>
+                <f:viewAction action="#{solicitudesDetallePacienteInsumo.onloadPaciente}" />
+            </f:metadata>
+            <p:messages id="messagesInsumo" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panel id="pnlPacienteContenido" header="Detalles del paciente" style="margin-bottom:20px" toggleable="true" toggleOrientation="vertical" collapsed="false">
+                <p:panelGrid id="pnlBusquedaPaciente" columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-2,ui-grid-col-5" >
+                    <p:outputLabel for="inpBuscarNss"  value="No. ISSSTE:" />                                 
+                    <p:inputText  id="inpBuscarNss" value="#{solicitudesDetallePacienteInsumo.paciente.nss}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpNss}" />
+                    <p:outputLabel for="inpBuscarCurp"  value="CURP:" />                                 
+                    <p:inputText id="inpBuscarCurp" value="#{solicitudesDetallePacienteInsumo.paciente.curp}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpCurp}"/>                                                                          
+                </p:panelGrid>
+                <h:panelGrid  id="pnlBtnBuscarPaciente"  columns="1" style="width: 99%;">
+                    <h:panelGroup style="display:block; text-align:right">
+                        <b:commandButton id="btnBuscarPaciente" value="Buscar" look="info" 
+                                         actionListener="#{solicitudesDetallePacienteInsumo.buscarPaciente}"
+                                         update="pnlDetallePaciente pnlBusquedaPaciente pnlPacienteContenido" process="pnlBusquedaPaciente"
+                                         icon="search"
+                                         rendered="#{solicitudesDetallePacienteInsumo.mostrarBtnBuscarPaciente}"
+                                         />
+                    </h:panelGroup>
+                </h:panelGrid>
+
+                <br></br>
+                <p:panelGrid  id="pnlDetallePaciente" columns="4" layout="grid"  styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpNss"  value="No. Seguridad:" />                                 
+                    <p:inputText  id="inpNss" value="#{solicitudesDetallePacienteInsumo.paciente.nss}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpNss}" >
+                    </p:inputText>
+                    <p:outputLabel for="inpCurp"  value="CURP:" />                                 
+                    <p:inputText id="inpCurp" value="#{solicitudesDetallePacienteInsumo.paciente.curp}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpCurp}">
+                    </p:inputText>                                                                                          
+                    <p:outputLabel for="inpNombre"  value="Nombre:" />                                 
+                    <p:inputText  id="inpNombre" value="#{solicitudesDetallePacienteInsumo.paciente.nombre}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpNombre}" >
+                        <p:ajax event="valueChange" listener="#{solicitudesDetallePacienteInsumo.actualizarPaciente()}" process="@this"/> 
+                    </p:inputText>
+                    <p:outputLabel for="fechaNacimiento" value="Fecha de nacimiento" />                                 
+                    <p:calendar id="fechaNacimiento" value="#{solicitudesDetallePacienteInsumo.paciente.fechaNacimiento}" pattern="dd/MM/yyyy" mask="true"
+                                readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpNombre}"/>
+                    <p:outputLabel for="inpExpediente"  value="Expediente:" />                                 
+                    <p:inputText id="inpExpediente" value="#{solicitudesDetallePacienteInsumo.paciente.expedinete}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpExpedinete}">
+                        <p:ajax event="valueChange" listener="#{solicitudesDetallePacienteInsumo.actualizarPaciente()}" process="@this"/> 
+                    </p:inputText>                    
+                    <p:outputLabel for="inpEdad"  value="Edad:" />                                 
+                    <p:inputText id="inpEdad" value="#{solicitudesDetallePacienteInsumo.edad}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpExpedinete}">
+                        <p:ajax event="valueChange" listener="#{solicitudesDetallePacienteInsumo.actualizarPaciente()}" process="@this"/> 
+                    </p:inputText>   
+                    <p:outputLabel for="inpDiagnostico"  value="Diagnostico:" />                                 
+                    <p:inputTextarea rows="5" cols="150" style="width:300%" id="inpDiagnostico" value="#{solicitudesDetallePacienteInsumo.paciente.diagnostico}"  readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpDiagnostico}">
+                        <p:ajax event="valueChange" listener="#{solicitudesDetallePacienteInsumo.actualizarPaciente()}" process="@this"/>
+                    </p:inputTextarea>       
+                </p:panelGrid>                
+                <div style="display:block; text-align:right">
+                    <b:commandButton id="btnBuscarBeneficiarioPaciente" value="Cambiar paciente" look="info" 
+                                     actionListener="#{solicitudesDetallePacienteInsumo.verBeneficiario}"
+                                     icon="search" rendered="#{solicitudesDetallePacienteInsumo.bbotonbeneficiario}"
+                                     update="formDialog"/>
+                </div>
+
+            </p:panel>   
+            <p:messages id="messagesInsumos" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panel id="pnlBusquedaInsumo" header="Detalle de insumo" style="margin-bottom:20px" toggleable="true" toggleOrientation="vertical" collapsed="false">
+                <p:panelGrid  id="pnlDetalleInsumo" columns="4" layout="grid"  styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpClave"  value="Clave:" />                                 
+                    <p:inputText  id="inpClave" value="#{solicitudesDetallePacienteInsumo.insumos.clave}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpClave}" />
+                </p:panelGrid>   
+                <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpDescripcion"  value="Descripción:" />                                 
+                    <p:inputTextarea rows="5" cols="150" id="inpDescripcion" value="#{solicitudesDetallePacienteInsumo.insumos.descripcion}"  readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpDescripcion}"/>                                          
+                </p:panelGrid>
+                <h:panelGrid  columns="1" style="width: 99%;">                    
+                    <h:panelGroup style="display:block; text-align:right">
+                        <b:commandButton value="Buscar" look="info" actionListener="#{solicitudesDetallePacienteInsumo.buscarInsumo}"
+                                         update="pnlBusquedaInsumo " process="inpClave"
+                                         icon="search"
+                                         />
+                    </h:panelGroup>
+                </h:panelGrid>     
+            </p:panel>
+            <p:messages id="messagesInsumosAgregar" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panelGrid  id="pnlCantidadInsumo" columns="3" layout="grid"  styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-2">
+                <p:outputLabel for="inpCantidad"  value="Cantidad:" />                                 
+                <p:inputNumber  id="inpCantidad" value="#{solicitudesDetallePacienteInsumo.cantidadInsumo}" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpCantidad}" decimalPlaces="0" size="9" minValue="1" />
+                <b:commandButton actionListener="#{solicitudesDetallePacienteInsumo.agregarInsumo}"
+                                 process="pnlCantidadInsumo"
+                                 update="pnlCantidadInsumo tablaSolInsumo messagesInsumos messagesInsumo messagesInsumosAgregar pnlBtnBuscarPaciente pnlBusquedaInsumo"
+                                 value="Agregar" look="primary" icon="plus" iconAlign="left"
+                                 />
+            </p:panelGrid> 
+
+            <p:dataTable id="tablaSolInsumo" var="insumoPaciente" value="#{solicitudesDetallePacienteInsumo.listInsumosPacientes}"
+                         filteredValue="#{solicitudesDetallePacienteInsumo.listInsumosPacientesFilter}"
+                         widgetVar="wVtablaSolInsumo"
+                         rowKey="#{insumoPaciente.idInsumo.idInsumo}"
+                         rows="10"
+                         paginator="true"
+                         editable="true" editMode="cell"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                         rowsPerPageTemplate="10,15,20" > 
+                <p:column style="width:30px" exportable="false"> 
+                    <p:rowToggler />
+                </p:column>                                                               
+                <p:column filterBy="#{insumoPaciente.idPaciente.nss}"   filterMatchMode="contains" headerText="No. ISSSTE" class="formatoTablas" > 
+                    <h:outputText value="#{insumoPaciente.idPaciente.nss}" />
+                </p:column>
+                <p:column filterBy="#{insumoPaciente.idInsumo.clave}"   filterMatchMode="contains" headerText="Clave medicamento" class="formatoTablas" > 
+                    <h:outputText value="#{insumoPaciente.idInsumo.clave}" />
+                </p:column>
+                <p:column filterBy="#{insumoPaciente.cantidad}"   filterMatchMode="contains" headerText="Cantidad insumo" class="formatoTablas" > 
+                    <h:outputText value="#{insumoPaciente.cantidad}" />
+                </p:column>             
+                <p:column headerText="Opciones" style="text-align: center;" class="" exportable="false" >                  
+                    <p:commandButton id="btnEliminarInsumo" value="" icon="fa fa-trash-o" iconPos="center" styleClass="customEliminar btn-danger"
+                                     style="color: #fff;width:30px;height:30px;font-size: 110%;"
+                                     disabled="#{solicitudesDetallePacienteInsumo.desHabilitarBtnEliminar}"
+                                     actionListener="#{solicitudesDetallePacienteInsumo.eliminarInsumo(insumoPaciente)}" 
+                                     update="tablaSolInsumo frmInsumPaciente:pnlBtnBuscarPaciente" process="@this"
+                                     >
+                    </p:commandButton>
+                    <p:tooltip for="btnEliminarInsumo" value="Eliminar insumo" position="top"/> 
+                </p:column>
+                <p:rowExpansion >
+                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                        <h:panelGrid columns="1" >
+                            <h:outputText value="#{insumoPaciente.idInsumo.descripcion}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </p:rowExpansion>
+            </p:dataTable>
+            <p:panelGrid  id="pnlGuardarSolInsumo" columns="3" layout="grid"  styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-2">
+                <b:commandButton actionListener="#{solicitudesDetallePacienteInsumo.guardarInsumo}"
+                                 value="Aceptar" look="primary" icon="floppy-disk" iconAlign="left"
+                                 process="pnlGuardarSolInsumo"
+                                 update="pnlGuardarSolInsumo"
+                                 />
+            </p:panelGrid>             
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+            </p:confirmDialog>
+        </h:form>
+        <h:form id="formDialog">
+            <p:dialog header="Selecciona paciente de los beneficiarios" widgetVar="dlg4" minHeight="70" modal="true" 
+                      width="100%" height="500">
+                <p:dataTable id="tablaPacientes" var="pacientes" 
+                             value="#{solicitudesDetallePacienteInsumo.listaSipeBeneficiarios}"
+                             rows="10" paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                             rowsPerPageTemplate="10,15,20" > 
+                    <p:column headerText="No. ISSSTE" class="formatoTablas" > 
+                        <h:outputText value="#{pacientes.nombre}' '#{pacientes.apellidoPaterno}' '#{pacientes.apellidoMaterno}" />
+                    </p:column>
+                    <p:column headerText="No. ISSSTE" class="formatoTablas" > 
+                        <b:commandButton actionListener="#{solicitudesDetallePacienteInsumo.seleccionaBeneficiario(pacientes)}"
+                                         update="frmInsumPaciente" tooltip="Seleccionar"
+                                         value="" look="info" icon="plus" iconAlign="left"
+                                         oncomplete="PF('dlg4').hide();"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+    </h:body>
+
+</html>

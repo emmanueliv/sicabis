@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.alertasDpn}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Actualización Reporte Interactivo" url="actualizacionReporteInteractivo.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Actualización reporte interactivo</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConfigura">
+                        <b:panelGrid colSpans="2,4,2,4" id="panelFiltros">
+                            <h:outputText value="Periodo"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectMes"
+                                             value="#{actualizaciónReporteInteractivoBean.mes}" autoWidth="false" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{actualizaciónReporteInteractivoBean.listAlertasDpn}" var="ad"
+                                               itemLabel="#{ad.mes} - #{ad.anio}" itemValue="#{ad.mes}"/>
+                                <p:ajax event="change" listener="#{actualizaciónReporteInteractivoBean.cambiaValores}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                        </b:panelGrid>
+                        <br/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton id="buttonConsulta" value="Buscar" look="info" icon="search" iconAlign="right"
+                                                 actionListener="#{actualizaciónReporteInteractivoBean.consultarAlertas}" update="tabla"/>
+                            </b:buttonGroup>
+                        </div>
+                        <br/><br/>
+                        <p:dataTable id="tabla" value="#{actualizaciónReporteInteractivoBean.listAlertasDpnConsulta}"
+                                     emptyMessage="No hay registros" var="alertas" >
+                            <f:facet name="header">
+                                Actualización reporte interactivo
+                            </f:facet>
+                            
+                            <p:column headerText="Delegación" filterBy="#{alertas.ur.nombre}" filterMatchMode="contains" 
+                                      sortBy="#{alertas.ur.nombre}">
+                                <p:outputLabel value="#{alertas.ur.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Enviado" style="text-align: center;" width="15%" >
+                                <p:graphicImage url="/resources/images/bien.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus == 224}" />
+                                <p:graphicImage url="/resources/images/mal.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus != 224}" />
+                            </p:column>
+                            <p:column headerText="Actualizado" style="text-align: center;" width="15%">
+                                <p:graphicImage url="/resources/images/bien.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus == 222}" />
+                                <p:graphicImage url="/resources/images/mal.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus != 222}" />
+                            </p:column>
+                            <p:column headerText="Sin actualizar" style="text-align: center;" width="15%">
+                                <p:graphicImage url="/resources/images/bien.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus == 221}" />
+                                <p:graphicImage url="/resources/images/mal.png" width="20" height="20" rendered="#{alertas.idEstatus.idEstatus != 221}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.alertasDpn}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.tareaProgramadaActualizacionCatalogo}">
+                <h:outputStylesheet name="css/rcb.css" />
+                <div id="contenido" class="ui-fluid">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogo institucional de insumos para la salud" url="catalogoInsumos.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Catálogo institucional de insumos para la salud</h2>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <p:separator />
+                    <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{contratoBean.mensajeGuardar}" />
+                    <h:form id='formRCB' style="width:100%; height: 100%" >   
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:outputText id="lblTablaRcb" value="Lista de Insumos:" />
+
+                            <h:panelGroup style="display:block; text-align:right" rendered="#{!loginBean.accesos.tareaProgramadaActualizacionCatalogoC}">
+                                <p:commandButton id="btnActualizar" value="" icon="fa fa-refresh" iconPos="center" 
+                                                 styleClass="customInfo btn-info" style="width: 30px;height: 35px;" 
+                                                 actionListener="#{catalogoInsumosBean.obtieneRegistros}" process="@this"
+                                                 update="tablaInsumosSIAM"
+                                                 rendered="#{loginBean.tabNuevoActivo == 0}"
+                                                 />
+                                <p:tooltip for="btnActualizar" value="Actualizar catálogo" position="top"/> 
+
+                                <p:commandButton id="btnAgregarInsumo" value="" icon="fa fa-plus" iconPos="center" 
+                                                 styleClass="customModificar btn-primary" style="width: 30px;height: 35px;"  
+                                                 actionListener="#{catalogoInsumosBean.abrirModalAgregarInsumo('0')}" 
+                                                 rendered="#{loginBean.tabNuevoActivo == 0}" process="@this"
+                                                 >
+                                    <p:ajax event="dialogReturn" listener="#{catalogoInsumosBean.cacharInsumoRegistrado}" 
+                                            update="tablaInsumo" oncomplete="PF('wvTablaInsumos').filter();"/>
+                                </p:commandButton>
+                                <p:tooltip for="btnAgregarInsumo" value="Agregar insumo" position="top"/> 
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br></br>
+                        <h:panelGrid id="pnlTableRcb" columns="2">
+                            <p:dataTable id="tablaInsumo" var="insumo" value="#{catalogoInsumosBean.listInsumos}"
+                                         filteredValue="#{catalogoInsumosBean.listInsumosFilter}"
+                                         widgetVar="wvTablaInsumos"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20">   
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaInsumo" fileName="InsumoDetalle" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{insumo.clave}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{insumo.clave}" />
+                                </p:column>
+                                <p:column filterBy="#{insumo.descripcion}"   filterMatchMode="contains" headerText="Descripción" class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{insumo.descripcion}">
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>
+                                </p:column>
+                                <p:column filterBy="#{insumo.idClasificacion.descripcion}"   filterMatchMode="contains" headerText="Clasificación" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{insumo.idClasificacion.descripcion}" />
+                                </p:column>
+                                <p:column filterBy="#{insumo.idGrupoTerapeutico.descripcion}"   filterMatchMode="contains" headerText="Grupo terapeutico" class="formatoTablas" > 
+                                    <h:outputText value="#{insumo.idGrupoTerapeutico.descripcion}" />
+                                </p:column>
+                                <p:column filterBy="#{insumo.idNivel.descripcion}"   filterMatchMode="contains" headerText="Nivel" class="formatoTablas" > 
+                                    <h:outputText value="#{insumo.idNivel.descripcion}" />
+                                </p:column>
+                                <p:column filterBy="#{insumo.idUnidadPieza.descripcion}"   filterMatchMode="contains" headerText="Unidad " class="formatoTablas"> 
+                                    <h:outputText value="#{insumo.idUnidadPieza.descripcion}" />
+                                </p:column>
+                                <p:column filterBy="#{insumo.partidaPresupuestal}"   filterMatchMode="contains" headerText="Partida presupuestal" class="formatoTablas"> 
+                                    <h:outputText value="#{insumo.partidaPresupuestal}"/>
+                                </p:column>
+                                <p:column filterBy="#{insumo.indicaciones}"   filterMatchMode="contains" headerText="Indicaciones" class="formatoTablas"> 
+                                    <h:outputText value="#{insumo.indicaciones}" >
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>                                
+                                </p:column>
+                                <p:column filterBy="#{insumo.viaAdministracionDosis}"   filterMatchMode="contains" headerText="Vía de administración" class="formatoTablas"> 
+                                    <h:outputText value="#{insumo.viaAdministracionDosis}" >
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>                                
+                                </p:column>
+                                <p:column filterBy="#{insumo.idGrupo.descripcion}"   filterMatchMode="contains" headerText="Grupo" class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{insumo.idGrupo.descripcion}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:rowExpansion >
+                                    <p:panel id="pnlDescripcion" header="Descripción completa" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumo.descripcion}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel id="pnlindicaciones" header="Indicaciones" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumo.indicaciones}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel id="pnlviaadmin" header="Vía de administración" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumo.viaAdministracionDosis}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                            </p:dataTable>  
+                        </h:panelGrid>
+                        <br></br>
+                        <h:panelGrid columns="1" style="width: 100%;">
+                            <h:outputText id="lbInsumosSIAM" value="Lista de insumos nuevos SIAM:" />                            
+                        </h:panelGrid>
+                        <br></br>
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <p:remoteCommand name="onCellEdit" update="tablaInsumosSIAM tablaInsumo" />
+                            <p:dataTable id="tablaInsumosSIAM" var="insumosSiam" value="#{catalogoInsumosBean.listaInsumosSIAM}"
+                                         filteredValue="#{catalogoInsumosBean.listaInsumosSIAMFilter}"
+                                         emptyMessage="No hay registros."
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20">   
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaInsumosSIAM" fileName="InsumoDetalle" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.clave}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{insumosSiam.clave}" />
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.descripcion}"   filterMatchMode="contains" headerText="Descripción" class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{insumosSiam.descripcion}">
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.clasificacion}" filterMatchMode="contains" headerText="Clasificación" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{insumosSiam.clasificacion}" />
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.partidaPresupuestal}"   filterMatchMode="contains" headerText="Partida presupuestal" class="formatoTablas"> 
+                                    <h:outputText value="#{insumosSiam.partidaPresupuestal}"/>
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.indicaciones}"   filterMatchMode="contains" headerText="Indicaciones" class="formatoTablas"> 
+                                    <h:outputText value="#{insumosSiam.indicaciones}" >
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>                                
+                                </p:column>
+                                <p:column filterBy="#{insumosSiam.viaAdministracionDosis}"   filterMatchMode="contains" headerText="Via de Administración" class="formatoTablas"> 
+                                    <h:outputText value="#{insumosSiam.viaAdministracionDosis}" >
+                                        <f:converter converterId="recortarCadena"/>  
+                                    </h:outputText>                                
+                                </p:column>
+                                <p:column headerText="Opciones" class="formatoTablas" width="7%">
+                                    <div>
+                                        <p:commandButton id="btnAgregarInsumoSIAM" value="" icon="fa fa-plus" iconPos="center" 
+                                                         styleClass="customModificar btn-primary" style="width: 30px;height: 35px;"  
+                                                         actionListener="#{catalogoInsumosBean.abrirModalAgregarInsumo(insumosSiam.clave)}"
+                                                         rendered="#{loginBean.tabNuevoActivo == 0}"
+                                                         oncomplete="onCellEdit()">
+                                            <p:ajax event="dialogReturn" listener="#{catalogoInsumosBean.cacharInsumoRegistradoSIAM}" 
+                                                     />
+                                        </p:commandButton>
+                                    </div>
+                                </p:column>
+                                <p:rowExpansion >
+                                    <p:panel id="pnlDescripcion" header="Descripción completa" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumosSiam.descripcion}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel id="pnlindicaciones" header="Indicaciones" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumosSiam.indicaciones}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel id="pnlviaadmin" header="Via de administración" style="margin-bottom:20px;width: 100%" toggleable="true" toggleOrientation="vertical" collapsed="true">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{insumosSiam.viaAdministracionDosis}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                            </p:dataTable>                            
+                        </h:panelGrid>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                            <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                        </p:confirmDialog>
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.tareaProgramadaActualizacionCatalogo}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

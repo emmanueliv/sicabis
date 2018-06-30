@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.colorPorcentaje}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Administrador de filtros de mapa" url="catColorPorcentajes.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Administrar filtros de porcentajes y colores asociados</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{catalogoColorPorcentajeBean.tabActivo}">
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.colorPorcentajeC}" >
+                            <br></br>
+                            <h:form id="frmTab">
+                                <p:messages id="idmessages" showDetail="false"  closable="true" />
+                                <b:panelGrid col-spans="2,4,2,4">
+                                    <h:outputText value="Porcentaje inicial:"/>
+                                    <p:inputNumber decimalPlaces="2" minValue="0" maxValue="100"
+                                                   value="#{catalogoColorPorcentajeBean.porcentajeInicial}"
+                                                   symbolPosition="s" 
+                                                   inputStyle="width: 100%; height: 34px;" />
+                                    <h:outputText value="Porcentaje final:" />
+                                    <p:inputNumber decimalPlaces="2" minValue="0" maxValue="100"
+                                                   value="#{catalogoColorPorcentajeBean.porcentajeFinal}"
+                                                   symbolPosition="s" 
+                                                   inputStyle="width: 100%; height: 34px;" />
+
+                                </b:panelGrid>
+                                <br/>
+                                <b:panelGrid col-spans="2,4,2,4" styleClass="top-buffer">
+                                    <h:outputText value="Color:"/>
+                                    <b:colorPicker id ="colorpicker"  style="background:white;" value="#{catalogoColorPorcentajeBean.hexColor}" opacity="false" format="hex" control="wheel" position="bottom right"/>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                </b:panelGrid>
+                                <br/>
+                                <br/>
+
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton  value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" actionListener="#{catalogoColorPorcentajeBean.guardarActualizarColorPorcentaje}" 
+                                                          />
+                                        <b:commandButton  value="Limpiar" look="danger" icon="remove" iconAlign="right" actionListener="#{catalogoColorPorcentajeBean.cancel()}" />
+                                    </b:buttonGroup>
+                                </div>
+                            </h:form>
+                        </b:tab>
+
+                        <b:tab title="ColorPorcentaje">
+                            <br></br>
+                            <h:form id="frmFiltros">
+                                <p:messages id="idmessages2" showDetail="false"   closable="true" rendered="#{catalogoColorPorcentajeBean.verMensaje}"/>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Porcentaje:" />
+                                    <p:inputNumber id="numero" decimalPlaces="2" minValue="0" maxValue="100"
+                                                   value="#{catalogoColorPorcentajeBean.porcentajeABuscar}"
+                                                   symbolPosition="s" 
+                                                   inputStyle="width: 100%; height: 34px;" />
+                                    <h:outputText value="" />
+                                    <h:outputText value="" />
+                                </b:panelGrid>
+                                <br/>
+                                <div style="display:block; text-align:right"> 
+                                    <b:commandButton process="@this,numero" value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                     actionListener="#{catalogoColorPorcentajeBean.consultarColorPorcentaje}"  update="tablaColorPorcentaje "/>
+                                </div>
+                                <p:separator/>
+                                <br/>
+
+                                <p:dataTable id="tablaColorPorcentaje"  emptyMessage="No hay registros" 
+                                             value="#{catalogoColorPorcentajeBean.listaBusquedaColorPorcentaje}"
+                                             var="colorp"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             paginatorPosition="bottom">
+
+                                    <p:column headerText="Porcentaje inicial">
+                                        <p:outputLabel value="#{colorp.porcentajeInicial}"/>
+                                    </p:column>
+                                    <p:column headerText="Porcentaje final" >
+                                        <p:outputLabel value="#{colorp.porcentajeFinal}"/>
+                                    </p:column>
+                                    <p:column headerText="Código color" >
+                                        <b:well style=" margin: 0 auto; width: 5px; background-color: #{colorp.hexColor}" size="sm" />
+                                    </p:column>
+
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" 
+                                                                 actionListener="#{catalogoColorPorcentajeBean.modificarRedirect(colorp)}" id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" update="frmFiltros" iconAlign="right" actionListener="#{catalogoColorPorcentajeBean.mostrarDialogo(colorp)}" 
+                                                                 id="btnEliminar" />
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el filtro  ' #{catalogoColorPorcentajeBean.porcentajeInicialAux}' - '#{catalogoColorPorcentajeBean.porcentajeFinalAux}' %" showEffect="clip" 
+                                          resizable="true" widgetVar="dialogElimina"  width="50%" modal="true">
+                                    <p:separator/>
+                                    <b:buttonGroup> 
+                                        <b:commandButton value="Eliminar" look="primary" icon="ok" iconAlign="right" actionListener="#{catalogoColorPorcentajeBean.eliminarColorPorcentaje}" process="@this,tablaColorPorcentaje" />
+                                        <b:commandButton value="Cancelar" look="danger" process="@this"  icon="remove" iconAlign="right" onclick="PF('dialogElimina').hide()" /> 
+                                    </b:buttonGroup> 
+                                </p:dialog> 
+
+                            </h:form>
+                        </b:tab>
+
+
+                    </b:tabView>
+                </div>
+            </c:if>
+            <br/>
+            <br/>
+            <c:if test="${!loginBean.accesos.colorPorcentaje}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+
+        </ui:define>
+
+    </ui:composition>
+
+
+</html>

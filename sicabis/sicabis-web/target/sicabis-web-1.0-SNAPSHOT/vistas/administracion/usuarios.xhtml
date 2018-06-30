@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.usuarios}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Usuarios" url="usuarios.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Usuarios</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.usuariosC}">
+                            <br></br>
+                            <h:form id="frmbNuevo">
+                                <p:messages id="idmessages" showDetail="false"  closable="true"/>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Apellido paterno:"/>
+                                    <b:inputText value="#{usuariosBean.usuarioNuevo.apellidoPaterno}" maxlength="45"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText value="Apellido materno:" style="font-size:14px"/>
+                                    <b:inputText value="#{usuariosBean.usuarioNuevo.apellidoMaterno}" maxlength="45"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <p:outputLabel style="font-size:14px" for="nombre" value="Nombre:"/>
+                                    <p:inputText id="nombre" value="#{usuariosBean.usuarioNuevo.nombre}" maxlength="45"
+                                                 onblur="value = value.toUpperCase()" style="width: 100%; height: 34px;text-transform: uppercase">
+                                        <p:ajax event="blur" update="usuario" listener="#{usuariosBean.generarUsuario()}"/>
+                                    </p:inputText>
+                                    <h:outputText value="Correo electrónico:"/>
+                                    <b:inputText value="#{usuariosBean.usuarioNuevo.correo}"/>
+                                    <h:outputText value="Teléfono:"/>
+                                    <b:inputText value="#{usuariosBean.usuarioNuevo.telefono}" validatorMessage="El formato del campo Teléfono es incorrecto"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()">
+                                        <f:validateRegex pattern="[0-9]*" />
+                                    </b:inputText>
+                                    <h:outputText value="Área:"/>
+                                    <p:selectOneMenu id="selectArea" value="#{usuariosBean.usuarioNuevo.idArea}" style="width: 100%; height: 34px;" 
+                                                     converter="selectConverter" autoWidth="false"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItems value="#{usuariosBean.areasList}" var="area"
+                                                       itemValue="#{area}" itemLabel="#{area.nombreArea}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel for="usuario" value="Nombre de usuario:" style="font-size:14px"/>
+                                    <p:inputText id="usuario" value="#{usuariosBean.usuarioNuevo.usuario}" maxlength="45" style="width: 100%; height: 34px;"/>
+                                    <h:outputText value="Perfil:"/>
+                                    <p:selectOneMenu id="selectPerfil" value="#{usuariosBean.perfil}" style="width: 100%; height: 34px;" 
+                                                     converter="selectConverter"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItems value="#{usuariosBean.perfilesList}" var="perfil" 
+                                                       itemValue="#{perfil}" itemLabel="#{perfil.nombre}"/>
+                                    </p:selectOneMenu>
+                                    <h:outputText value="UR"/>
+                                    <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectDelegacion"
+                                                     value="#{usuariosBean.usuarioNuevo.ur}"
+                                                     converter="selectConverter" filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemValue="" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{usuariosBean.listUr}" var="ur"
+                                                       itemValue="#{ur}" itemLabel="#{ur.numUr} - #{ur.nombre}"/>
+                                        <p:ajax event="change" listener="#{usuariosBean.cambiaUr}" process="@this" update="selectDel, selectUnidad" />
+                                    </p:selectOneMenu>
+                                    <h:outputText value="Delegación:"/>
+                                    <p:selectOneMenu id="selectDel" value="#{usuariosBean.usuarioNuevo.idDelegacion}" 
+                                                     style="width: 100%; height: 34px;" converter="selectConverter"
+                                                     filter="true" filterMatchMode="contains" disabled="true" >
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItems value="#{usuariosBean.delegacionesList}" var="delegacion" 
+                                                       itemValue="#{delegacion}" itemLabel="#{delegacion.nombreDelegacion}"/>
+                                        <p:ajax event="change" listener="#{usuariosBean.cambiaDelegación}" process="@this" update="selectUnidad" />
+                                    </p:selectOneMenu>
+                                    <h:outputText value="Unidad médica:"/>
+                                    <p:selectOneMenu id="selectUnidad" value="#{usuariosBean.usuarioNuevo.idUnidadMedica}" 
+                                                     style="width: 100%; height: 34px;" autoWidth="false" converter="selectConverter"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItem itemLabel="TODAS" itemValue="#{usuariosBean.unidadesMedicas}"/>
+                                        <f:selectItems value="#{usuariosBean.unidadesList}" var="unidad" 
+                                                       itemValue="#{unidad}" itemLabel="#{unidad.nombre}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel for="selectTipoUser"  value="Tipo de Usuario:" />                                 
+                                    <p:selectManyMenu id ="selectTipoUser" value="#{usuariosBean.tiposUsuariosSelect}" 
+                                                      style="width: 100%; height: auto;"
+                                                      filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{usuariosBean.listaTipoUsuarios}" var="tipo" 
+                                                       itemValue="#{tipo.idTipoUsuario}" itemLabel="#{tipo.nombre}"/>
+                                    </p:selectManyMenu>
+                                    
+                                </b:panelGrid>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton  value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                          actionListener="#{usuariosBean.altaUsuario}" update=":frmbNuevo" />
+                                        <b:commandButton  value="Limpiar" look="danger" icon="remove" iconAlign="right" actionListener="#{usuariosBean.cancel}" />
+                                    </b:buttonGroup>
+                                </div>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Usuarios">
+                            <br></br>
+                            <h:form id="frmFiltros">
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Nombre de usuario:" />
+                                    <b:inputText  value="#{usuariosBean.nombreUsuario}"/>
+                                    <h:outputText value="Área:"/>
+                                    <p:selectOneMenu id="selectArea" value="#{usuariosBean.areaSelect}" style="width: 100%; height: 34px;" 
+                                                     converter="selectConverter" autoWidth="false"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItems value="#{usuariosBean.areasList}" var="area" 
+                                                       itemValue="#{area}" itemLabel="#{area.nombreArea}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" actionListener="#{usuariosBean.consultarUsuarios}" update=":formaTabla"/>
+                                </div>
+                                <p:separator/>
+                            </h:form>
+                            <br/>
+
+                            <h:form id="formaTabla">
+                                <p:messages id="idmessages" showDetail="false"  closable="true"/>
+                                <p:dataTable id="tablaUsuarios" value="#{usuariosBean.usuariosList}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" var="usuario"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                                             {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaUsuarios" fileName="usuarios" />
+                                        </h:commandLink>                                
+                                    </f:facet>
+                                    <p:column headerText="Nombre">
+                                        <p:outputLabel value="#{usuario.nombre} #{usuario.apellidoPaterno} #{usuario.apellidoMaterno}"/>
+                                    </p:column>
+                                    <p:column headerText="Nombre de usuario" >
+                                        <p:outputLabel value="#{usuario.usuario}"/>
+                                    </p:column>
+                                    <p:column headerText="Correo" >
+                                        <p:outputLabel value="#{usuario.correo}"/>
+                                    </p:column>
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" actionListener="#{usuariosBean.modificarRedirect(usuario)}" 
+                                                                 id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" iconAlign="right" actionListener="#{usuariosBean.mostrarDialogo(usuario)}" 
+                                                                 update=":formaTabla" id="btnEliminar" rendered="#{!loginBean.esConsulta}"/>
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el usuario '#{usuariosBean.nombreUsuario}'" showEffect="clip" 
+                                          resizable="true" widgetVar="dialogEliminaUsuario" modal="true" width="50%">
+                                    <p:separator/>
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{usuariosBean.eliminarUsuario}" update=":formaTabla" />
+                                        <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" actionListener="#{usuariosBean.cancel}" update=":formaTabla" /> 
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.usuarios}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

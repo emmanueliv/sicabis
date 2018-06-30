@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-28T18:20:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReporteEntradaCenadi" pageWidth="425" pageHeight="555" orientation="Landscape" columnWidth="425" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7500e3e6-37a0-47ea-9c26-d62d9b9f54e5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="proveedor" class="java.lang.String"/>
+	<field name="clave" class="java.lang.String"/>
+	<field name="ingresoPendiente" class="java.math.BigDecimal"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}==1]]></printWhenExpression>
+			<staticText>
+				<reportElement mode="Opaque" x="92" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#080808" uuid="439e5797-9151-4e6a-bd59-7ffae50f6347"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030202"/>
+					<leftPen lineWidth="1.0" lineColor="#030202"/>
+					<bottomPen lineWidth="1.0" lineColor="#030202"/>
+					<rightPen lineWidth="1.0" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="193" y="0" width="80" height="30" forecolor="#FFFFFF" backcolor="#080808" uuid="a5be5fa9-ba94-4142-b77b-48cb8a4ba284">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030202"/>
+					<leftPen lineWidth="1.0" lineColor="#030202"/>
+					<bottomPen lineWidth="1.0" lineColor="#030202"/>
+					<rightPen lineWidth="1.0" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="90" height="30" forecolor="#FFFFFF" backcolor="#080808" uuid="423c537a-aecd-4335-aa9b-0dcbe6dd4fd0"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030202"/>
+					<leftPen lineWidth="1.0" lineColor="#030202"/>
+					<bottomPen lineWidth="1.0" lineColor="#030202"/>
+					<rightPen lineWidth="1.0" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="350" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#080808" uuid="45d42806-fbd6-4bd5-9275-cfa106c03b1b"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030202"/>
+					<leftPen lineWidth="1.0" lineColor="#030202"/>
+					<bottomPen lineWidth="1.0" lineColor="#030202"/>
+					<rightPen lineWidth="1.0" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingreso Pendiente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="273" y="0" width="77" height="30" forecolor="#FFFFFF" backcolor="#080808" uuid="45da6335-205e-4e28-af64-7b2dbffd7363">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030202"/>
+					<leftPen lineWidth="1.0" lineColor="#030202"/>
+					<bottomPen lineWidth="1.0" lineColor="#030202"/>
+					<rightPen lineWidth="1.0" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Final]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="91" y="0" width="100" height="30" uuid="4bf3e29c-1ae3-4a0b-a94a-4942cb259621"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="0" width="80" height="30" uuid="aa070aa9-92c8-439a-98ed-b8b54cb93ca1"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="90" height="30" uuid="b03abe93-7a6d-4956-818f-2b83e511cd8b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="0" width="70" height="30" uuid="08983991-9fa9-444b-8f0a-4ebe8b04b70b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{ingresoPendiente})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="272" y="0" width="77" height="30" uuid="f1bff329-566c-433f-bf12-dfa888e19fd7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaFinal})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

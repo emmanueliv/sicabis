@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-08-15T10:30:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subContrato" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4591fbbb-b248-4052-a1a4-1f69a50ea044">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="clave" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="idClave" class="java.lang.Integer"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="cantidadPiezas" class="java.lang.Integer"/>
+	<field name="unidadPieza" class="java.lang.String"/>
+	<field name="importeClave" class="java.math.BigDecimal"/>
+	<field name="nep" class="java.lang.String"/>
+	<field name="oficio" class="java.lang.String"/>
+	<field name="rcb" class="java.lang.String"/>
+	<field name="cantidadPiezasMin" class="java.math.BigDecimal"/>
+	<field name="importeClaveMin" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" x="2" y="0" width="554" height="27" backcolor="#000000" uuid="986b19cd-31f3-4a9a-a995-b3edc0292ed0"/>
+				<rectangle>
+					<reportElement mode="Opaque" x="1" y="1" width="552" height="19" forecolor="#FFFFFF" backcolor="#000000" uuid="c8d84fd2-7a39-41be-bba4-2c84d6b4ac8f"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="0" y="1" width="40" height="20" forecolor="#FFFFFF" uuid="74eed118-d2d2-421e-89d5-be4a4d086239">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[RENGLÓN]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="39" y="1" width="261" height="20" forecolor="#FFFFFF" uuid="bfd24fbe-5402-4f37-98e3-a0f569ee0ba5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[CLAVE/PARTIDA Y DESCRIPCIÓN DE LOS BIENES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="11" width="40" height="9" forecolor="#FFFFFF" uuid="36e9c7f3-27fa-41e7-9852-98ab34a8494c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[MÍNIMA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="0" width="38" height="20" forecolor="#FFFFFF" uuid="0a285a44-2fb1-4c22-b204-3b7913911cb0">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[UNIDAD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="340" y="11" width="40" height="9" forecolor="#FFFFFF" uuid="a74d50d7-1c41-4ce3-9ed9-d641e2e255a3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[MÁXIMA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="458" y="11" width="49" height="10" forecolor="#FFFFFF" uuid="d316913b-7ea4-4da1-81f2-27056ceccd1d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[MÍNIMA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="418" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="b5c002e6-ebf5-43d4-a171-7ec6b5b5fc51">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[PRECIO UNITARIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="458" y="1" width="90" height="10" forecolor="#FFFFFF" uuid="e5ad2fd0-bb93-4748-8ccb-299537995b2f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[MONTO TOTAL NETO M.N.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="1" width="80" height="10" forecolor="#FFFFFF" uuid="969f47b6-044e-4e8b-b8b4-b19b9b8b71a3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[CANTIDAD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="501" y="11" width="47" height="10" forecolor="#FFFFFF" uuid="fe9a1038-257d-4c5b-9747-8a03c8a02b50">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[MÁXIMA]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement x="41" y="-1" width="47" height="51" uuid="3b3dfcd9-b8d1-4b6e-9a5d-e0ae516e8f38"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="38" height="50" uuid="cff5d20f-9db2-4f17-a69f-2a26f8294bf9"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="302" y="0" width="39" height="50" uuid="edef4f74-f332-42bd-8cd8-5029cc37fa7f"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadPiezasMin})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="39" height="50" uuid="bbd87257-ac7c-4a09-9334-d1d73ab46a86"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidadPieza}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="419" y="0" width="42" height="50" uuid="f1e4bef7-c2a6-46b7-8cfb-32f2d055ca14"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{precioUnitario})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="461" y="-1" width="48" height="50" uuid="8bac83b8-327e-4def-a041-0bff717bff9a"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,##0.00").format($F{importeClaveMin})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="89" y="0" width="213" height="50" uuid="dbe65648-518b-41b9-b269-4e4f4cdb43e4"/>
+				<textElement textAlignment="Justified">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="0" width="39" height="50" uuid="a029f43b-71d7-4827-ba74-48761c721893"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidadPiezas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="509" y="-1" width="46" height="50" uuid="6c34ec42-4017-40e3-9477-070e6477b6df"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,##0.00").format($F{importeClave})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

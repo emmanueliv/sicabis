@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-22T18:09:31 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteEntradaCenadi" pageWidth="1100" pageHeight="595" orientation="Landscape" columnWidth="1060" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="06ad7143-b507-4376-9ad9-449dd3a111c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listInfoECD" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<field name="proveedores" class="java.lang.Integer"/>
+	<field name="remisiones" class="java.lang.Integer"/>
+	<field name="aprobadas" class="java.lang.Integer"/>
+	<field name="devoluciones" class="java.lang.Integer"/>
+	<field name="controlCalidad" class="java.lang.Integer"/>
+	<field name="piezas" class="java.lang.Integer"/>
+	<field name="claves" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="312" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="80" height="30" uuid="f6dcd96e-82dd-40ac-af1e-b54b3c4f211e"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="00d1abb9-0411-4bbf-91f5-6c88efa18044"/>
+				<text><![CDATA[Fecha Elaboración: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="0" width="480" height="80" uuid="82e3e64c-efd6-439a-9c8a-63621236f41b"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="321" y="87" width="180" height="30" uuid="84ab5b39-7054-4e69-aed6-2bb02c28549b"/>
+				<text><![CDATA[Reporte de Claves en Proceso del día ]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="501" y="87" width="100" height="30" uuid="77482bbc-7f3c-4d44-b56a-3d13280a59b6"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="60" y="88" width="170" height="150" uuid="fdfaeab0-ca86-4659-9c21-acec7a48c1c3"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="296" width="1060" height="13" backcolor="#C2BEBE" uuid="7ed3b51c-3273-4775-903e-f676675e9484"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="602" y="88" width="173" height="30" uuid="d04b9769-bf55-4a2f-94ed-978d5a76e227"/>
+				<text><![CDATA[Centro Nacional de Distribución]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="922" y="143" width="114" height="14" uuid="be9d33f2-6cd6-41c0-943a-40f071618c24"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{proveedores}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="157" width="114" height="20" uuid="1bdc86bc-1fa1-4b35-93ff-73bd8a5588f1"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{remisiones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="177" width="114" height="19" uuid="31599c45-c521-43da-9261-dbf7db7890fb"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{aprobadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="196" width="114" height="21" uuid="cf23ac96-c71d-4b56-ac8e-a419b998b5be"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{devoluciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="217" width="114" height="20" uuid="2a6622de-1066-4fe3-b867-be94b2972f42"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{controlCalidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="237" width="114" height="20" uuid="dc351a16-6649-4c88-ba70-61a2ecd7d510"/>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{piezas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="922" y="257" width="114" height="13" uuid="405bf013-14fa-4b3b-9f57-6372b7144f26">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.1"/>
+					<leftPen lineWidth="1.1"/>
+					<bottomPen lineWidth="1.1"/>
+					<rightPen lineWidth="1.1"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{claves}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="841" y="142" width="81" height="14" uuid="20cac24c-cd42-4a55-95fb-2d72d3226683"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedores]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="711" y="157" width="211" height="20" uuid="a874abd6-c23d-4283-bf8f-aff479e5b6b4"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remisiones generedas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="831" y="177" width="91" height="19" uuid="fc8a4575-3d96-4839-9aeb-9aceb26831d8"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aprobadas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="841" y="196" width="81" height="21" uuid="77d12539-00d5-4bc1-bb3a-bf6865ab5bc4"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Devoluciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="762" y="218" width="159" height="20" uuid="80e19b71-7503-4ac6-9e8e-f28eb1b96277"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[En proceso de Control de Calidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="851" y="238" width="69" height="19" uuid="6a03c042-36f0-408c-be2d-6305fcf6d9ec"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Piezas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="851" y="257" width="71" height="13" uuid="8a6ac7a5-10fa-4ae0-a017-d5f29b990440"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement x="2" y="0" width="1058" height="100" uuid="0fa9f625-be9e-458e-94ac-6b78f7c754dd"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoECD})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteClavesEnProceso.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

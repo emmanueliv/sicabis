@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.clausulado}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogos" url="../menuCatalogos.xhtml" />
+                            <p:menuitem value="Clausulados" url="catClausulados.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Clausulados</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" >
+                        <b:tab title="Clausulados" rendered="#{!loginBean.accesos.clausuladoC}">
+                            <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true"/>
+                            <h:form id="frmFiltros">
+                                <br></br>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Tipo de Clausula"/>
+                                    <p:selectOneMenu value="#{clausuladoBean.tipoClausulado}" style="width: 100%; height: 34px;"
+                                                     autoWidth="false">
+                                        <f:selectItem itemLabel="Seleccionar" itemValue="0"/>
+                                        <f:selectItem itemLabel="Convenio" itemValue="1"/>
+                                        <f:selectItem itemLabel="Contrato" itemValue="2"/>
+                                    </p:selectOneMenu>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                </b:panelGrid>
+                                
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                     actionListener="#{clausuladoBean.consultarClausulados()}" 
+                                                     update="tablaFabricantes,idmessages2" />
+                                </div>
+                                <p:separator/>                                
+                                <p:dataTable id="tablaFabricantes" value="#{clausuladoBean.clausuladoList}"
+                                             emptyMessage="No hay registros" var="clausulado"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             paginatorPosition="bottom">
+
+                                    <p:column headerText="Descripción">
+                                        <p:outputLabel value="#{clausulado.clausula}"/>
+                                    </p:column>
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" 
+                                                                 actionListener="#{clausuladoBean.modificarRedirect(clausulado)}" 
+                                                                 id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator/>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.clausulado}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

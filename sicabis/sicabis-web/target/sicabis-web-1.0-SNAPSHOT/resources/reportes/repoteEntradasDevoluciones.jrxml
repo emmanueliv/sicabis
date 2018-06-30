@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-22T18:34:25 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repoteEntradasDevoluciones" pageWidth="802" pageHeight="595" orientation="Landscape" columnWidth="762" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b214cd72-3a94-4a49-8db1-6dfbb81c7616">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listInfoEDCenadi" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="175" splitType="Stretch">
+			<staticText>
+				<reportElement key="" x="0" y="0" width="100" height="30" uuid="ab4b1a46-15a0-42cb-bb8d-726cb4baf4f0"/>
+				<text><![CDATA[Fecha Elaboración:]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="100" height="30" uuid="40bde484-8661-4f68-9af8-507a0910c520"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="504" y="130" width="126" height="30" uuid="ef0904a1-5e41-45f3-ab2b-08a1e98e1abe"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="244" y="130" width="260" height="30" uuid="e33b44d6-6207-4679-a36a-f5d6ab574cfd"/>
+				<text><![CDATA[Relación de entradas y devoluciones en el CeNaDi del día]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="520" height="114" uuid="37bf3f4e-35e5-4f14-becf-d88b021ecc6f"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES
+DEPARTAMENTO DE ALMACENAJE Y DISTRIBUCIÓN REGIÓN SURESTE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="28" y="41" width="140" height="114" uuid="1a0c96f8-f91b-48b6-a5df-c82214915f18"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="170" width="760" height="5" backcolor="#918989" uuid="9f4c43fb-aba6-4ee7-9e28-abdf0c3725fd"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="130" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="760" height="130" uuid="d72ecdf5-47c2-48dc-848d-02dc607bc2c9"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoEDCenadi})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteEntrdasDevoluciones.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

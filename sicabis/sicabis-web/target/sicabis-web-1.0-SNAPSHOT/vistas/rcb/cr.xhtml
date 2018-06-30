@@ -1,0 +1,304 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.generacionAnteproyectoCR}">
+                <div id="contenido" class="ui-fluid">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Generación de anteproyecto CR" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Generación de CR</h2>
+
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+
+                    <h:form id='formRCB' style="width:100%; height: 100%" > 
+
+                        <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" >
+                            <!--tab NuevoRcb RCB +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <b:tab title="Nueva CR" rendered="#{!loginBean.accesos.generacionAnteproyectoCRC}">
+                                <br></br>
+                                <h:panelGroup id="pnlNumRCB" style="display:block; text-align:center">
+                                    <!--p:outputLabel value="CR" style="font-size:1.5em;"/--> 
+                                    <h:inputHidden value="#{crBeanNuevo.cr.numeroCr}" />
+                                </h:panelGroup>
+                                <br></br>
+                                <p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+                                <p:panelGrid id="pnlRCB" columns="4" styleClass="ui-panelgrid-blank" layout="grid" style="width: 100%">                                   
+                                    <p:outputLabel for="inpEjercicio" value="Ejercicio:" />                                 
+                                    <p:inputMask id= "inpEjercicio" value="#{crBeanNuevo.cr.ejercicio}" required="true" requiredMessage="Ingrese Ejercicio" mask="2099" maxlength="4" slotChar=" " styleClass="tamanioCampos"/>
+                                    <p:outputLabel  value=""/>                                 
+                                    <p:outputLabel value="" />                                 
+                                    <p:outputLabel for="selectArea" value="Área:" />   
+                                    <p:selectOneMenu id ="selectArea" value="#{crBeanNuevo.idArea}" required="true"
+                                                     requiredMessage="-Seleccione un área" styleClass="" autoWidth="false">
+                                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                        <f:selectItems value="#{crBeanNuevo.areasList}" var="area"
+                                                       itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                                        <p:ajax event="valueChange" listener="#{crBeanNuevo.guardarIdArea()}" update="selectArea" process="@this"/>
+                                    </p:selectOneMenu> 
+                                </p:panelGrid>  
+                                <br></br>
+                                <h:panelGrid  columns="2" style="width: 100%;">
+                                    <h:outputText  value="Lista de insumos por requerir" />
+
+                                    <h:panelGroup style="display:block; text-align:right">
+                                        <p:fileUpload fileUploadListener="#{crBeanNuevo.handleFileUpload}" mode="advanced"
+                                                      update="tablaRcbInsumo" auto="true" sizeLimit="1000000"
+                                                      label="Carga masiva" allowTypes="/(\.|\/)(xls)$/" invalidFileMessage="El archivo es inválido. La extensión del archivo debe ser .xls"  />
+                                        <p:commandLink value="Agregar insumos"  actionListener="#{crBeanNuevo.seleccionaInsumo}" process="@this selectArea"
+                                                       styleClass="btn btn-primary"
+                                                       >
+                                            <p:ajax event="dialogReturn" listener="#{crBeanNuevo.insumoSeleccionado}" update="tablaRcbInsumo" />
+                                        </p:commandLink>
+                                        <p:commandLink value="Cargar catálogo de insumos" 
+                                                       actionListener="#{crBeanNuevo.cargarCatalogoInsumos}" 
+                                                       update="tablaRcbInsumo" process="@this selectArea"
+                                                       styleClass="btn btn-warning"
+                                                       >
+                                            <p:confirm header="Confirmación" message="¿Esta seguro de cargar el catálogo de insumos, esta acción eliminara los insumos seleccionados?" icon="ui-icon-alert"  />
+                                        </p:commandLink>
+                                        <p:commandLink value="Cargar CR anterior" 
+                                                       actionListener="#{crBeanNuevo.cargarRCBAnterior}" 
+                                                       update="tablaRcbInsumo" process="@this selectArea"
+                                                       styleClass="btn btn-info"
+                                                       >
+                                            <p:confirm header="Confirmación" message="¿Esta seguro de cargar la CR anterior, esta acción eliminará los insumos seleccionados?" icon="ui-icon-alert"  />
+                                        </p:commandLink>
+                                        <p:commandLink value="Eliminar todo" 
+                                                       actionListener="#{crBeanNuevo.eliminarInsumos}" 
+                                                       update="tablaRcbInsumo" process="@this"
+                                                       styleClass="btn btn-danger"
+                                                       >
+                                            <p:confirm header="Confirmación" message="¿Esta seguro de eliminar la lista de insumos?" icon="ui-icon-alert"  />
+                                        </p:commandLink>
+
+
+                                    </h:panelGroup>
+                                </h:panelGrid>
+
+                                <div style="width: 100%;">
+                                    <p:dataTable id="tablaRcbInsumo" var="crInsumo" value="#{crBeanNuevo.listCrinsumosDto}"
+                                                 filteredValue="#{crBeanNuevo.listCrinsumosDtoFilter}"
+                                                 widgetVar="wVtablaRcbInsumo"
+                                                 rows="10"
+                                                 paginator="true"
+                                                 emptyMessage="No hay registros."
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                                 rowsPerPageTemplate="10,15,20" >  
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink immediate="true">
+                                                <p:graphicImage name="images/excel.png" width="24"/>
+                                                <p:dataExporter type="xls" target="tablaRcbInsumo" fileName="crDetalle" />
+                                            </h:commandLink>                                
+                                        </f:facet> 
+                                        <p:column style="width:30px" exportable="false"> 
+                                            <p:rowToggler />
+                                        </p:column>
+                                        <p:column headerText="Seleccionar" class="formatoTablas" style="width: 7%"> 
+                                            <p:selectBooleanCheckbox value="#{crInsumo.crInsumoSeleccionado}"/>
+                                        </p:column>                                 
+                                        <p:column headerText="Clave" class="formatoTablas" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.idInsumo.clave}" />
+                                        </p:column>
+                                        <p:column headerText="Descripción" class="formatoTablas" style="width: 10%" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.idInsumo.descripcion.substring(0,20)}" />
+                                        </p:column>
+                                        <p:column headerText="Partida presupuestal" class="formatoTablas" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.idInsumo.partidaPresupuestal}" />
+                                        </p:column>
+                                        <p:column headerText="Existencias" class="formatoTablas" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.existencias}" />
+                                        </p:column>
+                                        <p:column headerText="Consumo promedio" class="formatoTablas" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.consumoPromedio}" />
+                                        </p:column>
+                                        <p:column headerText="Meses de cobertura" class="formatoTablas" > 
+                                            <h:outputText value="#{crInsumo.crInsumo.mesesCobertura}" />
+                                        </p:column>
+                                        <p:column headerText="Unidad " class="formatoTablas"> 
+                                            <h:outputText value="#{crInsumo.crInsumo.idInsumo.idUnidadPieza.descripcion}" />
+                                        </p:column>
+                                        <p:column headerText="Cantidad *" class="formatoTablas"> 
+                                            <h:outputText value="#{crInsumo.crInsumo.cantidadPiezas}"/>
+                                        </p:column>
+                                        <p:column headerText="Precio unitario *" class="formatoTablas">                                            
+                                            <h:outputText value="#{crInsumo.crInsumo.precioUnitario}" />
+
+                                        </p:column>
+                                        <p:column headerText="Importe" class="formatoTablas" > 
+                                            <h:outputText id="idCellimporteSinIva" value="#{crInsumo.importeSinIva}">
+                                                <f:convertNumber type="currency"  />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="IVA" class="formatoTablas" > 
+                                            <h:outputText id="idCellimporteIva" value="#{crInsumo.importeIva}">
+                                                <f:convertNumber type="currency"  />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Importe total" class="formatoTablas" style="width: 10%"> 
+                                            <h:outputText id="idCellimporte" value="#{crInsumo.crInsumo.importe}" class="#{crInsumo.crInsumo.idInsumo.clave}">
+                                                <f:convertNumber type="currency"  />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:rowExpansion >
+                                            <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                                <h:panelGrid columns="1" >
+                                                    <h:outputText value="#{crInsumo.crInsumo.idInsumo.descripcion}" />
+                                                </h:panelGrid>
+                                            </p:panel>
+                                        </p:rowExpansion>
+                                        <p:columnGroup type="footer">
+                                            <p:row>
+                                                <p:column colspan="13" style="text-align:right"  footerText="Total: $" />                                        
+                                                <p:column  id="colImporteTotal" class="formatoTablas">
+                                                    <f:facet name="footer">
+                                                        <h:outputText id="crImporteTotal" value="#{crBeanNuevo.cr.importeTotal}">
+                                                            <f:convertNumber type="currency"  />
+                                                        </h:outputText>                                        
+                                                    </f:facet>                                        
+                                                </p:column>
+                                            </p:row>
+                                        </p:columnGroup>
+                                    </p:dataTable>
+                                </div>
+
+                                <br></br>
+                                <p:separator />
+                                <div style="display:block; text-align:right">                                
+                                    <b:commandButton value="Guardar"  look="primary" onclick="ajax:crBeanNuevo.guardarRCB()"
+                                                     update="pnlNumRCB pnlRCB tablaRcbInsumo dlgContinuarCaptura" 
+                                                     />
+                                    <b:commandButton value="Limpiar"  look="danger" update="pnlNumRCB pnlRCB tablaRcbInsumo" process="@this" actionListener="#{crBeanNuevo.limpiarFrmNuevo}" />
+                                </div>                            
+                            </b:tab>
+
+                            <!-- tab consulta RCB  *******************  -->
+                            <b:tab title="Consultar CR">
+                                <br></br>
+                                <br></br>
+                                <p:messages id="messages2" showDetail="false" autoUpdate="true" closable="true" />
+                                <p:panelGrid id="pnlBuscarRCB" columns="4" columnClasses="" styleClass="ui-panelgrid-blank" layout="grid" style="width: 100%">  
+                                    <p:outputLabel value="No. CR:" />                                 
+                                    <p:inputText id ="inpNumRcb" value="#{crBean.numCr}" styleClass="tamanioCampos" maxlength="100"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <p:outputLabel  value=""/>                                 
+                                    <p:outputLabel value="" /> 
+                                    <p:outputLabel for="selectAreaCons" value="Área:" />   
+                                    <p:selectOneMenu id ="selectAreaCons" value="#{crBean.idArea}" 
+                                                     styleClass="" autoWidth="false">
+                                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                        <f:selectItems value="#{crBean.areasList}" var="area"
+                                                       itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                                        <p:ajax event="valueChange" listener="#{crBean.guardarIdArea()}" update="selectArea" process="@this"/>
+                                    </p:selectOneMenu> 
+                                    <p:outputLabel  value=""/>                                 
+                                    <p:outputLabel value="" /> 
+                                </p:panelGrid>                         
+                                <br></br>
+
+                                <h:panelGrid  columns="1" style="width: 100%;">
+
+                                    <h:panelGroup style="display:block; text-align:right">
+                                        <b:commandButton value="Buscar" actionListener="#{crBean.buscarCr()}" look="info" 
+                                                         update="pnlTableRcb tablaRcb" process="pnlBuscarRCB tablaRcb"
+                                                         icon="search"
+                                                         />
+                                    </h:panelGroup>
+                                    <p:separator />
+                                    <h:outputText id="lblTablaRcb" value="Lista de CR:" />
+                                </h:panelGrid>
+                                <br></br>
+
+
+                                <h:panelGrid id="pnlTableRcb" columns="2">
+                                    <p:dataTable id="tablaRcb" var="rcb" value="#{crBean.listCrViewDto}" emptyMessage="No hay registros">
+                                        <p:column headerText="No. CR" class="formatoTablas"> 
+                                            <h:outputText value="#{rcb.cr.numeroCr}" />
+                                        </p:column>                                                                             
+                                        <p:column headerText="Ejercicio" class="formatoTablas" > 
+                                            <h:outputText value="#{rcb.cr.ejercicio}" />
+                                        </p:column>    
+                                        <p:column headerText="Subdirección" class="formatoTablas" > 
+                                            <h:outputText value="#{rcb.cr.idArea.nombreArea}" />
+                                        </p:column>    
+                                        <p:column headerText="Estatus" class="formatoTablas" > 
+                                            <h:outputText value="#{rcb.cr.idEstatus.nombre}" />
+                                        </p:column>  
+                                        <p:column headerText="Fecha de elaboración" class="formatoTablas"> 
+                                            <h:outputText value="#{rcb.cr.fechaAlta}">
+                                                <f:convertDateTime pattern="dd/MM/YYYY" />
+                                            </h:outputText>   
+                                        </p:column>
+                                        <p:column headerText="Opciones" class="formatoTablas"> 
+                                            <b:commandButton value=""
+                                                             tooltip="Ver Detalle" 
+                                                             look="info" 
+                                                             icon="search" 
+                                                             iconAlign="right" 
+                                                             action="#{crBean.irRcbDetalle(rcb)}" process="@this" update="tablaRcb" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>               
+
+                            </b:tab>
+                            <!-- The next tab shows tabs aren't limited to text. You can put anything in a tab. -->
+                        </b:tabView>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <div style="display:block; text-align:right">
+                                <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                                <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                            </div>
+                        </p:confirmDialog>
+
+                        <p:confirmDialog id="dlgContinuarCaptura" widgetVar="wdContCaptura" showEffect="fade"
+                                         hideEffect="fade" 
+                                         message="Datos guardados correctamente, ¿Desea continuar editando el anteproyecto CR?">
+                            <div style="display:block; text-align:right">
+                                <p:commandLink value="Si" type="button"  styleClass="ui-confirmdialog-yes btn btn-primary" 
+                                               style="color: #fff;"
+                                               action="#{crBeanNuevo.irRcbDetalleControl(crBeanNuevo.tmpIdRcbView)}" process="@this" update=""
+                                               oncomplete="PF('wdContCaptura').hide()"/>
+                                <p:commandLink value="No" type="button"
+                                               update="pnlNumRCB pnlRCB tablaRcbInsumo" styleClass="ui-confirmdialog-no btn btn-danger"
+                                               process="@this" actionListener="#{crBeanNuevo.limpiarFrmNuevo}"
+                                               style="color: #fff;" 
+                                               oncomplete="PF('wdContCaptura').hide()"/>
+                            </div>
+                        </p:confirmDialog>
+
+
+
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.generacionAnteproyectoCR}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

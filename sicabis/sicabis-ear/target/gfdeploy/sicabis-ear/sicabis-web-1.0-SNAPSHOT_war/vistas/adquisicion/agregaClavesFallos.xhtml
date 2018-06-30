@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>Agregar claves por proveedor</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="idProveedor" value="#{agregaClavesFallosBean.idProveedor}"/>
+            <f:viewAction action="#{agregaClavesFallosBean.onload}" />
+        </f:metadata>
+        <h:form style="width: 95%; margin: auto; padding-left: 3%">
+            <br></br>
+            <h2>Selecciona claves</h2>
+            <p:separator/>
+            <br></br>
+            <p:dataTable id="tablaFalloProcRcbInsumo" var="falloProcRcb" value="#{agregaClavesFallosBean.listaFalloProcRcb}"
+                         selection="#{agregaClavesFallosBean.listaFalloProcRcbSelect}" rowKey="#{falloProcRcb.idFalloProcedimientoRcb}"
+                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                         filteredValue="#{agregaClavesFallosBean.listaFalloProcRcbFilter}"
+                         rows="10" paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                         rowsPerPageTemplate="10,15,20">
+                <p:column style="width:30px"> 
+                    <p:rowToggler />
+                </p:column>
+                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                <p:column headerText="ID" class="formatoTablas" filterBy="#{falloProcRcb.idFalloProcedimientoRcb}" filterMatchMode="contains" > 
+                    <h:outputText value="#{falloProcRcb.idFalloProcedimientoRcb}" />
+                </p:column>
+                <p:column headerText="Clave" class="formatoTablas" filterBy="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" filterMatchMode="contains" > 
+                    <h:outputText value="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" />
+                </p:column>
+                <p:column headerText="Fallo" class="formatoTablas" filterBy="#{falloProcRcb.idFallo.numeroFallo}" filterMatchMode="contains" >
+                    <h:outputText value="#{falloProcRcb.idFallo.numeroFallo}" />
+                </p:column>
+                <p:column headerText="RCB" class="formatoTablas" filterBy="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idRcb.numero}" filterMatchMode="contains" >
+                    <h:outputText value="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idRcb.numero}" />
+                </p:column>
+                <p:column headerText="Descripción" class="formatoTablas"> 
+                    <h:outputText value="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion.substring(0,20)}" />
+                </p:column>
+                <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{falloProcRcb.cantidadModificada}" filterMatchMode="contains" >
+                    <h:outputText value="#{falloProcRcb.cantidadModificada}" />
+                </p:column>
+                <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{falloProcRcb.importe}" filterMatchMode="contains" > 
+                    <h:outputText value="#{falloProcRcb.importe}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:rowExpansion >
+                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                        <h:panelGrid columns="1" >
+                            <h:outputText value="#{falloProcRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </p:rowExpansion>
+            </p:dataTable>
+            <p:separator/>
+            <div style="display:block; text-align:right">
+                <b:buttonGroup>
+                    <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{agregaClavesFallosBean.agregarClaves}" />
+                </b:buttonGroup>
+            </div>
+        </h:form>
+    </h:body>
+
+</html>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-29T16:18:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReporteResumenClavesSinEntrega" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f9af98be-3fe8-4cd7-8bfc-a00a3157e9f2">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="totales" class="java.lang.Integer"/>
+	<field name="totalesCero" class="java.lang.Integer"/>
+	<field name="estatus" class="java.lang.String"/>
+	<field name="porcentajeSNClavesPro" class="java.math.BigDecimal"/>
+	<field name="porcentajeClavesPro" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="41" width="75" height="40" forecolor="#FFFFFF" backcolor="#030202" uuid="4e5f6eb9-e612-48de-927c-5142bdde60d1"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cobertura Cenadi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="75" y="41" width="114" height="40" forecolor="#FFFFFF" backcolor="#030202" uuid="bb0d95e6-fe75-43f6-850d-79ac6b010281"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="189" y="41" width="180" height="40" forecolor="#FFFFFF" backcolor="#030202" uuid="ddeec213-c155-44b3-bf76-e49e80ea71bf"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estatus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="370" y="10" width="113" height="73" forecolor="#FFFFFF" backcolor="#030202" uuid="10d6a82a-9ee6-4f93-8990-fac3ce4ce261"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Porcentaje de claves sin programar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="10" width="370" height="30" forecolor="#FFFFFF" backcolor="#030202" uuid="8331c37c-48a9-4f8b-94fd-5950d6ed781b"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen de clase sin entrega programada]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="62" splitType="Stretch">
+			<textField>
+				<reportElement x="190" y="1" width="178" height="30" uuid="bb05f4ee-67c6-429f-a50d-761cdcd7b1d7"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{estatus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="32" width="114" height="30" uuid="1b25fe7a-c041-48a4-be9c-7bef24779914"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("##%").format($F{porcentajeSNClavesPro})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="2" width="114" height="30" uuid="5dbd3be8-5d9d-4978-98e1-692421921e0a"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("##%").format($F{porcentajeClavesPro})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="2" width="75" height="30" forecolor="#FFFCFC" backcolor="#857F7F" uuid="8bb3fcff-024e-4a82-9645-d81f08ff861d"/>
+				<box>
+					<topPen lineWidth="0.7" lineColor="#030202"/>
+					<leftPen lineWidth="0.7" lineColor="#030202"/>
+					<bottomPen lineWidth="0.7" lineColor="#030202"/>
+					<rightPen lineWidth="0.7" lineColor="#030202"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="32" width="75" height="30" backcolor="#F2EBEB" uuid="68c8ab23-b26c-4036-8ab8-674ffc297dee"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cob. <= 30 dias]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="76" y="2" width="113" height="30" uuid="4e604ca2-180f-4083-9a77-394e378f8686"/>
+				<box>
+					<topPen lineWidth="0.6"/>
+					<leftPen lineWidth="0.6"/>
+					<bottomPen lineWidth="0.6"/>
+					<rightPen lineWidth="0.6"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="76" y="32" width="113" height="30" uuid="12894772-bb0c-447a-935d-d5fd3ee1833f"/>
+				<box>
+					<topPen lineWidth="0.6"/>
+					<leftPen lineWidth="0.6"/>
+					<bottomPen lineWidth="0.6"/>
+					<rightPen lineWidth="0.6"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totales})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="32" width="178" height="29" uuid="b6827750-227a-476e-87d0-f39300421e5d"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{estatus}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="32">
+			<staticText>
+				<reportElement x="2" y="2" width="74" height="30" uuid="fe10c453-d8a7-4bbd-a6e8-6421114e99ac"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="79" y="2" width="111" height="30" uuid="ab12aa2d-0a3e-46aa-8726-d2db35628802"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero}+$F{totales})]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

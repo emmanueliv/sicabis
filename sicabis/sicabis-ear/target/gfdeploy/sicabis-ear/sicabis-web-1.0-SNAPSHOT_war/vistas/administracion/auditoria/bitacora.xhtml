@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.auditoria}">
+                <script type="text/javascript" src="../../../resources/js/calendar.js"/>
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Bitácora" url="bitacora.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Bitácora</h2>
+                        <br></br>
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid col-spans="2,4,2,4">
+                            <h:outputText value="Descripción:"/>
+                            <b:inputText value="#{bitacoraBean.bitacoraTarea.descripcion}" 
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Usuario:"/>
+                            <p:selectOneMenu id="selectUsuarios" value="#{bitacoraBean.bitacoraTarea.idUsuarios}" style="width: 100%; height: 34px;"
+                                             autoWidth="false">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItems value="#{bitacoraBean.usuariosList}" var="usuario" 
+                                               itemValue="#{usuario.idUsuario}" itemLabel="#{usuario.usuario}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Tarea:"/>
+                            <p:selectOneMenu id="selectTarea" value="#{bitacoraBean.bitacoraTarea.idTareaId}" style="width: 100%; height: 34px;"
+                                             autoWidth="false">
+                                <f:selectItem itemLabel="Selecciona..." itemValue="0"/>
+                                <f:selectItems value="#{bitacoraBean.tareasList}" var="tarea" 
+                                               itemValue="#{tarea.idTarea}" itemLabel="#{tarea.descripcion}"/>
+                                <p:ajax event="valueChange" listener="#{bitacoraBean.obtenerStatus()}" update="selectEstatus" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Estatus:"/>
+                            <p:selectOneMenu id="selectEstatus" value="#{bitacoraBean.bitacoraTarea.idEstatus}" style="width: 100%; height: 34px;"
+                                             autoWidth="false">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItems value="#{bitacoraBean.estatusList}" var="estatus" 
+                                               itemValue="#{estatus.idEstatus}" itemLabel="#{estatus.nombre}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Fecha inicial:"/>
+                            <p:calendar id="idCalendarInicial" value="#{bitacoraBean.fechaInicial}" locale="es" 
+                                        showOn="button" />
+                            <h:outputText value="Fecha final:"/>
+                            <p:calendar id="idCalendarFinal" value="#{bitacoraBean.fechaFinal}" locale="es" 
+                                        showOn="button" />
+                        </b:panelGrid>
+
+                        <div style="display: block; text-align: right; margin-top: 25px">
+                            <b:buttonGroup>
+                                <b:commandButton value="Consultar" icon="search" iconAlign="right" look="info" 
+                                                 actionListener="#{bitacoraBean.consultarBitacora()}" update=":formaTabla"/>
+                            </b:buttonGroup>
+                        </div>
+                        <p:separator/>
+                    </h:form>
+                    <h:form id="formaTabla">
+                        <p:dataTable id="tablaBitacora" value="#{bitacoraBean.listaBitacoraDto}"
+                                     emptyMessage="No hay registros" var="bitacora"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaBitacora" fileName="registroBitacora" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column headerText="Descripción">
+                                <p:outputLabel value="#{bitacora.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Tarea">
+                                <p:outputLabel value="#{bitacora.tarea.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Estatus">
+                                <p:outputLabel value="#{bitacora.estatus.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Usuario">
+                                <p:outputLabel value="#{bitacora.usuarios.usuario}"/>
+                            </p:column>
+                            <p:column headerText="Fecha">
+                                <p:outputLabel value="#{bitacora.fecha}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.auditoria}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

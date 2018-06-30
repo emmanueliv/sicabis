@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.recepcionInsumosSalud}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Recepción de insumos" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Recepción de insumos para la salud</h2>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" styleClass="DataTable" >
+                        <b:tab title="Seguimiento" rendered="#{!loginBean.accesos.recepcionInsumosSaludC}">
+                            <h:form id="recepcionBienes">
+                                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{recepcionInsumosBean.verMensaje}" ></p:messages>
+                                <br></br>
+                                <b:panelGrid colSpans="2,10">
+                                    <h:outputLabel  value="Registro de control"/>
+                                    <b:inputText style="width: 450px;" id="registroControl" value="#{recepcionInsumosBean.registroControl}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton icon="search" iconAlign="right"  process="@this,registroControl" type="submit" look="info" value="Buscar" update="recepcionBienes, idmessages" actionListener="#{recepcionInsumosBean.buscarRemision()}"/>
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable emptyMessage="No existen registros"  rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" var="remisiones" value="#{recepcionInsumosBean.remisionesBienesList}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisiones" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Registro de control">
+                                        <h:outputText value="#{remisiones.registroControl}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" 
+                                                      rendered="#{remisiones.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisiones.idCanjePermuta.idInsumoCanje.clave}" 
+                                                      rendered="#{remisiones.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{remisiones.cantidadRecibida}" >
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Contrato">
+                                        <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                                    </p:column>
+                                    <p:column headerText="Almacén">
+                                        <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.idAlmacen.nombreAlmacen}" />
+                                    </p:column>
+                                    <p:column headerText="Documento">
+                                        <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}"/>
+                                    </p:column>
+                                    <p:column headerText="Folio de remisión">
+                                        <h:outputText value="#{remisiones.folioRemision}" style="text-transform:uppercase;"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha de remisión">
+                                        <h:outputText value="#{remisiones.fechaRemision}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Proveedor">
+                                        <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" 
+                                                      rendered="#{remisiones.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisiones.idCanjePermuta.proveedor.nombreProveedor}" 
+                                                      rendered="#{remisiones.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Estatus">
+                                        <h:outputText value="#{remisiones.idEstatus.nombre}" />
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" 
+                                                              rendered="#{remisiones.idCanjePermuta == null}"/>
+                                                <h:outputText value="#{remisiones.idCanjePermuta.idInsumoCanje.descripcion}" 
+                                                              rendered="#{remisiones.idCanjePermuta != null}"/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                                <br></br>
+                                <b:panelGrid colSpans="2,10">
+                                    <h:outputLabel id="registroControL" value="Cantidad recibida"/>
+                                    <p:inputText style="width: 38%;height: 35px; margin-bottom: 15px" id="cantidadRecibida" 
+                                                 value="#{recepcionInsumosBean.cantidadRecibida}" >
+                                        <p:ajax event="blur" update="folioRemision, tablaLotes" listener="#{recepcionInsumosBean.habilitarFolio}" 
+                                                process="cantidadRecibida"/>
+                                    </p:inputText>
+                                </b:panelGrid>
+                                <!-- Modificacion agregada por jose 07-03-2017 -->
+                                <p:dataTable id="tablaLotes" value="#{recepcionInsumosBean.lotesList}"
+                                             emptyMessage="No hay registros" var="lote"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             editable="true" editMode="cell">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaLotes" fileName="registroBitacora" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column headerText="Lote">
+                                        <h:outputLabel value="#{lote.lote}"/>
+                                    </p:column>
+                                    <p:column headerText="Código de barras">
+                                        <h:outputLabel value="#{lote.codigoBarrasLote}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha de fabricación">
+                                        <h:outputLabel value="#{lote.fechaFabricacion}">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Fecha de caducidad">
+                                        <h:outputLabel value="#{lote.fechaCaducidad}">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Cantidad por lote">
+                                        <p:cellEditor >
+                                            <f:facet name="output">
+                                                <h:outputText value="#{lote.cantidadLote}" />
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:inputNumber decimalPlaces="0" emptyValue="zero" minValue="0" value="#{lote.cantidadLote}" 
+                                                               disabled="#{recepcionInsumosBean.disabledCantidadRecibida}"/>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                </p:dataTable>
+                                <!-- Fin de la modificación -->
+                                <br/>
+                                <b:panelGrid colSpans="2,10">
+                                    <h:outputLabel  value="Folio de remisión"/>
+                                    <b:inputText style="width: 38%;" id="folioRemision" 
+                                                 value="#{recepcionInsumosBean.folioRemision}"  disabled="#{recepcionInsumosBean.disabledFolio}"/>
+                                </b:panelGrid>
+                                <p:selectOneMenu style="height: 34px; width: 49%;" disabled="#{recepcionInsumosBean.disabledFolio}" id="dictamen" 
+                                                 value="#{recepcionInsumosBean.dictamen}">
+                                    <f:selectItem itemLabel="Selecionar dictamen" itemValue="-1" />
+                                    <f:selectItem itemLabel="Procesado" itemValue="1" />
+                                    <f:selectItem itemLabel="Rechazado" itemValue="2" />
+                                    <p:ajax update="mostrar,folioRemision"  listener="#{recepcionInsumosBean.mostrarDefecto()}"
+                                            process="folioRemision, cantidadRecibida, tablaLotes"/>
+                                </p:selectOneMenu>
+                                <br></br>
+                                <b:panelGrid columns="1"  id="mostrar">
+                                    <b:inputTextarea id="defecto2"   rendered="#{recepcionInsumosBean.verDetalleDefecto}"  style="width: 49%;" placeholder="Observaciones" value="#{recepcionInsumosBean.descripcion}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton icon="floppy-disk" iconAlign="right" look="primary" value="Guardar" update="recepcionBienes" 
+                                                     actionListener="#{recepcionInsumosBean.guardarRecepcionBienes}"
+                                                     rendered="#{!recepcionInsumosBean.verBotonDescargarRemision}"/>
+                                    <b:commandButton look="primary" value="Imprimir remisión" icon="print" iconAlign="right" 
+                                                     actionListener="#{recepcionInsumosBean.descargarRemision}"
+                                                     rendered="#{!recepcionInsumosBean.bcanjes and recepcionInsumosBean.verBotonDescargarRemision}"/>
+                                    <b:commandButton look="primary" value="Imprimir canje" icon="print" iconAlign="right" 
+                                                     actionListener="#{recepcionInsumosBean.descargarRemision}" 
+                                                     rendered="#{recepcionInsumosBean.bcanjes and recepcionInsumosBean.verBotonDescargarRemision}">
+                                        <p:fileDownload value="#{recepcionInsumosBean.file}" />
+                                    </b:commandButton>
+                                </div>
+                                <p:separator />
+                                <b:panelGrid col-spans="12" rendered="#{recepcionInsumosBean.verCargaDocumentos}" >
+                                    <h3>Carga de archivos</h3>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,10" rendered="#{recepcionInsumosBean.verCargaDocumentos}" >
+                                    <h:outputText value="Tipo de documento:" />
+                                    <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                     value="#{recepcionInsumosBean.idTipoDocumento}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{recepcionInsumosBean.listaTipoDocs}" var="tipoDocs"
+                                                       itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                        <p:ajax update="selectTipoDocs" listener="#{recepcionInsumosBean.cambiaTipoDoc()}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:fileUpload fileUploadListener="#{recepcionInsumosBean.guardarArchivos}" mode="advanced" multiple="false" dragDropSupport="true" process="@this, selectTipoDocs"
+                                              uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                              rendered="#{recepcionInsumosBean.verCargaDocumentos}"  
+                                              />
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{recepcionInsumosBean.listaRepoDocsDto}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{recepcionInsumosBean.verCargaDocumentos}" >                                
+                                    <p:column headerText="Nombre de archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                        <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                         update="tablaRepoDocs" actionListener="#{recepcionInsumosBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator rendered="#{recepcionInsumosBean.verCargaDocumentos}"/> 
+                                <br></br>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                    </p:panelGrid>
+                                    <b:buttonGroup>
+                                        <b:commandButton action="#{recepcionInsumosBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                        <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Remisiones" >
+                            <h:form id="frmNew">
+                                <h4>Consultar Remisiones</h4>
+                                <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true" rendered="#{recepcionInsumosBean.verMensaje2}" ></p:messages>
+                                <br></br>
+                                <b:panelGrid colSpans="2,2,2,2,2,2" size="xs">
+                                    <h:outputLabel value="Registro de control"/>
+                                    <b:inputText placeholder="Registro de control" value="#{recepcionInsumosBean.registroControl}"  ></b:inputText>
+                                    <h:outputLabel value="Fecha de inicio"/>
+                                    <p:calendar placeholder="Fecha de inicio" id="effect" value="#{recepcionInsumosBean.fechaInicio}" style=" height: 34px;" showOn="button" locale="es" />
+                                    <h:outputLabel value="Fecha fin"/>
+                                    <p:calendar placeholder="Fecha fin" id="effect2" value="#{recepcionInsumosBean.fechaFin}" style=" height: 34px;"  showOn="button"  />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="info" value="Buscar" icon="search" iconAlign="right" actionListener="#{recepcionInsumosBean.remisionByRegistroInsumos()}"  update="frmNew" ></b:commandButton> 
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable id="remisiones" emptyMessage="No existen registros"  rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" var="remisionesR" value="#{recepcionInsumosBean.remisionesRegistro}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisiones" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column  headerText="Registro de control">
+                                        <h:outputText value="#{remisionesR.registroControl}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" 
+                                                      rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisionesR.idCanjePermuta.idInsumoCanje.clave}" 
+                                                      rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{remisionesR.cantidadRecibida}" >
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Contrato">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                                    </p:column>
+                                    <p:column headerText="Almacén">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.idAlmacen.nombreAlmacen}" />
+                                    </p:column>
+                                    <p:column headerText="Documento">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}"/>
+                                    </p:column>
+                                    <p:column headerText="Folio de remisión">
+                                        <h:outputText value="#{remisionesR.folioRemision}" />
+                                    </p:column>
+                                    <p:column headerText="Proveedor">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" 
+                                                      rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisionesR.idCanjePermuta.proveedor.nombreProveedor}" 
+                                                      rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Estatus">
+                                        <h:outputText value="#{remisionesR.idEstatus.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones">
+                                        <b:commandButton  ajax="true" icon="glyphicon-plus" icon-align="right" look="primary" value="" 
+                                                          tooltip="Ver detalle"  id="controlId" styleClass="primary" 
+                                                          action="#{recepcionInsumosBean.verDettaleRemision}" >   
+                                            <f:setPropertyActionListener value="#{remisionesR}" target="#{recepcionInsumosBean.remisiones}"/>
+                                        </b:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" 
+                                                              rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                                <h:outputText value="#{remisionesR.idCanjePermuta.idInsumoCanje.descripcion}" 
+                                                              rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:form>      
+                        </b:tab>
+                    </b:tabView> 
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.recepcionInsumosSalud}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

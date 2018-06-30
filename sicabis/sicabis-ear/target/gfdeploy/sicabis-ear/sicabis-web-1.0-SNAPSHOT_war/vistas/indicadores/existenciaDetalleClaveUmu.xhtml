@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.reporteDetalleUmus}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte detallado de existencias en UMUs" url="existenciaDetalleClaveUmu.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Reporte detallado de existencias en UMUs</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConsulta">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelConsulta">
+                            <h:outputText value="Fecha entre:"/>
+                            <b:panelGrid colSpans="6,6" id="panelFechas">
+                                <p:calendar id="effect"  value="#{indicadorExistenciaDetalleClaveUmuBean.fechaInicio}" showOn="button" locale="es" />
+                                <p:calendar id="effect2" value="#{indicadorExistenciaDetalleClaveUmuBean.fechaFin}" showOn="button" locale="es" />
+                            </b:panelGrid>
+                            <h:outputText value="Delegación:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad1" autoWidth="false"
+                                             value="#{indicadorExistenciaDetalleClaveUmuBean.delegacion}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{indicadorExistenciaDetalleClaveUmuBean.delegacionList}" var="delegacion" 
+                                               itemValue="#{delegacion.nombreDelegacion}" itemLabel="#{delegacion.nombreDelegacion}"/>  
+                            </p:selectOneMenu>
+                            <h:outputText value="Lote"/>
+                            <b:inputText id="lote" value="#{indicadorExistenciaDetalleClaveUmuBean.lote}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Número UMU"/>
+                            <b:inputText id="numumu" value="#{indicadorExistenciaDetalleClaveUmuBean.numeroUmu}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Nombre UMU"/>
+                            <b:inputText id="nomumu" value="#{indicadorExistenciaDetalleClaveUmuBean.nombreUmu}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Clave"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad4" autoWidth="false"
+                                             value="#{indicadorExistenciaDetalleClaveUmuBean.clave}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{indicadorExistenciaDetalleClaveUmuBean.insumosList}" var="historico" 
+                                               itemValue="#{historico.clave}" itemLabel="#{historico.clave}"/>  
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Nombre"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad5" autoWidth="false"
+                                             value="#{indicadorExistenciaDetalleClaveUmuBean.clave2}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{indicadorExistenciaDetalleClaveUmuBean.insumosList}" var="historico" 
+                                               itemValue="#{historico.clave}" itemLabel="#{historico.descripcion}"/>  
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                        </b:panelGrid>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" process="panelConsulta"   
+                                             actionListener="#{indicadorExistenciaDetalleClaveUmuBean.buscarByFiltros}" update="tablaDpn" />
+                        </div>
+                        <p:separator/>
+                        <p:dataTable id="tablaDpn" var="existencia" 
+                                     value="#{indicadorExistenciaDetalleClaveUmuBean.existenciaList}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="50" paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaDpn" fileName="existencia" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Fecha de inventario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaInventario}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Delegación" class="formatoTablas" >
+                                <h:outputText value="#{existencia.nombreDelegacion}" />
+                            </p:column>
+                            <p:column headerText="Número de unidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.umu}" />
+                            </p:column>
+                            <p:column headerText="Nombre unidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.descUmu}" />
+                            </p:column>
+                            <p:column headerText="Clave" class="formatoTablas" >
+                                <h:outputText value="#{existencia.clave}" />
+                            </p:column>
+                            <p:column headerText="Descripción" class="formatoTablas" >
+                                <h:outputText value="#{existencia.nombre}" />
+                            </p:column>
+                            <p:column headerText="Lote" class="formatoTablas" >
+                                <h:outputText value="#{existencia.lote}" />
+                            </p:column>
+                            <p:column headerText="Fecha de caducidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaCaducidad}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cantidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.existencia}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.precioUnitario}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Importe" class="formatoTablas" >
+                                <h:outputText value="#{existencia.importe}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{existencia.nombre}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reporteDetalleUmus}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

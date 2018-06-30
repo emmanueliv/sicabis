@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.presentacionPropuestas}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Propuestas" url="propuestas.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Propuestas</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <b:tabView activeIndex="#{propuestasBean.tabActivo}" >
+                        <b:tab id="tabNew" title="Nuevo" rendered="#{!loginBean.accesos.presentacionPropuestasC}">
+                            <br></br>
+                            <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{propuestasBean.messageGuardar}" />
+                            <h:form id="formProc">
+                                <b:panelGrid col-spans="2,10">
+                                    <h:outputText value="No. procedimiento:"/>
+                                    <b:inputText style="width: 35%;text-transform:uppercase;" value="#{propuestasBean.numeroProcedimiento}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" actionListener="#{propuestasBean.obtenerProcedimientoByNumero}" />
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <b:panelGrid col-spans="4,8">
+                                    <h:outputText value="¿Se verificaron los proveedores sancionados o inhabilitados?" style="font-size: 20px"/>
+                                    <p:selectBooleanButton value="#{propuestasBean.bsansiones}" disabled="#{propuestasBean.bactivo}" onLabel="SI" offLabel="NO" onIcon="ui-icon-check" offIcon="ui-icon-close">
+                                        <p:ajax event="change" listener="#{propuestasBean.cambiaOpcion}" update="@this panelPropuestas" />
+                                    </p:selectBooleanButton>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="12" id="panelPropuestas" >
+                                    <b:panelGrid col-spans="12" >
+                                        <h3>Agregar propuesta por layout</h3>
+                                    </b:panelGrid>
+                                    <br></br>
+                                    <div style="display:block; text-align:left">
+                                        <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" styleClass="btn btn-success"
+                                                         value="Descargar layout">
+                                            <p:fileDownload value="#{propuestasBean.getFile(1)}" />
+                                        </p:commandButton>
+                                        <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" styleClass="btn btn-success"
+                                                         value="Descargar ejemplo de llenado de layout">
+                                            <p:fileDownload value="#{propuestasBean.getFile(2)}" />
+                                        </p:commandButton>
+                                    </div>
+                                    <br></br>
+                                    <p:fileUpload fileUploadListener="#{propuestasBean.validaCargaArchivo}" mode="advanced" 
+                                                  update="formDialog resultados tablaRcbInsumo" multiple="false" 
+                                                  dragDropSupport="true" process="@this" disabled="#{!propuestasBean.bsansiones}"
+                                                  uploadLabel="Guardar archivo" label="Selecciona archivo" cancelLabel="Borrar archivo"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/" invalidFileMessage="El archivo no es del tipo correcto" />
+                                    <br></br>
+                                    <b:panelGrid id="resultados" col-spans="12" rendered="#{propuestasBean.bresultado}">
+                                        <h4>Número de registros correctos: #{propuestasBean.numClavesBien}</h4>
+                                        <p>#{propuestasBean.clavesBien}</p>
+                                        <h4>Número de registros incorrectos: #{propuestasBean.numClavesMal}</h4>
+                                        <p>#{propuestasBean.clavesMal}</p>
+                                    </b:panelGrid>
+                                    <br></br>
+                                    <p:dataTable id="tablaRcbInsumo" var="listaProcRcb" value="#{propuestasBean.listaProcRcb}"
+                                                 emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                                 filteredValue="#{propuestasBean.listaProcRcbFilter}"
+                                                 rows="10"
+                                                 paginator="true"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                                 rowsPerPageTemplate="10,15,20">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink immediate="true">
+                                                <p:graphicImage name="images/excel.png" width="24"/>
+                                                <p:dataExporter type="xls" target="tablaRcbInsumo" fileName="propuestas" />
+                                            </h:commandLink>                                
+                                        </f:facet>
+                                        <p:column style="width:30px"> 
+                                            <p:rowToggler />
+                                        </p:column>
+                                        <p:column headerText="RCB" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.idRcb.idRcb}" filterMatchMode="contains">
+                                            <h:outputText value="#{listaProcRcb.idRcbInsumos.idRcb.idRcb}" />
+                                        </p:column>
+                                        <p:column headerText="Renglón" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.idInsumo.idInsumo}" filterMatchMode="contains"> 
+                                            <h:outputText value="#{listaProcRcb.idRcbInsumos.idInsumo.idInsumo}" />
+                                        </p:column>
+                                        <p:column headerText="Clave" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains">
+                                            <h:outputText value="#{listaProcRcb.idRcbInsumos.claveInsumo}" />
+                                        </p:column>
+                                        <p:column headerText="Descripción" class="formatoTablas" >
+                                            <h:outputText value="#{listaProcRcb.idRcbInsumos.descripcionInsumo.substring(0,20)}" />
+                                        </p:column>
+                                        <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{listaProcRcb.cantidadPiezas}" filterMatchMode="contains">
+                                            <h:outputText value="#{listaProcRcb.cantidadPiezas}" />
+                                        </p:column>
+                                        <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{listaProcRcb.precioUnitario}" filterMatchMode="contains">
+                                            <h:outputText value="#{listaProcRcb.precioUnitario}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Precio conveniente" class="formatoTablas">
+                                            <h:outputText value="#{listaProcRcb.precioUnitario.multiply(0.9)}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Precio aceptable" class="formatoTablas">
+                                            <h:outputText value="#{listaProcRcb.precioUnitario.multiply(1.1)}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Importe total" class="formatoTablas" filterBy="#{listaProcRcb.importe}" filterMatchMode="contains">
+                                            <h:outputText value="#{listaProcRcb.importe}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                            <div>
+                                                <b:commandButton id="btnAgregarProveedor" value="" 
+                                                                 tooltip="#{listaProcRcb.propuestasList.size() > 0 ? 'Ver Detalle' : 'Agregar Proveedor'}" 
+                                                                 look="#{listaProcRcb.propuestasList.size() > 0 ? 'info' : 'primary'}" 
+                                                                 icon="#{listaProcRcb.propuestasList.size() > 0 ? 'search' : 'plus'}" 
+                                                                 iconAlign="right"
+                                                                 disabled="#{!propuestasBean.bsansiones}"
+                                                                 update="formProc" action="#{propuestasBean.agregarProveedor(listaProcRcb)}"/>
+                                            </div>                                                                       
+                                        </p:column>
+                                        <p:rowExpansion>
+                                            <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                                <h:panelGrid columns="1" >
+                                                    <h:outputText value="#{listaProcRcb.idRcbInsumos.descripcionInsumo}" />
+                                                </h:panelGrid>
+                                            </p:panel>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:separator/>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg3" minHeight="70" modal="true" 
+                                          width="70%" >
+                                    <p:panelGrid>
+                                        <h:outputLabel value="El procedimiento ya tiene almacenada propuestas para las claves ¿Desea borrar la información y cargar la nueva?"/>
+                                    </p:panelGrid>
+                                    <p:separator/>
+                                    <div style="display:block; text-align:right">
+                                        <b:buttonGroup>
+                                            <b:commandButton look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg3').hide();"
+                                                             action="#{propuestasBean.cargaPorArchivo}" update="formProc"/>
+                                            <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg3').hide();" />
+                                        </b:buttonGroup>
+                                    </div>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab id="tabPropB" title="Resultado de las propuestas" >
+                            <br></br>
+                            <p:messages id="idmensajeResultados" showDetail="false" autoUpdate="true" closable="true" 
+                                        rendered="#{propuestasBean.messageGuardar}" />
+                            <h:form id="formProcB">
+                                <b:panelGrid col-spans="2,10">
+                                    <h:outputText value="No. procedimiento:"/>
+                                    <b:inputText style="width: 35%;text-transform: uppercase" value="#{propuestasBean.numeroProcedimiento}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="formProcB"
+                                                     actionListener="#{propuestasBean.obtenerResultadoPropuestas}" />
+                                </div>
+                                <br></br>
+                                <p:separator/>
+                                <p:dataTable id="tablaPropuestas" var="listaPropuestas" value="#{propuestasBean.listaPropuestasDTO}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                             filteredValue="#{propuestasBean.listaPropuestasDTOFilter}"
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="10,15,20">
+                                    <f:facet name="header">
+                                        Propuestas
+                                        <p:commandButton id="toggler" type="button" value="Columnas" style="float:right" icon="ui-icon-calculator" />
+                                        <p:columnToggler datasource="tablaPropuestas" trigger="toggler" />
+                                    </f:facet>
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaPropuestas" fileName="propuestas" />
+                                        </h:commandLink>                                
+                                    </f:facet>
+                                    <p:column style="width:30px"> 
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="ID" class="formatoTablas" filterBy="#{listaPropuestas.procedimientoRcb.idProcedimientoRcb}" filterMatchMode="contains"> 
+                                        <h:outputText value="#{listaPropuestas.procedimientoRcb.idProcedimientoRcb}" />
+                                    </p:column>
+                                    <p:column headerText="Clave" class="formatoTablas" filterBy="#{listaPropuestas.procedimientoRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.procedimientoRcb.idRcbInsumos.claveInsumo}" />
+                                    </p:column>
+                                    <p:column headerText="Estatus" class="formatoTablas" filterBy="#{listaPropuestas.desierta}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.desierta}" />
+                                    </p:column>
+                                    <p:column headerText="Proveedor" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.idInsumo.clave}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.propuestas.idProveedor.nombreProveedor}" />
+                                    </p:column>
+                                    <p:column headerText="Cantidad máxima adjudicada" class="formatoTablas" filterBy="#{listaPropuestas.procedimientoRcb.cantidadPiezas}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.procedimientoRcb.cantidadPiezas}" />
+                                    </p:column>
+                                    <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{listaPropuestas.propuestas.precioUnitario}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.propuestas.precioUnitario}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Descuento otorgado" class="formatoTablas" filterBy="#{listaPropuestas.propuestas.descuentoOtorgado}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.propuestas.descuentoOtorgado}" />
+                                    </p:column>
+                                    <p:column headerText="Precio unitario con descuento" class="formatoTablas" filterBy="#{listaPropuestas.propuestas.precioUnitarioDescuento}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.propuestas.precioUnitarioDescuento}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Importe total" class="formatoTablas" filterBy="#{listaPropuestas.propuestas.importe}" filterMatchMode="contains">
+                                        <h:outputText value="#{listaPropuestas.propuestas.importe}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{listaPropuestas.procedimientoRcb.idRcbInsumos.descripcionInsumo}" />
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                    <br/>
+                    <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{propuestasBean.mensajeBorrar}" />
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.presentacionPropuestas}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-25T15:56:37 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReporteEntrdasDevoluciones" pageWidth="1450" pageHeight="555" orientation="Landscape" columnWidth="1450" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e153a05a-4c2f-4c5f-b0f3-919c5b4faf67">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="proveedor" class="java.lang.String"/>
+	<field name="contrato" class="java.lang.String"/>
+	<field name="insumo" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="procediminento" class="java.lang.String"/>
+	<field name="convenio" class="java.lang.String"/>
+	<field name="numeroOrden" class="java.lang.String"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="cantidadAdjudicada" class="java.lang.Integer"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaIngreso" class="java.util.Date"/>
+	<field name="cantidadIngresada" class="java.lang.Integer"/>
+	<field name="cantidadCancelada" class="java.lang.Integer"/>
+	<field name="cantidadPendiente" class="java.lang.Integer"/>
+	<field name="numeroProveedor" class="java.lang.Integer"/>
+	<field name="fechaGenerado" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}==1]]></printWhenExpression>
+			<staticText>
+				<reportElement mode="Opaque" x="363" y="0" width="82" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="9e0d8e1f-d180-44b3-b9a9-599a494044fc"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="0" width="77" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="02d6d140-62ce-425b-a054-a4caa1535edf"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="521" y="0" width="77" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="41116184-8051-4665-bff7-faafc5b1bb8b"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Articulo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="598" y="0" width="77" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="04585608-3262-4e7b-906b-78e8a751c137"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="445" y="0" width="76" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="d4ad1203-1907-46ed-a820-24e5a36c066c"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Procedimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="204" y="0" width="77" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="13c4f087-3397-4e24-93c8-40e7955d8703"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Oficio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="675" y="0" width="77" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="b2383e90-0945-44c0-a622-8ed50a08e705"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="752" y="0" width="59" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="61ce491d-0a6d-4554-b5d2-8e64b8061ac1"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad adjudicada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="811" y="0" width="77" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="b03c72c8-c1ff-4e76-8332-3fb9fd9416de"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="888" y="0" width="77" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="6a8c697a-3005-4781-84ca-b88dd62e899b"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1035" y="0" width="56" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="81a8ed30-11be-4bea-9668-77af53cff0f6"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad ingresada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1168" y="0" width="63" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="8c2947f2-ca83-42f7-b262-23fdd530bc4b"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad cancelada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1231" y="0" width="60" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="72f23ecf-55dd-42bb-ae82-eea9e60d1505"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad pendiente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="128" y="0" width="76" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="52ad1ed3-1919-4d39-9928-0365f1042dea"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Convenio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="965" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="f131a05c-51b0-40c3-bb14-c8e64bbd0dfe"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad programada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="48" height="30" forecolor="#FFFCFC" backcolor="#030202" uuid="e40c997e-ec3c-4841-b29a-a7bcdcdcca47">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Almacen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="281" y="0" width="82" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="7c5419b0-efd9-490f-8165-b5f1eb2fb1d4"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1091" y="0" width="76" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="5554f442-1fd2-44f8-9c22-ee3f96684f6f"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reprogramado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1291" y="0" width="62" height="30" forecolor="#FFFFFF" backcolor="#050202" uuid="5f9ca4f3-067b-46b1-a531-994b6ae8143f"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#080707"/>
+					<leftPen lineWidth="1.0" lineColor="#080707"/>
+					<bottomPen lineWidth="1.0" lineColor="#080707"/>
+					<rightPen lineWidth="1.0" lineColor="#080707"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Generado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="361" y="0" width="82" height="30" uuid="ddd7fb6d-bd55-4751-85f5-bd97a31e86a4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="77" height="30" uuid="2bbaa296-7dba-4755-8c35-0195864bb0c5"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{contrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="519" y="0" width="79" height="30" uuid="1c1bc0cb-4392-4805-87cf-e4d58b53180c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{insumo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="598" y="0" width="77" height="30" uuid="7072878a-d380-45ce-9894-acb2f2de984f"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="443" y="0" width="76" height="30" uuid="4988fba3-e233-492f-bddf-83a6fb3b37e9"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{procediminento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="0" width="77" height="30" uuid="e826600f-ccf7-4eee-b89d-bd035462e529"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{numeroOrden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="675" y="0" width="77" height="30" uuid="632b1fd9-9d02-42b5-9f8f-b4a021015b9a"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("$ ###,###,##0.00").format($F{precioUnitario})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="752" y="0" width="59" height="30" uuid="8370b1f2-1540-4083-a204-80bfa72501f6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadAdjudicada})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="811" y="0" width="77" height="30" uuid="a2e6f4dc-8354-4c87-aa05-6bc9d4998dd3"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="888" y="0" width="77" height="30" uuid="177ef709-56f7-43de-8985-2aabae221982"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaFinal})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1035" y="0" width="56" height="30" uuid="312831ad-206c-42c5-9519-f618a55a8176"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadIngresada})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1168" y="0" width="63" height="30" uuid="0cca4a5f-4c73-4f94-b5fd-b8ff847707fa"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadCancelada})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1231" y="0" width="60" height="30" uuid="4fcc54ed-9616-4aa4-91a0-b44541403b06">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadPendiente})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="0" width="77" height="30" uuid="2241f7c4-4b3b-423e-929d-38d0d11244db"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{convenio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="965" y="0" width="70" height="30" uuid="1edcdf6e-82be-45c9-82fe-fab2be2f61ac"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{cantidadAdjudicada})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="50" height="30" uuid="914c6f3e-c434-4b06-9a22-7223178e967c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[1]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="0" width="80" height="30" uuid="98be4525-dafa-4831-a671-2bca37bbc5f0"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{numeroProveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1091" y="0" width="76" height="30" uuid="dbdab8d1-be63-46bd-8123-e0f27fb4b629"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1292" y="0" width="61" height="30" uuid="19c079c8-a9b2-4447-97a9-4180be3a9ce7"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a").format($F{fechaGenerado})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

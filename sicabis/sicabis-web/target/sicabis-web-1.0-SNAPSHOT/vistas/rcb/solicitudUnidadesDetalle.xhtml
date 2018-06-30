@@ -1,0 +1,307 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <h:outputStylesheet name="css/rcb.css" />
+            <div id="contenido" class="ui-fluid">
+                <h:form id="breadCrumb">
+                    <p:breadCrumb>
+                        <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                        <p:menuitem value="Solicitud de insumos para la salud" disabled="true" />
+                        <p:menuitem value="Detalle de solicitud " disabled="true"/>
+                    </p:breadCrumb>
+                </h:form>
+                <h2>Detalle de solicitud </h2>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+                <p:separator />
+                <h:form id='formSol' style="width:100%; height: 100%" > 
+                    <!--tab NuevoRcb RCB +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                    <br></br>
+                    <h:panelGroup id="pnlNumSolicitud" style="display:block; text-align:center">
+                        <p:outputLabel value="#{solicitudesUnidadesBeanDetalle.solicitud.numeroSolicitud}" style="font-size:1.5em;"/> 
+                    </h:panelGroup>
+                    <br></br>
+                    <p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+                    <p:panelGrid id="pnlSolicitud" columns="4" styleClass="ui-panelgrid-blank"  columnClasses="ui-grid-col-2,ui-grid-col-5,ui-grid-col-2,ui-grid-col-7" layout="grid"> 
+                        <p:outputLabel for="selectDelegacion" value="Delegación:" />  
+                        <p:selectOneMenu id ="selectDelegacion" value="#{solicitudesUnidadesBeanDetalle.delegacionSeleccionada.idDelegacion}"
+                                         required="true" requiredMessage="-Seleccione una Delegación"
+                                         disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarSelDelegacion}"
+                                         >
+                            <f:selectItem itemValue="" itemLabel="Selecciona" />
+                            <f:selectItems value="#{solicitudesUnidadesBeanDetalle.listaDelegaciones}" var="delegacion"
+                                           itemValue="#{delegacion.idDelegacion}"  itemLabel="#{delegacion.nombreDelegacion}"/>
+                        </p:selectOneMenu>                                  
+                        <p:outputLabel for="selectUnidadMedica" value="Unidad médica:" />                                 
+                        <p:selectOneMenu id ="selectUnidadMedica" value="#{solicitudesUnidadesBeanDetalle.solicitud.idUnidadesMedicas.idUnidadesMedicas}"
+                                         required="true" requiredMessage="-Seleccione Unidad Médica" 
+                                         disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarSelUnidadMedica}"
+                                         >
+                            <f:selectItem itemValue="" itemLabel="Selecciona" />
+                            <f:selectItems value="#{solicitudesUnidadesBeanDetalle.delegacionSeleccionada.unidadesMedicasList}" var="unidadMedica"
+                                           itemValue="#{unidadMedica.idUnidadesMedicas}"  itemLabel="#{unidadMedica.nombre}"/>
+                        </p:selectOneMenu> 
+                        <p:outputLabel for ="inpPeriodoSol" value="Periodo a solicitar:" />  
+                        <p:inputText id= "inpPeriodoSol" value="#{solicitudesUnidadesBeanDetalle.solicitud.periodoSolicitar}"
+                                     required="true" requiredMessage="-Ingrese un periodo" styleClass="tamanioCampos"
+                                     disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarInpPeriodo}"
+                                     />    
+                        <p:outputLabel for="selecSolicitud" value="Tipo de solicitud:" />  
+                        <p:selectOneMenu id ="selecSolicitud" value="#{solicitudesUnidadesBeanDetalle.idTiposolSeleccioanda}"
+                                         required="true" requiredMessage="-Seleccione tipo de solicitud" styleClass="" disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarSelidTipoSolicitud}">
+                            <p:ajax event="valueChange" listener="#{solicitudesUnidadesBeanDetalle.cargarTipoSolicitud()}" update="selecSolicitud" process="selecSolicitud"/>
+                            <f:selectItem itemValue="" itemLabel="Selecciona" />
+                            <f:selectItems value="#{solicitudesUnidadesBeanDetalle.listaTipoSolicitud}" var="tipoSol"
+                                           itemValue="#{tipoSol.idTipoSolicitud}"  itemLabel="#{tipoSol.descripcion}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for ="selectArea" value="Subdirección:" />  
+                        <p:selectOneMenu id ="selectArea" value="#{solicitudesUnidadesBeanDetalle.solicitud.idArea.idArea}"
+                                         required="true" requiredMessage="-Seleccione subdirección" styleClass="" disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarSelArea}">
+                            <f:selectItem itemValue="" itemLabel="Selecciona" />
+                            <f:selectItems value="#{solicitudesUnidadesBeanDetalle.listaAreas}" var="area"
+                                           itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                        </p:selectOneMenu>
+
+
+                    </p:panelGrid>                            
+                    <br></br>
+                    <h:panelGrid  id="pnlPacientesInsumos" columns="1" style="width: 100%;" rendered="#{solicitudesUnidadesBeanDetalle.muestrapnlPacientesInsumos}">
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:outputText  value="Lista de pacientes" />
+
+                            <h:panelGroup style="display:block; text-align:right">
+                                <p:commandLink value="Cargar periodo anterior" 
+                                               actionListener="#{solicitudesUnidadesBeanDetalle.cargarPeriodoAnterior}" 
+                                               update="tablaPacienteNumInsumos messages" process="@this"
+                                               styleClass="btn btn-info"
+                                               disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnCargarPeriodoAnterior}"
+                                               oncomplete="PF('wvTablaPacienteNumInsumos').filter()"
+                                               >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de cargar el periodo anterior, esta acción eliminara los pacientes seleccionados?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                                <p:commandLink value="Agregar paciente"  actionListener="#{solicitudesUnidadesBeanDetalle.seleccionaPaciente()}" process="@this"
+                                               styleClass="btn btn-primary" disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnAgregarPaciente}"                                           
+                                               >
+                                    <p:ajax event="dialogReturn" listener="#{solicitudesUnidadesBeanDetalle.actualizaPacienteInsumo}" 
+                                            update="tablaPacienteNumInsumos messages" oncomplete="PF('wvTablaPacienteNumInsumos').filter();"                                         
+                                            />
+                                </p:commandLink>
+                                <p:commandLink value="Eliminar Todo" 
+                                               actionListener="#{solicitudesUnidadesBeanDetalle.eliminarPacientes()}" 
+                                               update="tablaPacienteNumInsumos" process="@this"
+                                               styleClass="btn btn-danger"
+                                               disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnEliminarTodo}"
+                                               oncomplete="PF('wvTablaPacienteNumInsumos').filter();"
+                                               >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de eliminar la lista de pacientes?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <p:dataTable id="tablaPacienteNumInsumos" var="pacienteNumInsumo" value="#{solicitudesUnidadesBeanDetalle.listaPacientesInsumosDto}"
+                                     filteredValue="#{solicitudesUnidadesBeanDetalle.listaPacientesInsumosDtoFilter}"
+                                     widgetVar="wvTablaPacienteNumInsumos"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaPacienteNumInsumos" fileName="pacienteDetalle" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column filterBy="#{pacienteNumInsumo.paciente.nombre}"   
+                                      filterMatchMode="contains" headerText="Nombre" 
+                                      class="formatoTablas" style="width:10%">
+                                <h:inputHidden value="#{pacienteNumInsumo.idSolicitud}" />
+                                <h:outputText value="#{pacienteNumInsumo.paciente.nombre} #{pacienteNumInsumo.paciente.apaterno}" />
+                            </p:column>
+                            <p:column filterBy="#{pacienteNumInsumo.paciente.diagnostico}"   
+                                      filterMatchMode="contains" headerText="Diagnóstico" class="formatoTablas" style="width:15%"> 
+                                <h:outputText value="#{pacienteNumInsumo.paciente.diagnostico}" />
+                            </p:column>
+                            <p:column headerText="Genero" class="formatoTablas" style="width:7%"> 
+                                <h:outputText value="#{pacienteNumInsumo.paciente.genero == 1 ? 'M' : 'H'}" />
+                            </p:column>
+                            <p:column headerText="Expediente" class="formatoTablas" > 
+                                <h:outputText value="#{pacienteNumInsumo.paciente.expedinete}" />
+                            </p:column>
+                            <p:column headerText="Insumos solicitados" class="formatoTablas" > 
+                                <h:outputText value="#{pacienteNumInsumo.insumosSolicitados}" />
+                            </p:column>        
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center" class="" exportable="false"> 
+                                <p:commandButton id="btnAgregarInsumo" value=""  icon="fa fa-fw fa-edit" iconPos="left"
+                                                 styleClass="customModificar btn-primary" 
+                                                 style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                 disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnModificar}"
+                                                 actionListener="#{solicitudesUnidadesBeanDetalle.seleccionaPacienteAmodificar(pacienteNumInsumo)}"
+                                                 process="@this" >
+                                    <p:ajax event="dialogReturn" listener="#{solicitudesUnidadesBeanDetalle.pacienteModificado}" update="tablaPacienteNumInsumos" 
+                                            oncomplete="PF('wvTablaPacienteNumInsumos').filter();"/>
+                                </p:commandButton>
+                                <p:tooltip for="btnAgregarInsumo" value="Modificar Paciente" position="top"/> 
+
+                                <p:commandButton id="btnEliminarInsumo" value="" icon="fa fa-trash-o" iconPos="center" 
+                                                 styleClass="customEliminar btn-danger" 
+                                                 style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                 disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnEliminar}"
+                                                 actionListener="#{solicitudesUnidadesBeanDetalle.eliminarPaciente(pacienteNumInsumo)}" 
+                                                 update="tablaPacienteNumInsumos" process="@this"
+                                                 oncomplete="PF('wvTablaPacienteNumInsumos').filter();"
+                                                 >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de eliminar el Paciente?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:tooltip for="btnEliminarInsumo" value="Eliminar paciente" position="top"/> 
+                            </p:column>
+                        </p:dataTable>  
+                        <br></br>
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:panelGroup style="display:block; text-align:right">
+                                <b:commandButton value="Enviar"  look="primary" actionListener="#{solicitudesUnidadesBeanDetalle.guardarSolicitud}"
+                                                 update="formSol" icon="floppy-disk" 
+                                                 rendered="#{solicitudesUnidadesBeanDetalle.mostrarBtnGuardar and !loginBean.accesos.solicitudInsumosParaLaSaludC}"/>
+                                <b:commandButton value="Actualizar"  look="primary" actionListener="#{solicitudesUnidadesBeanDetalle.actualizarSolictud()}"
+                                                 process="selecSolicitud"
+                                                 update="formSol" icon="floppy-disk" 
+                                                 rendered="#{solicitudesUnidadesBeanDetalle.mostrarBtnActualizar and !loginBean.accesos.solicitudInsumosParaLaSaludC}"/>
+
+
+                            </h:panelGroup>                            
+                        </h:panelGrid>                            
+                    </h:panelGrid>     
+
+                    <h:panelGrid  id="pnlInsumos" columns="1" style="width: 100%;" rendered="#{solicitudesUnidadesBeanDetalle.muestrapnlInsumos}">
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:outputText  value="Lista de Insumos" />
+
+                            <h:panelGroup style="display:block; text-align:right">
+                                <p:commandLink value="Cargar periodo anterior" 
+                                               actionListener="#{solicitudesUnidadesBeanDetalle.cargarPeriodoAnteriorInsumo}" 
+                                               update="tablaNumInsumos messages" process="@this"
+                                               styleClass="btn btn-info"
+                                               disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnCargarPeriodoAnteriorInsumo}"
+                                               oncomplete="PF('wvTablaNumInsumos').filter()"
+                                               >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de cargar el periodo anterior, esta acción eliminara los pacientes seleccionados?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                                <p:commandLink value="Agregar insumo"  actionListener="#{solicitudesUnidadesBeanDetalle.seleccionaInsumo()}" process="@this"
+                                               styleClass="btn btn-primary" disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnAgregarPacienteInsumo}"                                           
+                                               >
+                                    <p:ajax event="dialogReturn" listener="#{solicitudesUnidadesBeanDetalle.actualizaInsumo}" 
+                                            update="tablaNumInsumos messages" oncomplete="PF('wvTablaNumInsumos').filter();"                                         
+                                            />
+                                </p:commandLink>
+                                <p:commandLink value="Eliminar todo" 
+                                               actionListener="#{solicitudesUnidadesBeanDetalle.eliminarInsumos}" 
+                                               update="tablaNumInsumos" process="@this"
+                                               styleClass="btn btn-danger"
+                                               disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnEliminarTodoInsumo}"
+                                               oncomplete="PF('wvTablaNumInsumos').filter();"
+                                               >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de eliminar la lista de pacientes?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <p:dataTable id="tablaNumInsumos" var="numInsumo" value="#{solicitudesUnidadesBeanDetalle.listaInsumosDto}"
+                                     filteredValue="#{solicitudesUnidadesBeanDetalle.listaInsumosDtoFilter}"
+                                     widgetVar="wvTablaNumInsumos"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaNumInsumos" fileName="insumoDetalle" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px" exportable="false"> 
+                                <p:rowToggler />
+                            </p:column>    
+                            <p:column filterBy="#{numInsumo.idInsumo.clave}"   
+                                      filterMatchMode="contains" headerText="Clave" 
+                                      class="formatoTablas" >
+                                <h:inputHidden value="#{numInsumo.idSolicitudesInsumosPacientes}" />
+                                <h:outputText value="#{numInsumo.idInsumo.clave}" />
+                            </p:column>
+                            <p:column filterBy="#{numInsumo.idInsumo.descripcion}"   
+                                      filterMatchMode="contains" headerText="Descripción" class="formatoTablas" > 
+                                <h:outputText value="#{numInsumo.idInsumo.descripcion}">
+                                    <f:converter converterId="recortarCadena"/>  
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Presentación" class="formatoTablas" > 
+                                <h:outputText value="#{numInsumo.idInsumo.idUnidadPieza.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Cantidad" class="formatoTablas" > 
+                                <h:outputText value="#{numInsumo.cantidad}" />
+                            </p:column>        
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center" class="" exportable="false"> 
+                                <p:commandButton id="btnAgregarInsumo" value=""  icon="fa fa-fw fa-edit" iconPos="left"
+                                                 styleClass="customModificar btn-primary" 
+                                                 style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                 disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnModificarInsumo and !loginBean.accesos.solicitudInsumosParaLaSaludC}"
+                                                 actionListener="#{solicitudesUnidadesBeanDetalle.seleccionaInsumoAmodificar(numInsumo)}"
+                                                 process="@this" >
+                                    <p:ajax event="dialogReturn" listener="#{solicitudesUnidadesBeanDetalle.insumoModificado}" update="tablaNumInsumos" 
+                                            oncomplete="PF('wvTablaNumInsumos').filter();"/>
+                                </p:commandButton>
+                                <p:tooltip for="btnAgregarInsumo" value="Modificar insumo" position="top"/> 
+
+                                <p:commandButton id="btnEliminarInsumo" value="" icon="fa fa-trash-o" iconPos="center" 
+                                                 styleClass="customEliminar btn-danger" 
+                                                 style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                 disabled="#{solicitudesUnidadesBeanDetalle.desHabilitarBtnEliminarInsumo and !loginBean.accesos.solicitudInsumosParaLaSaludC}"
+                                                 actionListener="#{solicitudesUnidadesBeanDetalle.eliminarInsumo(numInsumo)}" 
+                                                 update="tablaNumInsumos" process="@this"
+                                                 oncomplete="PF('wvTablaNumInsumos').filter();"
+                                                 >
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de eliminar el paciente?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:tooltip for="btnEliminarInsumo" value="Eliminar paciente" position="top"/> 
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{numInsumo.idInsumo.descripcion}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>  
+                        <br></br>
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:panelGroup style="display:block; text-align:right">
+                                <b:commandButton value="Enviar"  look="primary" actionListener="#{solicitudesUnidadesBeanDetalle.guardarSolicitudInsumos}"
+                                                 update="formSol" icon="floppy-disk" 
+                                                 rendered="#{solicitudesUnidadesBeanDetalle.mostrarBtnGuardar and !loginBean.accesos.solicitudInsumosParaLaSaludC}"/>
+
+                            </h:panelGroup>                            
+                        </h:panelGrid>                            
+                    </h:panelGrid>  
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                        <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                    </p:confirmDialog>
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

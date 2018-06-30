@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.avanceSurtimiento}">
+                <div id="contenido">
+                    <h:outputScript library="js" name="jquery.min.js" />
+                    <h:outputScript library="js" name="raphael-min.js" />
+                    <h:outputScript library="js" name="jquery.mousewheel.min.js" />
+                    <h:outputScript library="js" name="jquery.mapael.js" />
+                    <h:outputScript library="js" name="index.js" />
+                    <h:outputLabel id="listaMapa" styleClass="hide" value="#{alertasOperativasBean.datosEstadosFormatoJSON}"/>
+                    <!--la seccion con los styleClass maparea2 y map dibujan el mapa-->
+                    <h2 style="text-align: center;color:blue">Avance surtimiento real vs DPN </h2>
+                    <br></br>
+                    <b:panelGrid colSpans="8,4" >
+                        <b:panelGrid colSpans="12"  styleClass="maparea2">
+                            <b:panelGrid colSpans="12" styleClass="map">
+                            </b:panelGrid>
+                        </b:panelGrid>
+                        <p:dataTable var="color" style="width: 95%;" value="#{alertasOperativasBean.listacolores}">
+                            <f:facet name="header">
+                                República Mexicana - Avance surtimiento real vs DPN
+                            </f:facet>
+                            <p:column headerText="Porcentajes"  > 
+                                <h:outputText value="#{alertasOperativasBean.truncar(color.porcentajeInicial)} - #{alertasOperativasBean.truncar(color.porcentajeFinal)} %" />
+                            </p:column>
+                            <p:column headerText="Color">
+                                <b:well style=" margin: 0 auto; width: 5px; background-color: #{color.hexColor}" size="sm" />
+                            </p:column>
+                        </p:dataTable>
+                    </b:panelGrid>
+                    <br></br>
+                    <h:form id="formaTabla">
+                        <p:dataTable var="listaDatosMapa" value="#{alertasOperativasBean.alertaList}" style="margin-bottom:40px;"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}" >
+                            <p:column headerText="Delegación" class="formatoTablas" sortBy="#{listaDatosMapa.estado}">
+                                <h:outputText value="#{listaDatosMapa.estado}" />
+                            </p:column>
+                            <p:column headerText="#UMUs" class="formatoTablas" sortBy="#{listaDatosMapa.umu}">
+                                <h:outputText value="#{listaDatosMapa.umu}" />
+                            </p:column>
+                            <p:column headerText="Claves" class="formatoTablas" sortBy="#{listaDatosMapa.claves}">
+                                <h:outputText value="#{listaDatosMapa.claves}" />
+                            </p:column>
+                            <p:column headerText="Piezas" class="formatoTablas" sortBy="#{listaDatosMapa.piezas}">
+                                <h:outputText value="#{listaDatosMapa.piezas}" />
+                            </p:column>
+                            <p:column headerText="Ordinarios" class="formatoTablas" sortBy="#{listaDatosMapa.ordinarios}">
+                                <h:outputText value="#{listaDatosMapa.ordinarios}" />
+                            </p:column>
+                            <p:column headerText="Extraordinarios" class="formatoTablas" sortBy="#{listaDatosMapa.extraodinarios}">
+                                <h:outputText value="#{listaDatosMapa.extraodinarios}" />
+                            </p:column>
+                            <p:column headerText="Ordinarios (%)" class="formatoTablas" sortBy="#{listaDatosMapa.porcentajeOrdinario}">
+                                <h:outputText value="#{listaDatosMapa.porcentajeOrdinario}" >
+                                    <f:convertNumber pattern="#0.00" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Extraordinarios (%)" class="formatoTablas" sortBy="#{listaDatosMapa.porcentajeExtraordinario}">
+                                <h:outputText value="#{listaDatosMapa.porcentajeExtraordinario}" >
+                                    <f:convertNumber pattern="#0.00" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Disponible (%)" class="formatoTablas" sortBy="#{listaDatosMapa.disponible}" >
+                                <h:outputText value="#{listaDatosMapa.disponible}" >
+                                    <f:convertNumber pattern="#0.00" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <br></br>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.avanceSurtimiento}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

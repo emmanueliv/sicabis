@@ -1,0 +1,5 @@
+com\issste\sicabis\ejb\sipeav\modelo\Sicabis_.class
+com\issste\sicabis\ejb\sipeav\DAO\VwSicabisImplement.class
+com\issste\sicabis\ejb\sipeav\modelo\Sicabis.class
+com\issste\sicabis\ejb\sipeav\DAO\VwSicabis.class
+com\issste\sicabis\ejb\sipeav\ln\VwSicabisService.class

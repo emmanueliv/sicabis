@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.catalogos}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogos" url="menuCatalogos.xhtml" disabled="true"/>
+                        </p:breadCrumb> 
+                    </h:form>
+                    <h2>Catálogos</h2>
+                    <h:form id="frmCat">
+                        <b:panelGrid colSpans="3,3,3,3" style="text-align: center ; width: 100%;">
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.almacenes}">
+                                <p:graphicImage library="images" name="catalog.png" />
+                                <p:commandLink value="Almacenes" style="color: #5bc0de;"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catAlmacenes')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.areas}">
+                                <p:graphicImage library="images" name="catalog.png" />
+                                <p:commandLink value="Areas" style="color: #5bc0de;"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catAreas')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.caracterProcedimiento}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Carácter procedimiento" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catCaracterProcedimientos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.clasificaciones}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Clasificaciones" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catClasificaciones')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.clasificacionImportancia}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Clasificación Importancia" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catClasificacionImportancia')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.clasificacionProcedimientos}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Clasificación procedimientos" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catClasificacionProcedimientos')}"/>
+                            </p:panelGrid>
+
+
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.almacenes}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Clausulados" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catClausulados')}"/>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.compradores}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Compradores" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catCompradores')}" />
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.compradores}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Condiciones de pago" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catCondicionesPago')}" />
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.configuraciones}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Configuraciones" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catConfiguraciones')}" immediate="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.configuraDpn}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Configuración Alertas DPN" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catConfiguraDpn')}" immediate="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.contactos}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Contactos" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catContactos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.destinos}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Destinos" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catDestinos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.detalleIM}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Detalle Investigación de Mercado" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catDetalleIM')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.estatus}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Estatus" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catEstatus')}" />
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.fabricantes}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Fabricantes" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('fabricantes')}" immediate="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.fundamentosLegales}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Fundamentos legales" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catArticulos')}" immediate="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.grupos}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Grupos" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catGrupos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.gruposTerapeuticos}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Grupos terapeuticos" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catGruposTerapeuticos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.pacientes}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Pacientes" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catPacientes')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.partidasPresupuestales}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Partidas presupuestales" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catPartidas')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.proveedores}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Presentaciones" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catPresentaciones')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.proveedores}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Proveedores" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('proveedores')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tareas}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tareas" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTareas')}" />
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposCompra}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de compra" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoCompras')}" immediate="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposContrato}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de contrato" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoContratos')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposConvenio}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de convenio" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTiposConvenios')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposDocumento}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de documento" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTiposDocumento')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposProcedimiento}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de procedimiento" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoProcedimiento')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.tiposSolicitud}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de solicitud" style="color: #5bc0de" 
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoSolicitudes')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.unidadesMedicas}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Unidades médicas" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catUnidadMedica')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="#{loginBean.accesos.colorPorcentaje}">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Color Porcentaje" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catColorPorcentaje')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="false">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipo Usuarios" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoUsuarios')}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" style="margin-bottom: 30px; width: 100%"
+                                         rendered="false">
+                                <p:graphicImage library="images" name="catalog.png"/>
+                                <p:commandLink value="Tipos de proveedor" style="color: #5bc0de"
+                                               actionListener="#{menuCatalogosBean.redirectCatalogo('catTipoProveedor')}" />
+                            </p:panelGrid>
+                        </b:panelGrid>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.catalogos}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

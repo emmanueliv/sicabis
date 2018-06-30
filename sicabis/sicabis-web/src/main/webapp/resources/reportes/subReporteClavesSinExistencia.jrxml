@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-22T18:58:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReporteClavesSinExistencia" pageWidth="860" pageHeight="555" orientation="Landscape" columnWidth="860" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4e520197-1fe3-4995-84b3-1f00a5fcc522">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="clave" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="tipoClave" class="java.lang.String"/>
+	<field name="disponibleCenadi" class="java.lang.Integer"/>
+	<field name="diasInventario" class="java.math.BigDecimal"/>
+	<field name="DPN" class="java.math.BigDecimal"/>
+	<field name="ingresi" class="java.lang.Integer"/>
+	<field name="diasInventarioConsiderado" class="java.math.BigDecimal"/>
+	<field name="ingresoPendiente" class="java.math.BigDecimal"/>
+	<field name="numero" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}==1]]></printWhenExpression>
+			<staticText>
+				<reportElement mode="Opaque" x="47" y="0" width="100" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="1a69e600-708b-4058-a75b-94b6a35bf6f8"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="147" y="0" width="98" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="83855ddd-3c80-4512-b567-11064ec4de5f"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="245" y="0" width="98" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="5705c5c2-82bc-431a-8719-fdb90d49d964"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Clave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="343" y="0" width="98" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="547392fd-339c-4aa6-bbed-687912f4016b"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disponible en CENADI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="441" y="0" width="98" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="58d4068b-ccc2-45d9-8364-b65b6c51fda1"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Días de Inventario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="539" y="0" width="58" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="b2e2c515-39ac-494e-bb05-eaf972620e6d"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DPN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="657" y="0" width="70" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="9a95b1c5-6ff0-40c0-8371-362b2b129889"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingreso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="727" y="0" width="123" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="b04c95d2-18b0-4edc-adae-ae380f972aed"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Días de Inventario considerando Ingreso pendiente ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="597" y="0" width="60" height="40" forecolor="#FFFFFF" backcolor="#0A0A0A" uuid="e12c13e5-dc07-4944-b4ac-40dc4dd20e4d"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingreso Pendiente(Piezas)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="47" height="40" forecolor="#FFFFFF" backcolor="#030202" uuid="792dd664-84b3-419e-9408-3c32a5ff6f0a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="47" y="0" width="100" height="30" uuid="963e771a-9868-4a1b-91c4-cc03b408b8f9"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="0" width="98" height="30" uuid="8e170be2-9a92-4c6e-8459-e0127ecdba0f"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="245" y="0" width="98" height="30" uuid="5e6d93e5-2023-44d8-85f5-850627fe7e70"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tipoClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="343" y="0" width="98" height="30" uuid="96d1f14f-fe80-43a6-8aa5-59e2c4a5d2d4"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{disponibleCenadi})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="441" y="0" width="98" height="30" uuid="76b831ce-f423-46a5-8a37-ac3d4b9321c5"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{diasInventario})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="539" y="0" width="58" height="30" uuid="506f8104-2db2-4018-9d44-0311b00de2a9"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{DPN})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="657" y="0" width="70" height="30" uuid="bb72b398-feb6-4af5-a3d6-079fdad5d2eb"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{ingresi})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="727" y="0" width="123" height="30" uuid="b9810462-875c-4ee8-9dfd-bab8cc42b2c8"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{diasInventarioConsiderado})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="597" y="0" width="60" height="30" uuid="df98f2b0-2e53-44ac-b471-ea4633a68b7a"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###.##").format($F{ingresoPendiente})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="47" height="30" uuid="9fafe815-26c2-4047-803f-bb7a579421e0"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

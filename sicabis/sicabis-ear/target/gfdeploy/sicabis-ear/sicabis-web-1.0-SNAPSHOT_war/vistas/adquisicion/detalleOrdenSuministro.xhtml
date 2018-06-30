@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.generacionPreOrdenSuministro || loginBean.accesos.ordenesSuministro}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Orden Suministro" url="ordenSuministro.xhtml" />
+                            <p:menuitem value="Detalle Orden Suministro" url="detalleOrdenSuministro.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Orden de suministro</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <br></br>
+                    <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{detalleOrdenSuministroBean.messageGuardar}" />
+                    <h:form id="formOrden">
+                        <b:panelGrid col-spans="2,10">
+                            <h:outputText value="No. Contrato:"/>
+                            <b:inputText id="numContrato" style="width: 35%" value="#{detalleOrdenSuministroBean.numeroContrato}" disabled="true" />
+                        </b:panelGrid>
+                        <br></br>
+                        <p:separator/>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Id Orden de suministro:"/>
+                            <b:inputText id="idOrden" value="#{detalleOrdenSuministroBean.ordenSuministro.idOrdenSuministro}" disabled="true" />
+                            <h:outputText value="No. Orden de suministro:"/>
+                            <b:inputText id="numOrden" value="#{detalleOrdenSuministroBean.ordenSuministro.numeroOrden}" disabled="#{!detalleOrdenSuministroBean.bedita}" />
+
+                            <h:outputText value="Fecha de orden"/>
+                            <p:calendar id="fechaOrden" style="width: 100%; height: 34px;" value="#{detalleOrdenSuministroBean.ordenSuministro.fechaOrden}" 
+                                        pattern="dd/MM/yyyy" mask="true" showOn="button" disabled="#{!detalleOrdenSuministroBean.bedita}" />
+                            <h:outputText value="Estatus:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectEstatus" disabled="#{detalleOrdenSuministroBean.bpreorden}"
+                                             value="#{detalleOrdenSuministroBean.idEstatus}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleOrdenSuministroBean.listaEstatus}" var="estatus"
+                                               itemValue="#{estatus.idEstatus}"  itemLabel="#{estatus.nombre}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br></br>
+                        <p:fieldset style="margin-bottom:20px; " >
+                            <b:panelGrid colSpans="2,4,2,4">
+                                <h:outputText value="Nombre proveedor:"/>
+                                <b:inputText id="nomProv" value="#{detalleOrdenSuministroBean.proveedores.nombreProveedor}" disabled="true" />
+                                <h:outputText value="R.F.C.:"/>
+                                <b:inputText id="rfcProv" value="#{detalleOrdenSuministroBean.proveedores.rfc}" disabled="true" />
+
+                                <h:outputText value="Dirección:"/>
+                                <b:inputText id="dirProv" value="#{detalleOrdenSuministroBean.proveedores.direccion}" disabled="true" />
+                                <h:outputText value="Teléfono:"/>
+                                <b:inputText id="telProv" value="#{detalleOrdenSuministroBean.proveedores.numero}" disabled="true" />
+                            </b:panelGrid>
+                        </p:fieldset>
+                        <br></br>
+                        <p:messages id="idmensajeTabla" showDetail="false" autoUpdate="true" closable="true" />
+                        <p:remoteCommand name="onCellEdit" update="tablaDetalleOrden" />
+                        <p:dataTable id="tablaDetalleOrden" var="detalleOrden" value="#{detalleOrdenSuministroBean.listaDetalleOrden}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                     filteredValue="#{detalleOrdenSuministroBean.listaDetalleOrdenFilter}"
+                                     rowKey="#{detalleOrden.idFalloProcedimientoRcb.idFalloProcedimientoRcb}"
+                                     rows="10" editable="#{detalleOrdenSuministroBean.bedita}" editMode="cell"
+                                     paginator="true" 
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+
+                            <p:ajax event="cellEdit" listener="#{detalleOrdenSuministroBean.validaCampos}" oncomplete="onCellEdit()" update=":formOrden:idmensajeTabla" />
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Id" class="formatoTablas" width="3%">
+                                <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.idFalloProcedimientoRcb}" />
+                            </p:column>
+                            <p:column headerText="Clave" class="formatoTablas" width="8%">
+                                <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" />
+                            </p:column>
+                            <p:column headerText="Descripción" class="formatoTablas" width="10%">
+                                <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion.substring(0,20)}" />
+                            </p:column>
+                            <p:column headerText="Cantidad contrato" class="formatoTablas" width="8%">
+                                <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.cantidadModificada + detalleOrden.idFalloProcedimientoRcb.cantidadAgregadaConvenio}" />
+                            </p:column>
+                            <p:column headerText="Cantidad suministrada del contrato" class="formatoTablas" width="8%">
+                                <h:outputText value="#{detalleOrden.cantidadSuministrada}" />
+                            </p:column>
+                            <p:column headerText="Disponible del contrato" class="formatoTablas" width="7%">
+                                <h:outputText value="#{detalleOrden.totalCancelado}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario" class="formatoTablas" width="7%">
+                                <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.precioUnitario}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cantidad a suministrar" class="formatoTablas" width="8%">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{detalleOrden.cantidadSuministrar}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber decimalPlaces="0" maxValue="#{detalleOrden.totalCancelado}" minValue="1"
+                                                       value="#{detalleOrden.cantidadSuministrar}" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Importe total" class="formatoTablas" width="8%">
+                                <h:outputText value="#{detalleOrden.importe}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha inicial" class="formatoTablas" width="10%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{detalleOrden.fechaEntregaInicial}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:calendar id="vigInicial" mask="true" showOn="button" 
+                                                    mindate="#{detalleOrdenSuministroBean.fechaInicialContrato}"
+                                                    maxdate="#{detalleOrdenSuministroBean.fechaFinalContrato}"
+                                                    value="#{detalleOrden.fechaEntregaInicial}" pattern="dd/MM/yyyy" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Fecha final" class="formatoTablas" width="10%">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{detalleOrden.fechaEntregaFinal}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:calendar id="vigFinal" mask="true" showOn="button" 
+                                                    mindate="#{detalleOrdenSuministroBean.fechaInicialContrato}"
+                                                    maxdate="#{detalleOrdenSuministroBean.fechaFinalContrato}"
+                                                    value="#{detalleOrden.fechaEntregaFinal}" pattern="dd/MM/yyyy" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                <div>
+                                    <p:commandButton id="btnAgregar" value="" icon="fa fa-fw fa-edit" iconPos="left"
+                                                     actionListener="#{detalleOrdenSuministroBean.abreArchivos(detalleOrden)}"
+                                                     styleClass="customModificar btn-primary"
+                                                     style="color: #fff;width:30px;height:30px;font-size: 110%;"
+                                                     disabled="#{loginBean.accesos.ordenesSuministroC}"
+                                                     oncomplete="PF('dlg2').show();"
+                                                     update="formDialog"/>
+                                    <p:tooltip for="btnAgregar" value="Ver archivos" position="top"/>
+                                </div>                                                                       
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{detalleOrden.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton value="Actualizar" icon="floppy-disk" iconAlign="right" look="primary" update="formDialog idmensaje"
+                                                 rendered="#{!loginBean.accesos.ordenesSuministroC and detalleOrdenSuministroBean.bedita}" actionListener="#{detalleOrdenSuministroBean.validaGuardado}" />
+                            </b:buttonGroup>
+                            <b:commandButton value="Imprimir" icon="print" iconAlign="right" look="info"
+                                             rendered="#{!loginBean.accesos.ordenesSuministroC and !detalleOrdenSuministroBean.bedita}"
+                                             actionListener="#{detalleOrdenSuministroBean.descargarOrdenSuministro()}" />
+                        </div>
+                    </h:form>
+                    <h:form id="formDialog">
+                        <p:dialog header="Confirmación" widgetVar="dlg1" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Esta seguro de guardar la orden de suministro?"/>
+                            </p:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton action="#{detalleOrdenSuministroBean.guardaOrden}" look="primary" 
+                                                     value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg1').hide();" />
+                                    <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg1').hide();"/>
+                                </b:buttonGroup>
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialogCarga" header="Archivos" widgetVar="dlg2" minHeight="70" modal="true" width="70%" height="500">
+                            <b:panelGrid col-spans="2,10" rendered="#{detalleOrdenSuministroBean.barchivos}" >
+                                <h:outputText value="Tipo de documento:" />
+                                <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                 value="#{detalleOrdenSuministroBean.idTipoDocumento}" >
+                                    <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                    <f:selectItems value="#{detalleOrdenSuministroBean.listaTipoDocs}" var="tipoDocs"
+                                                   itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                    <p:ajax event="change" listener="#{detalleOrdenSuministroBean.cambiaTipoDoc}" />
+                                </p:selectOneMenu>
+                            </b:panelGrid>
+                            <br></br>
+                            <p:fileUpload fileUploadListener="#{detalleOrdenSuministroBean.guardarArchivos}" mode="advanced" 
+                                          dragDropSupport="true" process="@this, selectTipoDocs"
+                                          uploadLabel="Guardar archivo" label="Selecciona archivo" cancelLabel="Borrar archivo" 
+                                          update="dialogCarga"
+                                          multiple="false" rendered="#{!loginBean.accesos.ordenesSuministroC and detalleOrdenSuministroBean.barchivos}" />
+                            <br></br>
+                            <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{detalleOrdenSuministroBean.listaRepoDocsDto}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" >
+                                <p:column headerText="Nombre del archivo" class="formatoTablas">
+                                    <h:outputText value="#{listaRepoDocs.nombre}" />
+                                </p:column>
+                                <p:column headerText="Tipo de archivo" class="formatoTablas">
+                                    <h:outputText value="#{listaRepoDocs.idTipoDocumento.nombre}" />
+                                </p:column>
+                                <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                    <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                     look="success" icon="download" iconAlign="right">
+                                        <p:fileDownload value="#{listaRepoDocs.file}" />
+                                    </b:commandButton>
+                                    <p:commandButton id="btnQuitar" value="" icon="fa fa-trash-o" iconPos="left"
+                                                     styleClass="customEliminar btn-danger" oncomplete="PF('dlg2').hide();"
+                                                     actionListener="#{detalleOrdenSuministroBean.validaBorrarArchivo(listaRepoDocs)}"
+                                                     style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                     update="formDialog"
+                                                     rendered="#{!loginBean.accesos.ordenesSuministroC}"/>
+                                    <p:tooltip for="btnQuitar" value="Eliminar" position="top"/>
+                                </p:column>
+                            </p:dataTable>
+                            <br></br>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton look="danger" value="Cancelar" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                </b:buttonGroup>
+                            </div>
+                        </p:dialog>
+                        <p:dialog header="Confirmación" widgetVar="dlg3" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                            </p:panelGrid>
+                            <b:buttonGroup>
+                                <b:commandButton action="#{detalleOrdenSuministroBean.borrarArchivo}" look="primary" value="Si" 
+                                                 icon="check" iconAlign="right" oncomplete="PF('dlg3').hide();" />
+                                <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" 
+                                                 oncomplete="PF('dlg3').hide();"/>
+                            </b:buttonGroup>
+                        </p:dialog>
+                    </h:form>
+                    <br/>
+                    <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{detalleOrdenSuministroBean.mensajeBorrar}" />
+                </div>
+            </c:if>
+            <c:if test="${!(loginBean.accesos.generacionPreOrdenSuministro || loginBean.accesos.ordenesSuministro)}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

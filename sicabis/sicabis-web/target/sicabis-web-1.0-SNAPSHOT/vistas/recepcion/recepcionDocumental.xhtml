@@ -1,0 +1,419 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.recepcionDocumental}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Recepción Documental" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Recepción documental</h2>
+                    <p:messages id="idmess" showDetail="false" autoUpdate="true" closable="true"/>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" styleClass="DataTable" >
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.recepcionDocumentalC}">
+                            <br></br>
+                            <h:form id="formaId">
+                                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{recepcionDocumentalBean.verMensaje}" />
+                                <b:panelGrid col-spans="1,3,8">
+                                    <h:outputLabel value="Buscar"/>
+                                    <p:selectOneMenu id="console" style="height: 34px; width: 80%; " value="#{recepcionDocumentalBean.buscar}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue="-1" />
+                                        <f:selectItem itemLabel="Contrato" itemValue="1" />
+                                        <f:selectItem itemLabel="Convenio" itemValue="2" />
+                                        <f:selectItem itemLabel="Suministro" itemValue="3"/>
+                                        <f:selectItem itemLabel="Registro de control" itemValue="4"/>
+                                    </p:selectOneMenu>
+                                    <b:inputText style="width: 50%; text-transform: uppercase" onblur="value = value.toUpperCase()" value="#{recepcionDocumentalBean.criterioBusqueda}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="formaId"  action="#{recepcionDocumentalBean.orden()}"></b:commandButton>
+                                </div>
+                                <b:panelGrid columns="1" rendered="#{recepcionDocumentalBean.ocultar}">
+                                    <p:separator />
+                                    <h3>Orden de suministro</h3>
+                                    <p:remoteCommand name="onCellEdit" update=":formaId:insumos"  />
+                                    <p:dataTable  id="listaOrden" emptyMessage="No existen registros" rows="10"
+                                                  paginator="true" selection="#{recepcionDocumentalBean.r}" rowKey="#{orden.idSuministro}"
+                                                  selectionMode="single" 
+                                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                  {RowsPerPageDropdown} {Exporters}"
+                                                  currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                                  {totalRecords}, Página: {currentPage}/{totalPages})"
+                                                  rowsPerPageTemplate="5,10,15"  
+                                                  var="orden" value="#{recepcionDocumentalBean.ordenList}" >
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink immediate="true">
+                                                <p:graphicImage name="images/excel.png" width="24"/>
+                                                <p:dataExporter type="xls" target="listaOrden" fileName="OrdenSuministro" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:ajax event="rowSelect" listener="#{recepcionDocumentalBean.mostrarInsumos2}" update=":formaId:insumos" />
+                                        <p:column headerText="No. orden">
+                                            <h:outputText value="#{orden.ordenSuministro}" />
+                                        </p:column>
+                                        <p:column headerText="Importe total">
+                                            <h:outputText value="#{orden.importeTotal}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Fecha de entrega inicial">
+                                            <h:outputText value="#{orden.fechaEntregaInicio}" >
+                                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Fecha de entrega final">
+                                            <h:outputText value="#{orden.fechaEntregaFin}" >
+                                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Contrato">
+                                            <h:outputText value="#{orden.numeroContrato}" />
+                                        </p:column>
+                                        <p:column headerText="Estatus">
+                                            <h:outputText value="#{orden.estatus}" />
+                                        </p:column>
+                                        <!-- <p:column headerText="Opciones">
+                                             <b:commandButton icon="glyphicon-plus" value="" style="margin-left: 50px;" tooltip="Ver Detalle" look="primary" />
+                                         </p:column>-->
+                                    </p:dataTable>
+                                </b:panelGrid>
+
+                                <b:panelGrid rendered="#{recepcionDocumentalBean.ocultar}" columns="1">
+                                    <p:separator />
+                                    <h3>Seleccionar insumos</h3>
+                                    <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true" 
+                                                rendered="#{recepcionDocumentalBean.verMensajeInsumos}" />
+
+                                    <p:dataTable id="insumos"   emptyMessage="No existen registros" rows="10"  selectionMode="single" 
+                                                 paginator="true"  selection="#{recepcionDocumentalBean.r2}" rowKey="#{insumo.renglon}"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                                 {RowsPerPageDropdown} {Exporters}"
+                                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                                 rowsPerPageTemplate="5,10,15" var="insumo" value="#{recepcionDocumentalBean.insumosList}" >
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink>
+                                                <p:graphicImage name="images/excel.png" width="24"/>
+                                                <p:dataExporter type="xls" target="insumos" fileName="Insumos" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:ajax event="rowSelect" listener="#{recepcionDocumentalBean.seleccionarInsumo2}" update=":formaId" />      
+                                        <p:column headerText="Descripcion" style="width:30px">
+                                            <p:rowToggler />
+                                        </p:column>
+                                        <p:column headerText="Renglón">
+                                            <h:outputText value="#{insumo.renglon}" />
+                                        </p:column>
+                                        <p:column headerText="Clave">
+                                            <h:outputText value="#{insumo.clave}" />
+                                        </p:column>
+                                        <p:column headerText="Cantidad">
+                                            <h:outputText value="#{insumo.cantidad}" >
+                                                <f:convertNumber pattern="###,###,###" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Fecha de compromiso">
+                                            <h:outputText value="#{insumo.fechaEntregaInicio}" >
+                                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Fecha máxima">
+                                            <h:outputText value="#{insumo.fechaEntregaFin}" >
+                                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:rowExpansion>
+                                            <p:panelGrid  columns="1" columnClasses="label,value" style="width:300px">
+                                                <f:facet name="header">
+                                                    Descripción
+                                                </f:facet>
+                                                <h:outputText value="#{insumo.descripcion}" />
+                                            </p:panelGrid>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                                </b:panelGrid>
+                                <p:confirmDialog showEffect="fade" message="Hay Remisiones en estatus de devolución para el insumo seleccionado, deseea actualizar la remisión" header="Remisiones en Devolución" widgetVar="modificarEncuestaDialog" hideEffect="fade">
+                                    <div style="display:block; text-align:right">
+                                        <b:commandButton value="Si"  look="primary" actionListener="#{recepcionDocumentalBean.mostrarDevolucion()}"  
+                                                         icon="ui-icon-check" />
+                                        <b:commandButton value="No"  look="danger" actionListener="#{recepcionDocumentalBean.ocultarDevolucion()}"  
+                                                         icon="ui-icon-close" />
+                                    </div>
+                                </p:confirmDialog>
+                                <br></br>
+                                <h:panelGrid columns="1" rendered="#{recepcionDocumentalBean.verRemisionesDevolucion}">
+                                    <h3>Remisiones</h3>
+                                    <p:dataTable id="remisoness" rows="10"
+                                                 paginator="true"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown} {Exporters}"
+                                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                                 rowsPerPageTemplate="5,10,15" rendered="#{recepcionDocumentalBean.verRemisionesDevolucion}" emptyMessage="No existen registros" 
+                                                 var="remisiones" value="#{recepcionDocumentalBean.devolucionList}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink>
+                                                <p:graphicImage name="images/excel.png" width="24"/>
+                                                <p:dataExporter type="xls" target="remisioness" fileName="Remisiones" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column headerText="Seleccionar">    
+                                            <p:selectOneRadio  id="idRemision" value="#{recepcionDocumentalBean.idRemision}" layout="grid" columns="1" style="width: auto;">
+                                                <f:selectItem itemValue="#{remisiones.idRemision}"   />
+                                                <p:ajax update="formaId" event="change" listener="#{recepcionDocumentalBean.seleccionarRemisionDevolucion()}"/>
+                                            </p:selectOneRadio>
+                                        </p:column>
+                                        <p:column style="width:30px">
+                                            <p:rowToggler />
+                                        </p:column>
+                                        <p:column headerText="Registro de control">
+                                            <h:outputText value="#{remisiones.registroControl}" />
+                                        </p:column>
+                                        <p:column headerText="Cantidad">
+                                            <h:outputText value="#{remisiones.cantidadRecibida}" >
+                                                <f:convertNumber pattern="###,###,###" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Unidad">
+                                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.idUnidadPieza.descripcion}" />
+                                        </p:column>
+                                        <p:column headerText="Precio unitario">
+                                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Clave">
+                                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" />
+                                        </p:column>
+                                        <p:column headerText="Importe">
+                                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario * remisiones.cantidadRecibida}" >
+                                                <f:convertNumber type="currency" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:rowExpansion>
+                                            <p:panelGrid  columns="1" columnClasses="label,value" style="width:300px">
+                                                <f:facet name="header">
+                                                    Descripción
+                                                </f:facet>
+                                                <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" />
+                                            </p:panelGrid>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <p:separator/>
+                                <br></br>
+                                <h3>Lotes</h3>
+                                <b:panelGrid colSpans="2,4,2,2,2">
+                                    <h:outputLabel value ="Código de barras"/>
+                                    <b:inputText id="codigoBarras"  value="#{recepcionDocumentalBean.codigoBarras}"
+                                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"></b:inputText>
+                                    <h:outputLabel value ="Cantidad por lote"/>
+                                    <p:inputText id="lote"  value="#{recepcionDocumentalBean.cantidadLotes}"  
+                                                 style="text-transform: uppercase; height: 34px;" onblur="value = value.toUpperCase()"/>
+                                    <b:commandButton value="Agregar" icon="glyphicon-plus" icon-align="right" look="info" 
+                                                     process="@this,codigoBarras,lote" update="lotes, idmess"
+                                                     actionListener="#{recepcionDocumentalBean.addLote}" style="margin-bottom: 15px"/>
+                                </b:panelGrid>
+                                <p:dataTable id="lotes" emptyMessage="No existen registros" rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" var="lotes" value="#{recepcionDocumentalBean.lotes}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisioness" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column  headerText="Lote">
+                                        <h:outputText id="l" value="#{lotes.lote}" />
+                                    </p:column>
+                                    <p:column headerText="Código de barras">
+                                        <h:outputText id="codigoBarras1" value="#{lotes.codigoBarrasLote}" />
+                                    </p:column>
+                                    <p:column  headerText="Cantidad de insumos por lote">
+                                       <!-- <h:outputText id="lote1" value="#{lotes.cantidadLote}" />-->
+                                        <p:inputText   
+                                            value="#{lotes.cantidadLote}" >
+                                            <p:ajax event="blur" listener="#{recepcionDocumentalBean.cambiarCantidadLote(lotes)}" oncomplete="onCellEdit()" />
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column  headerText="Fecha de fabricación">
+                                        <h:outputText id="fabricacion" value="#{lotes.fechaFabricacion}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column  headerText="Fecha de caducidad">
+                                        <h:outputText id="ca" value="#{lotes.fechaCaducidad}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column  headerText="Opciones">
+                                        <b:commandButton style="margin-left: 50%;" look="primary" update="lotes" icon="glyphicon-remove" iconAlign="right" tooltip="Quitar" value="" ajax="true" actionListener="#{recepcionDocumentalBean.deleteAction(lotes)}" ></b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Imprimir remisión" rendered="#{recepcionDocumentalBean.verBotonDescargarRemision}" look="primary" action="#{recepcionDocumentalBean.descargarRemision()}" ajax="false" icon="ok" />
+                                    <b:commandButton icon="floppy-disk" iconAlign="right"  value="Guardar" look="primary"  rendered="#{recepcionDocumentalBean.verBotonGuardar}" actionListener="#{recepcionDocumentalBean.guardarRemision(CodigoBarras,lote)}"/>
+                                    <b:commandButton icon="floppy-disk" iconAlign="right" rendered="#{recepcionDocumentalBean.verBotonActualizar}" value="Actualizar" look="primary"  actionListener="#{recepcionDocumentalBean.actualizarRemisionDevolucion()}"/>
+
+                                </div>
+                                <p:separator />
+                                <b:panelGrid col-spans="12" rendered="#{recepcionDocumentalBean.verCargarDocumentos}" >
+                                    <h3>Carga de archivos</h3>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,10" rendered="#{recepcionDocumentalBean.verCargarDocumentos}" >
+                                    <h:outputText value="Tipo de documento:" />
+                                    <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                     value="#{recepcionDocumentalBean.idTipoDocumento}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{recepcionDocumentalBean.listaTipoDocs}" var="tipoDocs"
+                                                       itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                        <p:ajax update="selectTipoDocs" listener="#{recepcionDocumentalBean.cambiaTipoDoc}" />
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:fileUpload fileUploadListener="#{recepcionDocumentalBean.guardarArchivos}" mode="advanced" multiple="false" dragDropSupport="true" process="@this, selectTipoDocs"
+                                              uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                              rendered="#{recepcionDocumentalBean.verCargarDocumentos}"  
+                                              />
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{recepcionDocumentalBean.listaRepoDocsDto}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{recepcionDocumentalBean.verCargarDocumentos}" >                                
+                                    <p:column headerText="Nombre archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Tipo de documento" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.idTipoDocumento.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                        <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                         update="tablaRepoDocs" actionListener="#{recepcionDocumentalBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator rendered="#{recoleccionInsumosBean.verCargaDocumentos}"/> 
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                    </p:panelGrid>
+                                    <b:buttonGroup>
+                                        <b:commandButton action="#{recepcionDocumentalBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                        <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Remisiones" >
+                            <h:form id="frmNew">
+                                <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true" rendered="#{recepcionDocumentalBean.verMensaje2}" />
+                                <br></br> 
+                                <b:panelGrid colSpans="2,2,2,2,2,2" size="xs">
+                                    <h:outputLabel value="Registro de control"/>
+                                    <b:inputText placeholder="Registro de control" value="#{recepcionDocumentalBean.registroControl}" ></b:inputText>
+                                    <h:outputLabel value="Fecha de inicio"/>
+                                    <p:calendar placeholder="Fecha de inicio" id="effect" value="#{recepcionDocumentalBean.fechaInicio}" style="height: 34px;" showOn="button" locale="es" />
+                                    <h:outputLabel value="Fecha Final"/>
+                                    <p:calendar placeholder="Fecha fin" id="effect2" value="#{recepcionDocumentalBean.fechaFin}" style="height: 34px;"  showOn="button"  />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="info" value="Buscar" icon="search" iconAlign="right" actionListener="#{recepcionDocumentalBean.remisionByRegistro()}"  update="frmNew" ></b:commandButton> 
+                                </div>
+                                <br></br>
+                                <p:dataTable id="remisiones" emptyMessage="No existen registros"  rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" var="remisionesR" value="#{recepcionDocumentalBean.remisionesRegistro}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisiones" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column  headerText="Registro de control">
+                                        <h:outputText value="#{remisionesR.registroControl}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" />
+                                    </p:column>
+
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{remisionesR.cantidadRecibida}" >
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Contrato">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                                    </p:column>
+                                    <p:column headerText="Almacén">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.idAlmacen.nombreAlmacen}" />
+                                    </p:column>
+                                    <p:column headerText="Documento">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}"/>
+                                    </p:column>
+                                    <p:column headerText="Proveedor">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" />
+                                    </p:column>
+                                    <p:column headerText="Estatus">
+                                        <h:outputText value="#{remisionesR.idEstatus.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" style="text-align: center">
+                                        <b:commandButton ajax="true" look="info" icon="search" iconAlign="right" value="" tooltip="Ver detalle"  
+                                                         id="contestarId" action="#{recepcionDocumentalBean.verDettaleRemision()}" >   
+                                            <f:setPropertyActionListener value="#{remisionesR}" target="#{recepcionDocumentalBean.remisiones}"/>
+                                        </b:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid  columns="1" columnClasses="label,value" style="width:300px">
+                                            <f:facet name="header">
+                                                Descripción
+                                            </f:facet>
+                                            <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion}" />
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                                <b:commandButton value="Imprimir remisión" look="primary" action="#{reporteContratoBean.generarReporte()}" ajax="false" icon="ok" rendered="false" />
+                                <b:commandButton value="Imprimir convenio" look="primary" action="#{recepcionDocumentalBean.generarReporteConvenio()}" ajax="false" icon="ok" rendered="false" />
+                            </h:form>
+                        </b:tab>
+                    </b:tabView> 
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.recepcionDocumental}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

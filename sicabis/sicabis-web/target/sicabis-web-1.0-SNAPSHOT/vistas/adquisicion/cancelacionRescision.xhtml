@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="breadCrumb">
+                    <p:breadCrumb>
+                        <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                        <p:menuitem value="Cancelación y rescisiones" url="cancelacionRescision.xhtml" />
+                    </p:breadCrumb>
+                </h:form>
+                <h2>Cancelaciones y Rescisiones</h2>
+                <p:separator />
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+                <h:form id="nuevo">
+                    <br></br>
+                    <p:messages id="idmessages" rendered="#{cancelacionRecisionBean.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                    <b:panelGrid col-spans="2,10">
+                        <h:outputLabel value="Contrato"/>
+                        <b:inputText style="width: 38%;" value="#{cancelacionRecisionBean.contrato}" />
+                        <h:outputLabel value="Clave"/>
+                        <b:inputText style="width: 38%;" value="#{cancelacionRecisionBean.clave}" />
+                    </b:panelGrid>
+                    <div style="display:block; text-align:right">
+                        <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="nuevo"  
+                                         actionListener="#{cancelacionRecisionBean.listaOrdenesPendientesPorSuministrar()}"></b:commandButton>
+                    </div>
+                    <br></br>
+                    <p:dataTable id="tablaCancResicion" emptyMessage="No existen registros" rows="10"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                 {RowsPerPageDropdown} {Exporters}"
+                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                 rowsPerPageTemplate="5,10,15" 
+                                 var="reco" value="#{cancelacionRecisionBean.listCancelacionRescicionDTO}" >
+                        <f:facet name="{Exporters}">
+                            <h:commandLink immediate="true">
+                                <p:graphicImage name="images/excel.png" width="24"/>
+                                <p:dataExporter type="xls" target="canjePermuta" fileName="OrdenSuministro" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column headerText="Contrato">
+                            <h:outputText value="#{reco.contrato}" />
+                        </p:column>
+                        <p:column headerText="Cantidad programa">
+                            <h:outputText value="#{reco.cantidadSuministrar}" />
+                        </p:column>
+                        <p:column headerText="Cantidad entregada">
+                            <h:outputText value="#{reco.cantidasSuministrada}" />
+                        </p:column>
+                        <p:column headerText="Cantidad pendiente">
+                            <h:outputText value="#{reco.cantidasPendiente}" />
+                        </p:column>
+                        <p:column headerText="Fecha de inicio de entrega">
+                            <h:outputText value="#{reco.vigenciaInicial}" >
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Fecha final de entrega">
+                            <h:outputText value="#{reco.vigenciaFinal}" >
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Estatus sugerido">
+                            <h:outputText value="#{reco.estatusSugerido}" />
+                        </p:column>
+                        <p:column headerText="Opciones">
+                            <b:commandButton  ajax="true" value="" look="info" icon="search" iconAlign="right" 
+                                              tooltip="Ver Detalle" update="tablaCancResicion"
+                                              action="#{cancelacionRecisionBean.verDetalle}" 
+                                              rendered="#{reco.activo == 1}">   
+                                <f:setPropertyActionListener value="#{reco}" target="#{cancelacionRecisionBean.cancelacionRescicionDTO}"/>
+                                </b:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:separator/>
+                </h:form>    
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

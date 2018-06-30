@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="nuevo">
+                    <h2>Cálculo de penas convencionales</h2>
+                    <p:messages id="idmessages" rendered="#{detalleRescisionCancelacion.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                    <p:separator/>
+                    <h:outputLabel id="cancelacionInicio" style="font-size: 40px; color: red;"  rendered="#{detalleRescisionCancelacion.verInicio}"  value="En Inicio de Cancelación"/>
+                    <h:outputLabel id="cancelacion" style="font-size: 40px; color: red;"  rendered="#{detalleRescisionCancelacion.verCancelado}" value="Cancelado"/>
+                    <h:outputLabel id="RInicio" style="font-size: 40px; color: red;" rendered="#{detalleRescisionCancelacion.verInicioR}"  value="En Inicio de Rescisión"/>
+                    <h:outputLabel id="R" style="font-size: 40px; color: red;"  rendered="#{detalleRescisionCancelacion.verRescision}" value="Rescisión"/>
+                    <br></br>
+                    <br></br>
+                    <b:panelGrid colSpans="2,2,2,2,2,2">
+                        <h:outputLabel value="Proveedor"/>
+                        <b:inputText id="proveedor" disabled="true" value="#{detalleRescisionCancelacion.nombreProveedor}"/>
+                        <h:outputLabel value="Fecha de entrega inicial"/>
+                        <b:inputText id="fi" disabled="true" value="#{detalleRescisionCancelacion.fechaInicio}" >
+                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                        </b:inputText>
+                        <h:outputLabel  value="Fecha de entrega final" />
+                        <b:inputText id="ff" disabled="true" value="#{detalleRescisionCancelacion.fechaFin}">
+                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                        </b:inputText>
+                    </b:panelGrid>
+                    <br></br>
+                    <b:panelGrid colSpans="2,2,2,2,2,2">
+                        <h:outputLabel value="Clave"/>
+                        <b:inputText id="claveDetalle" disabled="true" value="#{detalleRescisionCancelacion.clave}"/>
+                        <h:outputLabel value="No. Orden"/>
+                        <b:inputText id="cantidad2" disabled="true" value="#{detalleRescisionCancelacion.numeroOrden}" />
+                        <h:outputLabel value="No. Contrato" />
+                        <b:inputText id="Lote1" disabled="true" value="#{detalleRescisionCancelacion.contrato}"/>
+                    </b:panelGrid>
+                    <br></br>
+                    <h3>Cantidades  recibidas y pendientes</h3>
+                    <p:fieldset >
+                        <b:panelGrid columns="4">
+                            <h:outputLabel value="Cantidad solicitada"/>
+                            <b:inputText id="cantidad1" disabled="true" value="#{detalleRescisionCancelacion.cantidadPiezasSolicitadas}"/>
+                            <h:outputLabel value="Importe total"/>
+                            <b:inputText id="importe" disabled="true" value="#{detalleRescisionCancelacion.importeTotal}" />
+                            <h:outputLabel  value="Cantidad de piezas recibidas" />
+                            <b:inputText disabled="true" id="cPr" value="#{detalleRescisionCancelacion.cantidadPiezasRecibida}"/>
+                            <h:outputLabel  value="Importe recibido" />
+                            <b:inputText disabled="true" id="ir" value="#{detalleRescisionCancelacion.importeRecibido}"/>
+                            <h:outputLabel value="Cantidad de piezas pendientes" />
+                            <b:inputText disabled="true" id="cp" value="#{detalleRescisionCancelacion.cantidadPiezasPendientes}"/>
+                            <h:outputLabel value="Importe pendiente" />
+                            <b:inputText disabled="true" id="ip" value="#{detalleRescisionCancelacion.importePendiente}"/>
+                            <h:outputLabel value="Precio unitario" />
+                            <b:inputText disabled="true" id="pu" value="#{detalleRescisionCancelacion.precioUnitario}"/>
+                        </b:panelGrid>
+                    </p:fieldset>
+                    <p:separator />
+                    <b:panelGrid  rendered="#{detalleRescisionCancelacion.verRemision}" columns="1">
+                        <h3>Entregas en almacén</h3>
+                    </b:panelGrid>
+                    <p:dataTable rendered="#{detalleRescisionCancelacion.verRemision}" id="canjePermuta" emptyMessage="No existen registros" rows="10"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                 rowsPerPageTemplate="5,10,15" 
+                                 var="reco" value="#{detalleRescisionCancelacion.remiList}" >
+                        <f:facet name="{Exporters}">
+                            <h:commandLink immediate="true">
+                                <p:graphicImage name="images/excel.png" width="24"/>
+                                <p:dataExporter type="xls" target="listaOrden" fileName="OrdenSuministro" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column headerText="Registro de control">
+                            <h:outputText value="#{reco.registroControl}" />
+                        </p:column>
+                        <p:column headerText="Folio de remisión">
+                            <h:outputText value="#{reco.folioRemision}" />
+                        </p:column>
+                        <p:column headerText="Fecha de remisión">
+                            <h:outputText value="#{reco.fechaRemision}" >
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{reco.idEstatus.nombre}" />
+                        </p:column>
+                    </p:dataTable>
+                    <br></br>
+                    <h3>Porcentaje de incumplimiento</h3>
+                    <p:fieldset >
+                        <b:panelGrid columns="2">
+                            <h:outputLabel value="Cantidad"/>
+                            <b:inputText id="cantidaP" disabled="true" value="#{detalleRescisionCancelacion.cantidadPiezasPendientes}"/>
+                            <h:outputLabel value="Importe total"/>
+                            <b:inputText id="importeP" disabled="true" value="#{detalleRescisionCancelacion.importePendiente}" />
+                            <h:outputLabel value="Porcentaje" />
+                            <b:inputText id="porcentaje" disabled="true" value="#{detalleRescisionCancelacion.porcentajeIncumplimiento}"/>
+                        </b:panelGrid>
+                    </p:fieldset>
+                    <br></br>
+                    <h3>Porcentaje de incumplimiento del proveedor</h3>
+                    <p:fieldset >
+                        <b:panelGrid columns="2">
+                            <h:outputLabel value="Cantidad incumplida"/>
+                            <b:inputText disabled="true" id="cantidaPR" value="#{detalleRescisionCancelacion.importeContrato}"/>
+                            <h:outputLabel value="Días vencidos"/>
+                            <b:inputText disabled="true" id="importePR" value="#{detalleRescisionCancelacion.diasIncumplimiento}" />
+                            <h:outputLabel value="Porcentaje de incumplimiento del contrato " />
+                            <b:inputText disabled="true" id="porcentajeR" value="#{detalleRescisionCancelacion.porcentajeProveedor}"/>
+                            <h:outputLabel value="Pena aplicada" />
+                            <b:inputText disabled="true" id="pena" value="#{detalleRescisionCancelacion.pena}"/>
+                        </b:panelGrid>
+                    </p:fieldset>
+                    <br></br>
+                    <div style="display:block; text-align:right">
+                        <b:commandButton disabled="#{detalleRescisionCancelacion.verInicioCancelacion}" value="Iniciar cancelación" look="primary" icon="search" iconAlign="right"  update="nuevo idmessages"  action="#{detalleRescisionCancelacion.iniciarCancelacion()}"/>
+                        <b:commandButton disabled="#{detalleRescisionCancelacion.verInicioRescision}" value="Iniciar rescisión" look="primary" icon="search" iconAlign="right" update="nuevo idmessages"   action="#{detalleRescisionCancelacion.iniciarRescision()}"/>
+                    </div>
+                    <br></br>
+                </h:form>  
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

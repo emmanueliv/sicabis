@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>Agregar claves</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        
+        <h:form id="formClaves" style="width: 95%; margin: auto; padding-left: 3%">
+            <br></br>
+            <b:panelGrid colSpans="2,10">
+                <h:outputText value="Clave:"/>
+                <b:inputText style="width: 35%" value="#{agregarClavesOrdenesBean.claveInsumo}" />
+            </b:panelGrid>
+            <div style="display:block; text-align:right">
+                <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="formClaves"
+                                 actionListener="#{agregarClavesOrdenesBean.obtenerClaves}" />
+            </div>
+            <p:separator/>
+            <br></br>
+            <p:dataTable id="tablaClaves" var="contratoOrden" value="#{agregarClavesOrdenesBean.listaContratoOrdenDTO}"
+                         selection="#{agregarClavesOrdenesBean.listaContratoOrdenDTOSelect}" 
+                         rowKey="#{contratoOrden.id}"
+                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                         filteredValue="#{agregarClavesOrdenesBean.listaContratoOrdenDTOFilter}"
+                         rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                         rowsPerPageTemplate="10,15,20">
+                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                <p:column headerText="ID" class="formatoTablas" filterBy="#{contratoOrden.contratoFalloProcedimientoRcb.idContratoFalloProcedimientoRcb}" filterMatchMode="contains" > 
+                    <h:outputText value="#{contratoOrden.contratoFalloProcedimientoRcb.idContratoFalloProcedimientoRcb}" />
+                </p:column>
+                <p:column headerText="Clave" class="formatoTablas" filterBy="#{contratoOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains" > 
+                    <h:outputText value="#{contratoOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" />
+                </p:column>
+                <p:column headerText="No. Contrato" class="formatoTablas" filterBy="#{contratoOrden.contratoFalloProcedimientoRcb.idContrato.numeroContrato}" filterMatchMode="contains" >
+                    <h:outputText value="#{contratoOrden.contratoFalloProcedimientoRcb.idContrato.numeroContrato}" />
+                </p:column>
+                <p:column headerText="Proveedor" class="formatoTablas" filterBy="#{contratoOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" filterMatchMode="contains" > 
+                    <h:outputText value="#{contratoOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Disponible" class="formatoTablas" >
+                    <h:outputText value="#{contratoOrden.detalleOrdenSuministro.totalCancelado}" />
+                </p:column>
+            </p:dataTable>
+            <br></br>
+            <p:separator/>
+            <div style="display:block; text-align:right">
+                <b:buttonGroup>
+                    <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{agregarClavesOrdenesBean.agregarClaves}" />
+                </b:buttonGroup>
+            </div>
+        </h:form>
+    </h:body>
+
+</html>

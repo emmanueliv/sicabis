@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="breadCrumb">
+                    <p:breadCrumb>
+                        <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                        <p:menuitem value="Propuestas" url="propuestas.xhtml" />
+                        <p:menuitem value="Agregar Proveedor" url="agregarProveedor.xhtml" disabled="true"/>
+                    </p:breadCrumb>
+                </h:form>
+                <h2>Incorporación de proveedores</h2>
+                <br></br>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+                <br></br>
+                <h:form id="formProp">
+                    <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{agregarProveedorBean.messageGuardar}" />                
+                    <b:panelGrid col-spans="2,4,2,4">
+                        <h:outputText value="Procedimiento:"/>
+                        <b:inputText value="#{agregarProveedorBean.procedimientoRcb.idProcedimiento.numeroProcedimiento}" disabled="true" />
+                        <h:outputText value="Clave"/>
+                        <b:inputText value="#{agregarProveedorBean.procedimientoRcb.idRcbInsumos.claveInsumo}" disabled="true" />
+                    </b:panelGrid>
+                    <br></br>
+                    <p:fieldset id="fieldsetProv" style="margin-bottom:20px; " >
+                        <b:panelGrid col-spans="2,10">
+                            <h:outputText value="Proveedor"/>
+                            <p:selectOneMenu  style="width: 38%; height: 34px;" id ="idProveedor" 
+                                              value="#{agregarProveedorBean.idProveedor}" 
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItem itemValue="-2" itemLabel="Nuevo ..." />
+                                <f:selectItems value="#{agregarProveedorBean.listaProveedor}" var="proveedor"
+                                               itemValue="#{proveedor.idProveedor}"  itemLabel="#{proveedor.numeroProveedor} #{proveedor.nombreProveedor}"/>
+                                <p:ajax event="change" listener="#{agregarProveedorBean.cambiaProveedor}" update="fieldsetProv" />
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br/>
+                        <b:panelGrid id="panelNuevoProv" col-spans="2,4,2,4" rendered="#{agregarProveedorBean.bnuevoProv}">
+                            <h:outputText value="Nombre proveedor:"/>
+                            <b:inputText id="nombreProv" value="#{agregarProveedorBean.nombreProv}" 
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Tipo proveedor:"/>
+                            <p:selectOneMenu  style="width: 100%; height: 34px;" id ="idTipoProv" 
+                                              value="#{agregarProveedorBean.idTipoProv}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{agregarProveedorBean.listaTipoProv}" var="tipoProveedor"
+                                               itemValue="#{tipoProveedor.idTipoProveedor}"  itemLabel="#{tipoProveedor.descripcion}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br/>
+                        <b:panelGrid col-spans="2,4,2,4">
+                            <h:outputText value="Precio Unitario RCB:"/>
+                            <p:inputNumber decimalPlaces="2" value="#{agregarProveedorBean.precioUnRcb}"
+                                           symbolPosition="s" emptyValue="zero" readonly="true"
+                                           inputStyle="width: 100%; height: 34px;" id="precioUnRcb" />
+                            <h:outputText value="Precio unitario con descuento:"/>
+                            <p:inputNumber value="#{agregarProveedorBean.precioUnDesc}" id="precioUnDesc"
+                                           symbolPosition="s" emptyValue="zero" decimalPlaces="2"
+                                           inputStyle="width: 100%; height: 34px;" readonly="true" />
+                        </b:panelGrid>
+                        <br/>
+                        <b:panelGrid col-spans="2,4,2,4">
+                            <h:outputText value="Descuento otorgado (%):"/>
+                            <p:inputNumber symbol="%" decimalPlaces="2" minValue="0" maxValue="100"
+                                           value="#{agregarProveedorBean.propuestas.descuentoOtorgado}"
+                                           symbolPosition="s" emptyValue="zero"
+                                           inputStyle="width: 100%; height: 34px;"
+                                           disabled="#{agregarProveedorBean.bdescuento}" id="descuentoO" >
+                                <p:ajax event="blur" listener="#{agregarProveedorBean.calculoPrecioUnit}" process="@this, precioU" update="precioUnDesc" />
+                            </p:inputNumber>
+                            <h:outputText value="Precio unitario $:"/>
+                            <p:inputNumber value="#{agregarProveedorBean.propuestas.precioUnitario}"
+                                           symbolPosition="s" emptyValue="zero" decimalPlaces="2"
+                                           inputStyle="width: 100%; height: 34px;"
+                                           disabled="#{agregarProveedorBean.bprecio}" id="precioU" >
+                                <p:ajax event="blur" listener="#{agregarProveedorBean.calculoPrecioUnit}" process="@this, descuentoO" update="precioUnDesc" />
+                            </p:inputNumber>
+                        </b:panelGrid>
+                        <br/>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Agregar" look="info" icon="plus" iconAlign="right" update="formProp"
+                                             actionListener="#{agregarProveedorBean.agregarProveedor}" />
+                        </div>
+                        <br></br>
+                        <p:dataTable id="tablaPropuesta" var="propuesta" value="#{agregarProveedorBean.listaPropuestas}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     filteredValue="#{agregarProveedorBean.listaPropuestasFilter}"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+                            <p:column headerText="Proveedor" class="formatoTablas" filterBy="#{propuesta.idProveedor.nombreProveedor}" filterMatchMode="contains">
+                                <h:outputText value="#{propuesta.idProveedor.nombreProveedor}" />
+                            </p:column>
+                            <p:column headerText="Tipo de proveedor" class="formatoTablas" filterBy="#{propuesta.idProveedor.idTipoProveedor.descripcion}" filterMatchMode="contains">
+                                <h:outputText value="#{propuesta.idProveedor.idTipoProveedor.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Descuento otorgado" class="formatoTablas" filterBy="#{propuesta.descuentoOtorgado}" filterMatchMode="contains"> 
+                                <h:outputText value="#{propuesta.descuentoOtorgado}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario de referencia" class="formatoTablas" filterBy="#{propuesta.precioUnitario}" filterMatchMode="contains"> 
+                                <h:outputText value="#{propuesta.precioUnitario}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Precio unitario con descuento" class="formatoTablas" filterBy="#{propuesta.precioUnitarioDescuento}" filterMatchMode="contains"> 
+                                <h:outputText value="#{propuesta.precioUnitarioDescuento}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                <div>
+                                    <b:commandButton id="btnAgregarFab" value="" tooltip="Agregar fabricante" look="primary" icon="plus" iconAlign="right" 
+                                                     update="formfab"
+                                                     actionListener="#{agregarProveedorBean.agregaFabricante(propuesta)}" />
+                                    <b:commandButton id="btnEditarProv" value="" tooltip="Editar proveedor" look="primary" icon="pencil" iconAlign="right" 
+                                                     update="formProp" 
+                                                     actionListener="#{agregarProveedorBean.editaProveedor(propuesta)}" />
+                                    <b:commandButton id="btnQuitarProv" value="" tooltip="Quitar proveedor" look="danger" icon="remove" iconAlign="right" 
+                                                     update="tablaPropuesta" actionListener="#{agregarProveedorBean.quitaProveedor(propuesta)}" />
+                                </div>                                                                       
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+                    <br></br>
+                    <b:panelGrid colSpans="3,4,5" rendered="#{agregarProveedorBean.bactualizar}" >
+                        <h:outputLabel value="Fecha de realización de apertura de propuestas técnicas y económicas"/>
+                        <p:calendar id="fechaRea" style="width: 100%; height: 34px;"  
+                                    value="#{agregarProveedorBean.propuestas.aperturaProgramada}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value="Fecha programada de apertura de propuestas ténicas y económicas"/>
+                        <p:calendar id="fechaPro" style="width: 100%; height: 34px;" 
+                                    value="#{agregarProveedorBean.propuestas.aperturaRealizada}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                        <b:commandButton value="Actualizar fechas" icon="floppy-disk" class="pull-right"
+                                         iconAlign="right" look="primary" update="formfab" id="btnGuardar"
+                                         actionListener="#{agregarProveedorBean.actualizarPropuesta()}" />
+                    </b:panelGrid>
+                    <br></br>
+                    <b:panelGrid col-spans="12" rendered="#{agregarProveedorBean.barchivos}" >
+                        <h3>Carga de archivos</h3>
+                    </b:panelGrid>
+                    <br></br>
+                    <b:panelGrid col-spans="2,10" rendered="#{agregarProveedorBean.barchivos}" >
+                        <h:outputText value="Tipo de documento:" />
+                        <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                         value="#{agregarProveedorBean.idTipoDocumento}" >
+                            <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                            <f:selectItems value="#{agregarProveedorBean.listaTipoDocs}" var="tipoDocs"
+                                           itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                            <p:ajax event="change" listener="#{agregarProveedorBean.cambiaTipoDoc}" />
+                        </p:selectOneMenu>
+                    </b:panelGrid>
+                    <br></br>
+                    <p:fileUpload fileUploadListener="#{agregarProveedorBean.guardarArchivos}" mode="advanced" 
+                                  dragDropSupport="true" process="@this, selectTipoDocs"
+                                  uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" 
+                                  update="formProp tablaRepoDocs"
+                                  multiple="false" rendered="#{agregarProveedorBean.barchivos}" />
+                    <br></br>
+                    <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{agregarProveedorBean.listaRepoDocsDto}"
+                                 emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{agregarProveedorBean.barchivos}" >
+                        <p:column headerText="Nombre archivo" class="formatoTablas">
+                            <h:outputText value="#{listaRepoDocs.nombre}" />
+                        </p:column>
+                        <p:column headerText="Tipo de documento" class="formatoTablas">
+                            <h:outputText value="#{listaRepoDocs.idTipoDocumento.nombre}" />
+                        </p:column>
+                        <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                            <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                             look="success" icon="download" iconAlign="right">
+                                <p:fileDownload value="#{listaRepoDocs.file}" />
+                            </b:commandButton>
+                            <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                             update="tablaRepoDocs" actionListener="#{agregarProveedorBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                            </b:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:separator/>
+                    <div style="display:block; text-align:right">
+                        <b:buttonGroup>
+                            <b:commandButton value="#{!agregarProveedorBean.bactualizar ? 'Guardar' : 'Actualizar'}" icon="floppy-disk"
+                                             iconAlign="right" look="primary" update="formfab" id="botonGuardar"
+                                             actionListener="#{agregarProveedorBean.guardaProveedor}" rendered="#{agregarProveedorBean.botonGuardar}" />
+                        </b:buttonGroup>
+                    </div>
+                </h:form>
+                <h:form id="formfab">
+                    <p:dialog header="Continuar editando la propuesta" widgetVar="dlg3" minHeight="70" modal="true" 
+                              width="70%" >
+                        <p:panelGrid>
+                            <p:messages id="idmessagesDialog3" showDetail="false" autoUpdate="true" closable="true" rendered="#{agregarProveedorBean.mensajeDialog}" />
+                            <h:outputLabel value="¿Desea continuar editando la propuesta?"/>
+                        </p:panelGrid>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg3').hide();" />
+                                <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg3').hide();" 
+                                                 action="#{agregarProveedorBean.salir}"/>
+                            </b:buttonGroup>
+                        </div>
+                    </p:dialog>
+                    <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                        <p:panelGrid>
+                            <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                        </p:panelGrid>
+                        <b:buttonGroup>
+                            <b:commandButton action="#{agregarProveedorBean.borrarArchivo}" look="primary" value="Si" 
+                                             icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                            <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" 
+                                             oncomplete="PF('dlg2').hide();"/>
+                        </b:buttonGroup>
+                    </p:dialog>
+                    <p:dialog header="Agregar Fabricante" widgetVar="dlg1" width="70%" height="500" 
+                              minHeight="70" modal="true" >
+                        <br></br>
+                        <b:panelGrid columns="4">
+                            <h:outputText value="Proveedor:"/>
+                            <b:inputText value="#{agregarProveedorBean.propuestas.idProveedor.nombreProveedor}" disabled="true" />
+                            <h:outputText value="Clave"/>
+                            <b:inputText value="#{agregarProveedorBean.procedimientoRcb.idRcbInsumos.claveInsumo}" disabled="true" />
+                        </b:panelGrid>
+                        <p:messages id="idmessagesDialog" showDetail="false" autoUpdate="true" closable="true" rendered="#{agregarProveedorBean.messageDialog}" />
+                        <p:fieldset id="fieldset1" style="margin-bottom:20px; font-size: 12px;">
+                            <b:panelGrid col-spans="2,10">
+                                <h:outputText value="Fabricante:"/>
+                                <p:selectOneMenu  style="width: 38%; height: 34px;" id ="idProveedor" 
+                                                  value="#{agregarProveedorBean.idFabricante}" >
+                                    <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                    <f:selectItem itemValue="-2" itemLabel="Nuevo ..." />
+                                    <f:selectItems value="#{agregarProveedorBean.listaFabricantes}" var="fabricante"
+                                                   itemValue="#{fabricante.idFabricante}"  itemLabel="#{fabricante.nombre}"/>
+                                    <p:ajax event="change" listener="#{agregarProveedorBean.cambiaFabricante}" update="fieldset1" />
+                                </p:selectOneMenu>
+                            </b:panelGrid>
+                            <br></br>
+                            <b:panelGrid id="panelNuevo" col-spans="2,4,2,4" rendered="#{agregarProveedorBean.bnuevo}">
+                                <h:outputText value="Nombre:"/>
+                                <b:inputText id="nombreFabricante" value="#{agregarProveedorBean.nombreFabricante}" 
+                                             style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                <h:outputText value="Registro sanitario:"/>
+                                <b:inputText value="#{agregarProveedorBean.registroSanitario}" />
+                            </b:panelGrid>
+                            <div style="display:block; text-align:right">
+                                <b:commandButton value="Agregar" look="info" icon="plus" iconAlign="right" update="fieldset1" >
+                                    <f:ajax listener="#{agregarProveedorBean.agregarProvFabricante}" execute="fieldset1" />
+                                </b:commandButton>
+                            </div>
+                            <p:separator/>
+                            <br></br>
+                            <p:dataTable id="tablaProvFab" var="provFab" value="#{agregarProveedorBean.listaProvFab}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                         filteredValue="#{agregarProveedorBean.listaProvFabFilter}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20">
+                                <p:column headerText="Fabricante" class="formatoTablas" filterBy="#{provFab.idFabricante.nombre}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{provFab.idFabricante.nombre}" />
+                                </p:column>
+                                <p:column headerText="Registro sanitario" class="formatoTablas" filterBy="#{provFab.idFabricante.registroSanitario}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{provFab.idFabricante.registroSanitario}" />
+                                </p:column>
+                                <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                    <div>
+                                        <b:commandButton id="btnQuitarProvFab" value="" tooltip="Quitar Fabricante" look="danger" icon="remove" iconAlign="right" 
+                                                         update="tablaProvFab" actionListener="#{agregarProveedorBean.quitaFabricante(provFab)}" />
+                                    </div>                                                                       
+                                </p:column>
+                            </p:dataTable>
+                        </p:fieldset>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton value="Aceptar" look="primary" icon="ok" oncomplete="PF('dlg1').hide();" update="formProp"
+                                                 iconAlign="right" actionListener="#{agregarProveedorBean.fabricantesAgregados}" />
+                            </b:buttonGroup>
+                        </div>
+                        <br/>
+                    </p:dialog>
+                </h:form>
+                <br/>
+                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{agregarProveedorBean.mensajeBorrar}" />
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

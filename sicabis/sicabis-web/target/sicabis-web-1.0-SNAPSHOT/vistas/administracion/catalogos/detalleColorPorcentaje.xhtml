@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.usuarios}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Color-Porcentaje" url="catColorPorcentaje.xhtml" />
+                            <p:menuitem value="Detalle de filtro color-porcentaje" url="detalleColorPorcentaje.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Detalle de filtro color - porcentaje</h2>
+
+                    <h:form id="frmbNuevo">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid col-spans="2,4,2,4">
+                            <h:outputText value="Porcentaje inicial:"/>
+                            <p:inputNumber decimalPlaces="2" minValue="0" maxValue="100"
+                                           value="#{detalleCatalogoColorPorcentajeBean.colorPorcentaje.porcentajeInicial}"
+                                           symbolPosition="s" 
+                                           inputStyle="width: 100%; height: 34px;" />
+                            <h:outputText value="Porcentaje final:" />
+                            <p:inputNumber decimalPlaces="2" minValue="0" maxValue="100"
+                                           value="#{detalleCatalogoColorPorcentajeBean.colorPorcentaje.porcentajeFinal}"
+                                           symbolPosition="s" 
+                                           inputStyle="width: 100%; height: 34px;" />
+
+
+                        </b:panelGrid>
+                        <br/> 
+                        <b:panelGrid col-spans="2,4,2,4" styleClass="top-buffer">
+                            <h:outputText value="Color:"/>
+                            <b:colorPicker id ="colorpicker"  style="background:white;" value="#{detalleCatalogoColorPorcentajeBean.colorPorcentaje.hexColor}" opacity="false" format="hex" control="wheel" position="bottom right"/>
+                            <h:outputText value=""/>
+                            <h:outputText value=""/>
+                        </b:panelGrid>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton  value="Actualizar" icon="floppy-disk" iconAlign="right" look="primary"  
+                                                  actionListener="#{detalleCatalogoColorPorcentajeBean.actualizarColorPorcentaje}"             />
+                            </b:buttonGroup>
+                        </div>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.usuarios}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

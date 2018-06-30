@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.rptPiezasPendientesAnual}">
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte de piezas pendientes entregar" url="rptPiezasPendientesAnual.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Reporte de piezas pendientes entregar</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelDatos">
+                            <p:outputLabel for="anio" value="Año:"  />
+                            <p:selectOneMenu id="anio" value="#{rptPiezasPendientesAnualBean.encabezadosReportesDTO.anio}" panelStyle="width:180px" style="width: 100%; height: 34px;">
+                                <f:selectItem itemValue="-1" itemLabel="Seleccione" />
+                                <f:selectItem itemValue="#{rptPiezasPendientesAnualBean.anioAnterior}" itemLabel="#{rptPiezasPendientesAnualBean.anioAnterior}" />
+                                <f:selectItem itemValue="#{rptPiezasPendientesAnualBean.anio}" itemLabel="#{rptPiezasPendientesAnualBean.anio}" />
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" process="panelDatos export" 
+                                             iconAlign="right" update="tablaRptPiezasPendientes export" 
+                                             actionListener="#{rptPiezasPendientesAnualBean.buscarLista}" >
+                            </b:commandButton>
+                        </div>  
+                        <br></br>
+                        <div id="divTable" style="width: 100%;">
+                            <p:dataTable id="tablaRptPiezasPendientes" var="rptPiezasPendientes" value="#{rptPiezasPendientesAnualBean.listPPA}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20" >
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaRptPiezasPendientes" fileName="Reporte piezas pendientes" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column  headerText="Contrato" 
+                                           class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptPiezasPendientes.contrato}" />
+                                </p:column>
+                                <p:column headerText="Convenio" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptPiezasPendientes.convenio}" />
+                                </p:column>
+                                <p:column headerText="Orden Suministro" 
+                                          class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rptPiezasPendientes.ordenSuministro}" />
+                                </p:column>
+                                <p:column headerText="Proveedor" class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rptPiezasPendientes.proveedor}" />
+                                </p:column>
+                                <p:column headerText="Clave" class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptPiezasPendientes.clave}" />
+                                </p:column>
+                                <p:column headerText="Fecha Inicial" class="formatoTablas" > 
+                                    <h:outputText value="#{rptPiezasPendientes.periodoEntregaInicial}" >
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </p:column>    
+                                <p:column headerText="Fecha Final" class="formatoTablas" > 
+                                    <h:outputText value="#{rptPiezasPendientes.periodoEntregaInicial}" >  
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </p:column>  
+                                <p:column headerText="Pendiente" class="formatoTablas" > 
+                                    <h:outputText value="#{rptPiezasPendientes.pendiente}" />
+                                </p:column>  
+                            </p:dataTable>  
+                        </div>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup id="export">
+                                <b:commandButton value="Exportar" icon="search" iconAlign="right" look="info" 
+                                                 rendered="#{rptPiezasPendientesAnualBean.rptactivo == 1}"
+                                                 action="#{rptPiezasPendientesAnualBean.exportarExcel(rptPiezasPendientesAnualBean.encabezadosReportesDTO.anio)}" />
+                            </b:buttonGroup>
+                        </div>
+                        <p:separator/>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reportes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este modulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.usuarios}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Usuarios" url="usuarios.xhtml" />
+                            <p:menuitem value="Detalle del usuario" url="usuarios.xhtml" disabled="true"/>
+                        </p:breadCrumb> 
+                    </h:form>
+                    <h2>Detalle del usuario</h2>
+
+                    <h:form id="frmbNuevo">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Apellido paterno:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.apellidoPaterno}" 
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Apellido materno:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.apellidoMaterno}" 
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Nombre:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.nombre}" 
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Correo electrónico:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.correo}" validator-message="El formato del campo Correo electrónico es incorrecto">
+                                <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                            </b:inputText>
+                            <h:outputText value="Teléfono:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.telefono}" validatorMessage="El formato del campo Teléfono es incorrecto"
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()">
+                                <f:validateRegex pattern="[0-9]*" />
+                            </b:inputText>
+                            <h:outputText value="Área:"/>
+                            <p:selectOneMenu id="selectArea" value="#{detalleUsuariosBean.usuarioNuevo.idArea}" style="width: 100%; height: 34px;" 
+                                             converter="selectConverter" autoWidth="false"
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItems value="#{detalleUsuariosBean.areasList}" var="area" 
+                                               itemValue="#{area}" itemLabel="#{area.nombreArea}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Perfil:"/>
+                            <p:selectOneMenu id="selectPerfil" value="#{detalleUsuariosBean.perfil}" 
+                                             style="width: 100%; height: 34px;" converter="selectConverter"
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItems value="#{detalleUsuariosBean.perfilesList}" var="perfil" 
+                                               itemValue="#{perfil}" itemLabel="#{perfil.nombre}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Nombre de usuario:"/>
+                            <b:inputText value="#{detalleUsuariosBean.usuarioNuevo.usuario}"/>
+                            <h:outputText value="UR"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectDelegacion"
+                                             value="#{detalleUsuariosBean.usuarioNuevo.ur}"
+                                             converter="selectConverter" filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleUsuariosBean.listUr}" var="ur"
+                                               itemValue="#{ur}" itemLabel="#{ur.numUr} - #{ur.nombre}"/>
+                                <p:ajax event="change" listener="#{detalleUsuariosBean.cambiaUr}" process="@this" update="selectDel, selectUnidad" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Delegación:"/>
+                            <p:selectOneMenu id="selectDel" value="#{detalleUsuariosBean.usuarioNuevo.idDelegacion}" 
+                                             style="width: 100%; height: 34px;" converter="selectConverter"
+                                             filter="true" filterMatchMode="contains" disabled="true">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItems value="#{detalleUsuariosBean.delegacionesList}" var="delegacion" 
+                                               itemValue="#{delegacion}" itemLabel="#{delegacion.nombreDelegacion}"/>
+                                <p:ajax event="change" listener="#{detalleUsuariosBean.cambiaDelegación}" process="@this" update="selectUnidad" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Unidad médica:"/>
+                            <p:selectOneMenu id="selectUnidad" value="#{detalleUsuariosBean.usuarioNuevo.idUnidadMedica}" 
+                                             style="width: 100%; height: 34px;" 
+                                             autoWidth="false" converter="selectConverter"
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                <f:selectItem itemLabel="TODAS" itemValue="#{detalleUsuariosBean.unidadesMedicas}"/>
+                                <f:selectItems value="#{detalleUsuariosBean.unidadesList}" var="unidad" 
+                                               itemValue="#{unidad}" itemLabel="#{unidad.nombre}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="selectTipoUser"  value="Tipo de Usuario:" />                                 
+                            <p:selectManyMenu id ="selectTipoUser" value="#{detalleUsuariosBean.tiposUsuariosSelect}" 
+                                              style="width: 100%; height: auto;"
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{detalleUsuariosBean.listaTipoUsuarios}" var="tipo" 
+                                               itemValue="#{tipo.idTipoUsuario}" itemLabel="#{tipo.nombre}"/>
+                            </p:selectManyMenu> 
+                            <h:outputText value="Resetear contraseña: " rendered="#{detalleUsuariosBean.perfilLogin.idPerfil == 1}" />
+                            <p:selectBooleanCheckbox value="#{detalleUsuariosBean.bresetpass}" rendered="#{detalleUsuariosBean.perfilLogin.idPerfil == 1}"/>
+                            <h:outputText value=""/>
+                            <h:outputText value=""/>
+                        </b:panelGrid>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton  value="Actualizar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                  actionListener="#{detalleUsuariosBean.guardarUsuario}" update=":frmbNuevo" 
+                                                  rendered="#{!loginBean.accesos.usuariosC}"/>
+                            </b:buttonGroup>
+                        </div>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.usuarios}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

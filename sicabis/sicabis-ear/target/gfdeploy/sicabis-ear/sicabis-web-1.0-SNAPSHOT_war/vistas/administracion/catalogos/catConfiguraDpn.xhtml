@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.configuraDpn}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogos" url="../menuCatalogos.xhtml" />
+                            <p:menuitem value="Configura Alertas" url="catConfiguraDpn.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Configuraciones alertas DPN y envío disponibilidad</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConfigura">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <p:fieldset id="fieldsetConfig" style="margin-bottom:20px; " >
+                            <b:panelGrid colSpans="2,4,2,4" id="panelConfig">
+                                <h:outputText value="Número de días de periodo"/>
+                                <p:inputNumber inputStyle="width: 100%; height: 34px;" maxValue="30" minValue="0" decimalPlaces="0"
+                                               id="numDias" value="#{configuraDpnBean.configuraDpn.numDias}" />
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                            </b:panelGrid>
+                            <br/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton value="#{configuraDpnBean.bopcion ? 'Actualiza' : 'Guarda'}" icon="floppy-disk" 
+                                                     iconAlign="right" look="primary" update="panelConfig"
+                                                     actionListener="#{configuraDpnBean.guardaActualiza}"/>
+                                </b:buttonGroup>
+                            </div>
+                        </p:fieldset>
+                        <p:separator/>
+                        <h2>Agregar contactos para envío de correos de disponibilidad</h2>
+                        <br/>
+                        <p:fieldset id="fieldsetContacto" style="margin-bottom:20px; " >
+                            <b:panelGrid colSpans="2,4,2,4" id="panelContacto">
+                                <h:outputText value="Delegacion"/>
+                                <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectDelegacion"
+                                                 value="#{configuraDpnBean.idDelegacion}" 
+                                                 autoWidth="false"
+                                                 filterMatchMode="startsWith">
+                                    <f:selectItem itemValue="-1" itemLabel="SELECCIONA ..." />
+                                    <f:selectItem itemValue="-2" itemLabel="MAPAS DISPONIBILIDAD" />
+                                    <f:selectItems value="#{configuraDpnBean.listDelegaciones}" var="delegacion"
+                                                   itemValue="#{delegacion.idDelegacion}" itemLabel="#{delegacion.nombreDelegacion}"/>
+                                    <p:ajax event="change" listener="#{configuraDpnBean.cambiaDelegacion()}" update="selectUsuario panelContacto"
+                                            process="@this" />
+                                </p:selectOneMenu>
+                                <h:outputText value="Unidad Médica" rendered="#{configuraDpnBean.bunidadmed}"/>
+                                <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad"
+                                                 value="#{configuraDpnBean.idUnidadesMedicas}" 
+                                                 autoWidth="false"
+                                                 filterMatchMode="startsWith"
+                                                 rendered="#{configuraDpnBean.bunidadmed}">
+                                    <f:selectItem itemValue="-1" itemLabel="SELECCIONA ..." />
+                                    <f:selectItems value="#{configuraDpnBean.listaUnidadesMedicas}" var="unidad"
+                                                   itemValue="#{unidad.idUnidadesMedicas}" itemLabel="#{unidad.nombre}"/>
+                                    <p:ajax event="change" listener="#{configuraDpnBean.cambiaUnidad}" update="selectUsuario "
+                                            process="@this" />
+                                </p:selectOneMenu>
+                                <h:outputText value="Contactos"/>
+                                <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUsuario" autoWidth="false"
+                                                 value="#{configuraDpnBean.idContacto}" >
+                                    <f:selectItem itemValue="-1" itemLabel="SELECCIONA ..." />
+                                    <f:selectItem itemValue="-2" itemLabel="AGREGAR CORREO CONTACTO" />
+                                    <f:selectItems value="#{configuraDpnBean.listContactosAlertasDpn}" var="contacto"
+                                                   itemValue="#{contacto.idContactosAlertasDpn}" itemLabel="#{contacto.correo}"/>
+                                    <p:ajax event="change" listener="#{configuraDpnBean.cambiaContacto()}" process="@this" update="fieldsetContacto" />
+                                </p:selectOneMenu>
+                                <h:outputText value="Mapas"/>
+                                <p:selectManyCheckbox id="basic" layout="grid" columns="3" value="#{configuraDpnBean.tipoMapas}" 
+                                                      rendered="#{configuraDpnBean.bmapasDisp}">
+                                    <f:selectItem itemLabel="Estados" itemValue="1" />
+                                    <f:selectItem itemLabel="Delegaciones" itemValue="2" />
+                                    <f:selectItem itemLabel="G40" itemValue="3" />
+                                </p:selectManyCheckbox>
+                            </b:panelGrid>
+                            <b:panelGrid colSpans="2,4,2,4" id="panelNuevo" rendered="#{configuraDpnBean.bvercorreos}" >
+                                <h:outputText value="Nombre:" />
+                                <b:inputText value="#{configuraDpnBean.contactosAlertasDpn.nombre}" maxlength="45"
+                                             style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()" />
+                                <h:outputText value="Apellido paterno:" />
+                                <b:inputText value="#{configuraDpnBean.contactosAlertasDpn.apellidoPaterno}" maxlength="60"
+                                             style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()" />
+                                <h:outputText value="Apellido materno:" />
+                                <b:inputText value="#{configuraDpnBean.contactosAlertasDpn.apellidoMaterno}" maxlength="60"
+                                             style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()" />
+                                <h:outputText value="Correo electrónico:" />
+                                <b:inputText value="#{configuraDpnBean.contactosAlertasDpn.correo}" style="width: 100%; height: 34px;" />
+                                <h:outputText value="Red:" />
+                                <b:inputText value="#{configuraDpnBean.contactosAlertasDpn.red}" style="width: 100%; height: 34px;" />
+                            </b:panelGrid>
+                            <br/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton value="#{configuraDpnBean.bopcion ? 'Guardar':'Actualizar'}" icon="plus" 
+                                                     process="panelContacto, panelNuevo"
+                                                     iconAlign="right" look="primary" update="idmessages"
+                                                     actionListener="#{configuraDpnBean.agregaContacto}"/>
+                                    <b:commandButton value="Borrar" icon="remove" 
+                                                     process="panelContacto, panelNuevo"
+                                                     iconAlign="right" look="danger" update="idmessages, fieldsetContacto"
+                                                     rendered="#{configuraDpnBean.bvercorreos}"
+                                                     actionListener="#{configuraDpnBean.borrarContacto}"/>
+                                    <b:commandButton value="Enviar Mail" icon="plus" 
+                                                     process="panelContacto, panelNuevo"
+                                                     iconAlign="right" look="primary" update="idmessages"
+                                                     actionListener="#{configuraDpnBean.enviaMail}"/>
+                                </b:buttonGroup>
+                            </div>
+                            <br/><br/>
+                        </p:fieldset>
+                        <p:separator/>
+                        <h2>Envío de correos personalizados</h2>
+                        <br/>
+                        <p:fieldset id="fieldsetCorreos" style="margin-bottom:20px; " >
+                            <b:panelGrid colSpans="2,10" id="panelCorreos">
+                                <h:outputText value="Destinatarios"/>
+                                <b:inputText value="#{configuraDpnBean.destinatario}" style="width: 100%; height: 34px;" />
+                                <h:outputText value="Asunto" />
+                                <b:inputText value="#{configuraDpnBean.asunto}" style="width: 100%; height: 34px;" />
+                            </b:panelGrid>
+                            <p:textEditor widgetVar="mensajeCorreo" value="#{configuraDpnBean.mensajeCorreo}" 
+                                          height="300" style="margin-bottom:10px"/>
+                            <br/>
+                            <p:fileUpload fileUploadListener="#{configuraDpnBean.adjuntaArchivos}" mode="advanced" 
+                                          dragDropSupport="true" process="@this" cancelLabel="Borrar archivo" 
+                                          uploadLabel="Adjuntar archivo" label="Selecciona archivo" 
+                                          update="tablaRepoDocs" multiple="false" sizeLimit="1000000" 
+                                          invalidSizeMessage="El tamaño del archivo excede los 10 MB" />
+                            <br></br>
+                            <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{configuraDpnBean.listaRepoDocsDto}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" >
+                                <p:column headerText="Nombre del archivo" class="formatoTablas">
+                                    <h:outputText value="#{listaRepoDocs.nombre}" />
+                                </p:column>
+                                <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                    <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                     look="success" icon="download" iconAlign="right">
+                                        <p:fileDownload value="#{listaRepoDocs.file}" />
+                                    </b:commandButton>
+                                    <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                     update="tablaRepoDocs" actionListener="#{configuraDpnBean.quitaArchivo}" 
+                                                     rendered="#{!loginBean.accesos.alertasDpnC}">                               
+                                    </b:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <br/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton value="Enviar Mail" icon="plus" 
+                                                     process="fieldsetCorreos"
+                                                     iconAlign="right" look="primary" update="idmessages"
+                                                     actionListener="#{configuraDpnBean.enviaMailPersonalizado}"/>
+                                </b:buttonGroup>
+                            </div>
+                            <br/><br/>
+                        </p:fieldset>
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.configuraDpn}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

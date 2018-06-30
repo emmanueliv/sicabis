@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.rptControlCalidad}">
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte de control de calidad" url="rptControlCalidad.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Reporte de control de calidad</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelDatos">
+                            <p:outputLabel for="estatus" value="Estatus" style="width: 100%; height: 34px;"/>
+                            <p:selectOneMenu id="estatus" value="#{rptControlCalidadBean.estatus}" style="width: 100%; height: 34px;">
+                                <f:selectItem itemLabel="Seleccione" itemValue="-1" />
+                                <f:selectItem itemValue="81" itemLabel="Todos" />
+                                <f:selectItem itemValue="82" itemLabel="Control Calidad" />
+                                <f:selectItem itemValue="83" itemLabel="Aprobado" />
+                                <f:selectItem itemValue="84" itemLabel="Devolucion" />
+                            </p:selectOneMenu> 
+                            <p:outputLabel for="fabricante" value="Fabricantes" style="width: 100%; height: 34px;"/>
+                            <p:selectOneMenu id="fabricante" value="#{rptControlCalidadBean.idFabricante}" 
+                                             style="width: 100%; height: 34px;"
+                                             filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Seleccione" itemValue="-1" />
+                                <f:selectItems value="#{rptControlCalidadBean.listFabricante}" var="fab" 
+                                               itemLabel="#{fab.nombre}" itemValue="#{fab.idFabricante}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel for="insumos" value="Insumos"  />
+                            <p:selectOneMenu id="insumos" value="#{rptControlCalidadBean.insumo}"
+                                             effect="fade" var="insumo" style="width: 100%; height: 34px;" 
+                                             filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemValue="-1" itemLabel="Seleccione" />
+                                <f:selectItems value="#{rptControlCalidadBean.listInsumos}" var="i" itemLabel="#{i.clave}" itemValue="#{i.clave}" />
+                                <p:column>
+                                    <h:outputText value="#{insumo.clave}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="lote" value="Lote"  />
+                            <p:inputText id="lote" value="#{rptControlCalidadBean.lote}" style="width: 100%; height: 34px;" />
+                            <h:outputLabel value="Fecha de Inicial:" style="font-size: 12px" />
+                            <p:calendar id="fechaInicial" style="width: 100%; height: 34px;" mask="true" showOn="button"
+                                        value="#{rptControlCalidadBean.encabezadosReportesDTO.fechaInicial}" pattern="dd/MM/yyyy" />
+                            <h:outputLabel value="Fecha de Final" style="font-size: 12px"/>
+                            <p:calendar id="fechaFinal" style="width: 100%; height: 34px;" mask="true" showOn="button"
+                                        value="#{rptControlCalidadBean.encabezadosReportesDTO.fechaFinal}" pattern="dd/MM/yyyy" />
+                        </b:panelGrid>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" process="panelDatos export" 
+                                             iconAlign="right" update="tablaRptControlCalidad export" 
+                                             actionListener="#{rptControlCalidadBean.buscarLista}" >
+                            </b:commandButton>
+                        </div>           
+                        <br></br>
+                        <div id="divTable" style="width: 100%;">
+                            <p:dataTable id="tablaRptControlCalidad" var="rptControl" value="#{rptControlCalidadBean.listControlCalidadDTO}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20" >
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaRptExistenciasCenadi" fileName="Reporte Existencias" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{rptControl.claveInsumo}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptControl.claveInsumo}" />
+                                </p:column>
+                                <p:column  headerText="Registro Control" class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rptControl.registroControl}" />
+                                </p:column>
+                                <p:column headerText="Lote" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{rptControl.lote}" />
+                                </p:column>
+                                <p:column headerText="Cantidad Recibida" class="formatoTablas" > 
+                                    <h:outputText value="#{rptControl.cantidadRecibidaControlCalidad}" />                     
+                                </p:column>    
+                                <p:column headerText="Cantidad" class="formatoTablas" > 
+                                    <h:outputText value="#{rptControl.inspeccion}" />
+                                </p:column>  
+                                <p:column headerText="Calidad Aceptable" class="formatoTablas" > 
+                                    <h:outputText value="#{rptControl.nivelCalidadAceptable}" />
+                                </p:column>  
+                                <p:column headerText="Cantidad Lote" class="formatoTablas" > 
+                                    <h:outputText value="#{rptControl.cantidadLote}" />
+                                </p:column>  
+                            </p:dataTable>  
+                        </div>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup id="export">
+                                <b:commandButton value="Exportar" icon="search" iconAlign="right" 
+                                                 rendered="#{rptControlCalidadBean.rptactivo == 1}"
+                                                 look="info" immediate="true" ajax="false"
+                                                 action="#{rptControlCalidadBean.exportarExcel}"/>
+                            </b:buttonGroup>
+                        </div>
+                        <p:separator/>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reportes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este modulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

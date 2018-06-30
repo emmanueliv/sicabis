@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.reportes}">
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte general de seguimiento" url="reporteGeneral.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Reporte general de seguimiento</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <p:outputLabel value="Número de RCB"/>
+                            <b:inputText value="#{reporteGeneralBean.numeroRcb}"
+                                         style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                        </b:panelGrid>
+
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton value="Buscar RCB" icon="search" iconAlign="right" look="info" 
+                                                 actionListener="#{reporteGeneralBean.consultarRcb()}" update="@form"/>
+                            </b:buttonGroup>
+                        </div>
+                        <p:separator/>
+
+                        <p:tree id="arbol" value="#{reporteGeneralBean.arbol}" var="hoja" dynamic="true" orientation="horizontal"
+                                selectionMode="single" rendered="#{reporteGeneralBean.arbolVisible}" selection="#{reporteGeneralBean.nodoSeleccionado}" >
+                            <p:ajax event="select" listener="#{reporteGeneralBean.onNodeSelect()}"/>
+                            <p:treeNode type="default">
+                                <h:outputText value="#{hoja}"/>
+                            </p:treeNode>
+                        </p:tree>
+                        <p:contextMenu for="arbol" >
+                            <p:menuitem value="Ver detalle" update="idmessages" actionListener="#{reporteGeneralBean.llenarNodo()}" 
+                                        icon="ui-icon-search" />
+                        </p:contextMenu>
+                        <br></br>
+                        <p:dataTable id="tablaReporte" value="#{reporteGeneralBean.reporteDTOList}" var="reporte"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown} {Exporters}" emptyMessage="No existen registros" rows="10" paginator="true"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de {totalRecords}, Pagina: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="5,10,15" rendered="#{reporteGeneralBean.arbolVisible}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaReporte" fileName="Reporte general de avance de RCB" />
+                                </h:commandLink>
+                            </f:facet>
+
+                            <p:column headerText="RCB">
+                                <h:outputText value="#{reporte.rcb}" />
+                            </p:column>
+
+                            <p:column headerText="Procedimiento">
+                                <h:outputText value="#{reporte.procedimiento}" />
+                            </p:column>
+                            <p:column headerText="Fallo">
+                                <h:outputText value="#{reporte.fallo}" />
+                            </p:column>
+                            <p:column headerText="Contrato">
+                                <h:outputText value="#{reporte.contrato}" />
+                            </p:column>
+                            <p:column headerText="Convenio">
+                                <h:outputText value="#{reporte.convenio}" />
+                            </p:column>
+                            <p:column headerText="Orden de suministro">
+                                <h:outputText value="#{reporte.ordenSuministro}" />
+                            </p:column>
+                            <p:column headerText="Remisión">
+                                <h:outputText value="#{reporte.remision}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reportes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este mÃ³dulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

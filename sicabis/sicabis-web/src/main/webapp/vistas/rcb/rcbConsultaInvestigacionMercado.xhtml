@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.investigacionMercado}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Investigación de mercado" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+
+                    <h2>Investigación de mercado</h2>
+
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+
+                    <h:form id='formRCB' style="width:100%; height: 100%" > 
+                        <br></br>
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:outputText id="lblTablaRcb" value="Lista de RCB:" />
+                            <h:panelGroup style="display:block; text-align:right">
+                                <p:commandButton value="Actualizar" icon="fa fa-refresh" iconPos="right" 
+                                                 styleClass="customInfo btn-primary" style=""
+                                                 actionListener="#{invMercadoBean.onClickConsultaSolInvesMercadoRcbs()}"
+                                                 update="pnlTableRcb"/>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br></br>
+
+                        <h:panelGrid id="pnlTableRcb" columns="2">
+                            <p:dataTable id="tablaRcb" var="rcb" value="#{invMercadoBean.listRcbViewDto}" emptyMessage="No hay registros">
+                                <p:column headerText="Número" class="formatoTablas"> 
+                                    <h:outputText value="#{rcb.rcb.numero}" />
+                                </p:column>
+                                <p:column headerText="Unidad responsable" class="formatoTablas">
+                                    <h:outputText value="#{rcb.rcb.idUnidadResponsable.nombre}"/>                                    
+                                </p:column>
+                                <p:column headerText="Número de claves" class="formatoTablas"> 
+                                    <h:outputText value="#{rcb.numeroClaves}" />
+                                </p:column>
+                                <p:column headerText="Periodo a cubrir" class="formatoTablas" > 
+                                    <h:outputText value="#{rcb.rcb.periodo}" />
+                                </p:column>
+                                <p:column headerText="Tipo de compra" class="formatoTablas"> 
+                                    <h:outputText value="#{rcb.rcb.idTipoCompra.nombre}" />
+                                </p:column>
+                                <p:column headerText="Fecha de Elaboración" class="formatoTablas"> 
+                                    <h:outputText value="#{rcb.rcb.fechaElaboracion}">
+                                        <f:convertDateTime pattern="dd/MM/YYYY" />
+                                    </h:outputText>   
+                                </p:column>
+                                <p:column headerText="Estatus" class="formatoTablas"> 
+                                    <h:outputText value="#{rcb.rcb.idEstatus.nombre}" />
+                                </p:column>
+                                <p:column headerText="Opciones" class="formatoTablas" rendered="#{!loginBean.accesos.investigacionMercadoC}"> 
+                                    <b:commandButton value="" look="primary" action="#{invMercadoBean.irRcbDetalle(rcb)}" process="@this" 
+                                                     update="tablaRcb" id="btnDetalle" icon="search" iconAlign="right"/>
+                                    <p:tooltip for="btnDetalle" value="Ver detalle"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGrid>                            
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <div style="display:block; text-align:right">
+                                <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                                <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                            </div>
+                        </p:confirmDialog>
+
+
+
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.investigacionMercado}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

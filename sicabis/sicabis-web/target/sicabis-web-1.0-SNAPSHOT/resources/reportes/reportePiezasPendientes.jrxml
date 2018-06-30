@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-29T13:44:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteEntradaCenadi" pageWidth="802" pageHeight="595" orientation="Landscape" columnWidth="762" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="06ad7143-b507-4376-9ad9-449dd3a111c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="listInfoPPAD" class="java.util.List"/>
+	<field name="anio" class="java.lang.Integer"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="165" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="100" height="30" uuid="f6dcd96e-82dd-40ac-af1e-b54b3c4f211e"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="00d1abb9-0411-4bbf-91f5-6c88efa18044"/>
+				<text><![CDATA[Fecha Elaboración: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="0" width="550" height="100" uuid="2b26924d-79de-4fa6-8f00-0c8e7ce705d9"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES
+DEPARTAMENTO DE ALMACENAJE Y DISTRIBUCIÓN REGIÓN SURESTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="110" width="240" height="30" uuid="0d4120ae-19d7-4ec6-b043-cdedc514fe06"/>
+				<text><![CDATA[Reporte de piezas pendientes de ingresar ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="533" y="110" width="100" height="30" uuid="0bf5ed61-1951-40aa-b010-af409868f3e2"/>
+				<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="44" y="40" width="116" height="94" uuid="a95a82f3-5e34-49fe-af14-e9be9ff224e3"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="160" width="760" height="5" backcolor="#C2BEBE" uuid="eb6fab5e-4221-4561-80ab-e5867fc2d6fb"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="759" height="100" uuid="c389591d-9af1-4dbf-a9ec-e8b2a5525cfa"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoPPAD})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReportePiezasPendientes.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

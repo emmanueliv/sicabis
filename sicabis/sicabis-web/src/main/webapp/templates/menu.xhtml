@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <div id="menu">
+        <b:listLinks   >
+            <b:navLink header="Planeación" style="font-size: 16px; font-weight: bold;" rendered="#{loginBean.accesos.planeacion}"/>
+            <p:separator rendered="#{loginBean.accesos.planeacion}"/>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.catalogoInstitucionalInsumosSalud}">
+                <f:facet name="heading">
+                    <h:outputText value="Catalogo Institucional de Insumos para la Salud" />
+                </f:facet>
+                <b:navLink value="Tarea programada para la actualización del catálogo (SIAM a SICABIS)" icon="globe"
+                           href="#{loginBean.ctxPath}/vistas/rcb/catalogoInsumos.xhtml" 
+                           rendered="#{loginBean.accesos.tareaProgramadaActualizacionCatalogo}" />
+            </b:panel>            
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.solicitudInsumosParaLaSalud}">
+                <f:facet name="heading">
+                    <h:outputText value="Solicitud de Insumos para la Salud" />
+                </f:facet>
+
+                <b:navLink value="Solicitud Mensual" icon="globe"  href="#{loginBean.ctxPath}/vistas/rcb/solicitudUnidades.xhtml?idTipoSolicitud=1" /><br/>
+                <b:navLink value="Solicitud de Soporte de Vida" icon="globe" href="#{loginBean.ctxPath}/vistas/rcb/solicitudUnidades.xhtml?idTipoSolicitud=2" />
+            </b:panel>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.planeacionMensual}">
+                <f:facet name="heading">
+                    <h:outputText value="Planeación Mensual" />
+                </f:facet>
+                <b:navLink value="Consulta de Solicitudes de Unidades Médicas" icon="globe" href="#{loginBean.ctxPath}/vistas/rcb/planeacionConsultaSolicitudes.xhtml"
+                           rendered="#{loginBean.accesos.consultaSolicitudesUnidadesMedicas}"/><br/>
+                <b:navLink value="Distribucion Mensual" icon="globe"  href="#{loginBean.ctxPath}/vistas/rcb/planeacionHistoricaConsulta.xhtml?idTipoSolicitud=1"
+                           rendered="#{loginBean.accesos.distribucionMensual}"/>
+                <b:navLink value="Distribucion Por Soporte de Vida" icon="globe"  href="#{loginBean.ctxPath}/vistas/rcb/planeacionHistoricaConsulta.xhtml?idTipoSolicitud=2"
+                           rendered="#{loginBean.accesos.distribucionSoporteVida}"/>
+            </b:panel>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.planeacionAnual}">
+                <f:facet name="heading">
+                    <h:outputText value="Planeacion Anual" />
+                </f:facet>
+                <b:navLink value="Generacion de Anteproyecto (CR)" icon="globe" href="#{loginBean.ctxPath}/vistas/rcb/cr.xhtml"
+                           rendered="#{loginBean.accesos.generacionAnteproyectoCR}"/>
+            </b:panel>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.generacionRCB}">
+                <f:facet name="heading">
+                    <h:outputText value="Generación RCB"/>
+                </f:facet>
+                <b:navLink value="RCB Creacion y Seguimiento" icon="globe" href="#{loginBean.ctxPath}/vistas/rcb/rcb.xhtml" 
+                           rendered="#{loginBean.accesos.rcbCreacionSeguimiento}"/><br/>
+                <b:navLink value="Solicitud de Investigación de Mercado" icon="globe"
+                           rendered="#{loginBean.accesos.solicitudInvestigacionMercado}" href="#{loginBean.ctxPath}/vistas/rcb/rcbConsultaInvestigacionMercado.xhtml"/>
+            </b:panel>     
+            <b:navLink value="Generacion de Pre-Orden de Suministro" href="#{loginBean.ctxPath}/vistas/rcb/rcbConsultaInvestigacionMercado.xhtml" 
+                       icon="globe" rendered="#{loginBean.accesos.generacionPreOrdenSuministro}">
+                <f:ajax listener="#{loginBean.tipoOrdenSuministro(1)}" />
+            </b:navLink>     
+            <br/>
+            <b:navLink header="Adquisicion" style="font-size: 16px; font-weight: bold;"
+                       rendered="#{loginBean.accesos.adquisicion}"/>
+            <p:separator rendered="#{loginBean.accesos.adquisicion}"/>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.adjudicacion}">
+                <f:facet name="heading">
+                    <h:outputText value="Adjudicacion"/>
+                </f:facet>
+                <b:navLink value="Procedimientos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/procedimiento.xhtml" 
+                           rendered="#{loginBean.accesos.procedimientos}"/><br/>
+                <b:navLink value="Presentacion Propuestas" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/propuestas.xhtml" 
+                           rendered="#{loginBean.accesos.presentacionPropuestas}"/><br/>
+                <b:navLink value="Fallos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/fallos.xhtml" 
+                           rendered="#{loginBean.accesos.fallos}"/>
+            </b:panel>
+            <b:panel collapsed="true" rendered="#{loginBean.accesos.seguimientoContratos}">
+                <f:facet name="heading">
+                    <h:outputText value="Seguimiento Contratos" />
+                </f:facet>
+                <b:navLink value="Contratos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/contrato.xhtml" 
+                           rendered="#{loginBean.accesos.contratos}"/><br/>
+                <b:navLink value="Convenios" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/convenio.xhtml"
+                           rendered="#{loginBean.accesos.convenios}"/><br/>
+                <b:navLink value="Ordenes de Suministro" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/ordenSuministro.xhtml"
+                           rendered="#{loginBean.accesos.ordenesSuministro}">
+                    <f:ajax listener="#{loginBean.tipoOrdenSuministro(0)}" />
+                </b:navLink>
+            </b:panel>
+            <b:panel collapsed="true"  rendered="#{loginBean.accesos.penasConvencionales}">
+                <f:facet name="heading">
+                    <h:outputText value="Penas Convencionales"/>
+                </f:facet>
+                <b:navLink value="Calculo de Penas Convencionales (Alertas)" href="#{loginBean.ctxPath}/vistas/adquisicion/detalleCancelacionRecision.xhtml" icon="glyphicon-list-alt" 
+                           rendered="#{loginBean.accesos.calculoPenasConvencionales}"/><br/>
+                <b:navLink value="Cancelaciones" href="#{loginBean.ctxPath}/vistas/adquisicion/verCancelacion.xhtml" icon="glyphicon-list-alt"
+                           rendered="#{loginBean.accesos.cancelaciones}"/><br/>
+                <b:navLink value="Rescisiones" href="#{loginBean.ctxPath}/vistas/adquisicion/verRescisiones.xhtml" icon="glyphicon-list-alt"
+                           rendered="#{loginBean.accesos.cancelaciones}"/><br/>
+            </b:panel>
+            <b:navLink  value="Investigacion de Mercado" icon="link" href="#{loginBean.ctxPath}/vistas/rcb/rcbConsultaInvestigacionMercado.xhtml"
+                        rendered="#{loginBean.accesos.investigacionMercado}" ></b:navLink>
+            <br/>
+            <b:navBar brand="Recepcion" brandHref="#{loginBean.ctxPath}/vistas/recepcion/inicioRecepcion.xhtml"  style="font-size: 16px; font-weight: bold;" 
+                      rendered="#{loginBean.accesos.recepcion}"/>
+            <p:separator rendered="#{loginBean.accesos.recepcion}"/>
+            <b:navLink  value="Recepcion Documental" href="#{loginBean.ctxPath}/vistas/recepcion/recepcionDocumental.xhtml" icon="glyphicon-list-alt"
+                        rendered="#{loginBean.accesos.recepcionDocumental}"/>
+            <b:navLink  value="Control de Calidad" href="#{loginBean.ctxPath}/vistas/recepcion/controlCalidad.xhtml" icon="glyphicon-list-alt"
+                        rendered="#{loginBean.accesos.controlCalidad}"/>
+            <b:navLink  value="Recepcion de Insumos para la Salud" href="#{loginBean.ctxPath}/vistas/recepcion/recepcionInsumos.xhtml" icon="glyphicon-list-alt"
+                        rendered="#{loginBean.accesos.recepcionInsumosSalud}"/>
+            <b:navLink  value="Recoleccion de Insumos" href="#{loginBean.ctxPath}/vistas/recepcion/recoleccionInsumos.xhtml" icon="glyphicon-list-alt"
+                        rendered="#{loginBean.accesos.recoleccionInsumos}"/>
+            <b:navLink  value="Canjes" href="#{loginBean.ctxPath}/vistas/recepcion/canjePermuta.xhtml" icon="glyphicon-list-alt"
+                        rendered="#{loginBean.accesos.canjes}"/>
+            <br/>
+            <b:navBar brand="Reportes" style="font-size: 16px; font-weight: bold;" 
+                       rendered="#{loginBean.accesos.reportes}"/>
+            <p:separator/>
+            <b:navLink value="Reporte General de Seguimiento" 
+                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/reporteGeneral.xhtml" icon="glyphicon-list-alt" 
+                       rendered="#{loginBean.accesos.reporteGeneralSeguimiento}"/>
+             <b:navLink value="Reporte General de Seguimiento 2" 
+                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/reporteConsolidado.xhtml" icon="glyphicon-list-alt" 
+                       rendered="#{loginBean.accesos.reporteConsolidadoAdjudicaciones}"/>
+             <b:navLink value="Indicadores" 
+                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/reporteConsolidado.xhtml" icon="glyphicon-list-alt" 
+                       rendered="#{loginBean.accesos.indicadores}"/>
+        </b:listLinks>
+    </div>
+</ui:composition>

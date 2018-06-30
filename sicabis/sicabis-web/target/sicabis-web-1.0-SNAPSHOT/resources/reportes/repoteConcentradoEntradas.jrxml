@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-22T17:56:04 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repoteEntradasDevoluciones" pageWidth="1450" pageHeight="595" orientation="Landscape" columnWidth="1410" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b214cd72-3a94-4a49-8db1-6dfbb81c7616">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listConcentrado" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="191" splitType="Stretch">
+			<staticText>
+				<reportElement key="" x="0" y="0" width="100" height="30" uuid="ab4b1a46-15a0-42cb-bb8d-726cb4baf4f0"/>
+				<text><![CDATA[Fecha Elaboración:]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="100" height="30" uuid="40bde484-8661-4f68-9af8-507a0910c520"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="776" y="130" width="100" height="30" uuid="ed8b2b37-2a93-413c-949c-2475f02be107"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="634" y="130" width="140" height="30" uuid="585c33c7-850e-4b34-b857-19ef90431da8"/>
+				<text><![CDATA[Concentrado con corte al]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="0" width="580" height="114" uuid="f6a30719-5322-495f-a7fa-c7cddfe4f5a3"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="138" y="46" width="220" height="114" uuid="65c9b76e-3937-476c-ab15-91b372579fca"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="180" width="1410" height="11" backcolor="#918989" uuid="76dc65c9-22c9-47bb-9099-b734637eac79"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="130" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="1410" height="130" uuid="d72ecdf5-47c2-48dc-848d-02dc607bc2c9"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listConcentrado})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subRepoteConcentradoEntradas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-28T16:14:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReportePiezasPendientes" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5459de3b-dc1b-422e-a6fe-9d2ce0ce0781">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="CEPMedCero" class="java.lang.Integer"/>
+	<field name="CSEPMedCero" class="java.lang.Integer"/>
+	<field name="CEPMatCuracionCero" class="java.lang.Integer"/>
+	<field name="CSEPMatCuracionCero" class="java.lang.Integer"/>
+	<field name="totalesCero" class="java.lang.Integer"/>
+	<field name="CEPMed" class="java.lang.Integer"/>
+	<field name="CSEPMed" class="java.lang.Integer"/>
+	<field name="CEPMatCuracion" class="java.lang.Integer"/>
+	<field name="CSEPMatCuracion" class="java.lang.Integer"/>
+	<field name="totales" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="512" y="35" width="100" height="30" forecolor="#FFFFFF" backcolor="#050505" uuid="59b0f87f-901c-40de-a43d-03092fba6f50"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves sin entrega programada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="416" y="36" width="92" height="29" forecolor="#FFFFFF" backcolor="#050505" uuid="ef6a6ad8-dfc8-48eb-b650-4d56bc8b1ef6"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves con entrega programada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="206" y="35" width="100" height="30" forecolor="#FFFFFF" backcolor="#050505" uuid="6790af00-2102-444a-ba53-7a8ea9196853"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves con entrega programada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="311" y="35" width="100" height="30" forecolor="#FFFFFF" backcolor="#050505" uuid="3d6b366f-8e7e-4302-91ab-6b873fd8bf10"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves sin entrega programada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="5" y="3" width="80" height="61" forecolor="#FFFFFF" backcolor="#000000" uuid="f5800989-9d7d-4925-a58e-23cae0192c1d"/>
+				<box>
+					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="618" y="4" width="100" height="60" forecolor="#FFFFFF" backcolor="#080707" uuid="c32a8786-e847-4a3d-8a33-ec04ea3537b5"/>
+				<box>
+					<topPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<leftPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<bottomPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<rightPen lineWidth="0.7" lineColor="#FCF7F7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="416" y="5" width="196" height="30" forecolor="#FFFFFF" backcolor="#080707" uuid="3765409e-cb0b-4e3b-91f8-57a52420aac2"/>
+				<box>
+					<topPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<leftPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<bottomPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<rightPen lineWidth="0.7" lineColor="#FCF7F7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Material de Curacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="206" y="5" width="205" height="30" forecolor="#FFFFFF" backcolor="#080707" uuid="3fcd7a3f-97d5-4ee1-85a5-548fe8aa14d2"/>
+				<box>
+					<topPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<leftPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<bottomPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<rightPen lineWidth="0.7" lineColor="#FCF7F7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Medicamentos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="96" y="5" width="100" height="60" forecolor="#FFFFFF" backcolor="#080707" uuid="65f578b5-dc56-4096-a1c0-cc8cc4edb485"/>
+				<box>
+					<topPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<leftPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<bottomPen lineWidth="0.7" lineColor="#FCF7F7"/>
+					<rightPen lineWidth="0.7" lineColor="#FCF7F7"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claves]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="67" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="37" width="80" height="30" uuid="5c859663-4180-45fb-b823-5bbea20cab1d"/>
+				<box>
+					<topPen lineWidth="0.7"/>
+					<leftPen lineWidth="0.7"/>
+					<bottomPen lineWidth="0.7"/>
+					<rightPen lineWidth="0.7"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cob. = 0 < a 30 dias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4" y="2" width="80" height="30" forecolor="#FFFFFF" backcolor="#8C8989" uuid="7eeeada6-a6b8-4575-9dea-0e79f4f1f3d3"/>
+				<box>
+					<topPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.7" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[En cero]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="205" y="2" width="100" height="30" uuid="c030006c-9520-431a-a80e-7cc60b191426"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMedCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="2" width="100" height="30" uuid="2b13a314-d139-4a32-9463-1c5709bc197d"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMedCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="2" width="92" height="30" uuid="d5c7559b-b065-4aba-b943-c4510f042dea"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMatCuracionCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="511" y="2" width="100" height="30" uuid="29656277-b681-482c-bbd7-4834b23ea98c"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMatCuracionCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="617" y="2" width="100" height="30" uuid="39c15276-43b0-40bd-9a9a-7fdfeae41141"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="36" width="100" height="30" uuid="534414a9-754c-4436-acb7-285bf65fefaf"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMed})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="36" width="100" height="30" uuid="dcb74f86-6fda-4fea-ac36-49c9dc5b65ec"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMed})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="36" width="92" height="30" uuid="a503681d-1d7a-45c9-b9bd-0a1fc5a94005"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMatCuracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="512" y="36" width="99" height="30" uuid="7c199d9d-b2e1-46ce-9bb9-3c843db2262c"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMatCuracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="36" width="101" height="30" uuid="757a1c2d-dc7d-4cff-8111-6f0d8b1b9d44"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totales})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="37" width="101" height="30" uuid="1be6fa96-493a-447b-9adc-efb2b0f1c79b"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totales})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="96" y="2" width="99" height="30" uuid="87c5a759-03e3-463d-accb-3fa681528e27"/>
+				<box>
+					<topPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.8" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="25">
+			<staticText>
+				<reportElement x="9" y="5" width="74" height="20" uuid="f8cb09d5-ceb1-4e7b-9c01-164820b21ac6"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="95" y="5" width="100" height="19" uuid="7756175a-9d49-4616-9df7-87de827c8b8b"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero}+$F{totales})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="5" width="100" height="19" uuid="d394684e-670c-479f-a5de-e0c057f9506e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMed}+$F{CEPMedCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="5" width="100" height="19" uuid="8d79fd83-4f06-48af-9dec-9b7043e69d0b"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMed}+$F{CSEPMedCero})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="5" width="95" height="19" uuid="e21f8a40-f2ef-405a-beb6-7fcfdc1002bf"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CEPMatCuracionCero}+$F{CEPMatCuracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="515" y="5" width="95" height="19" uuid="76e88b4d-5390-4781-adf9-6166f59958f5"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{CSEPMatCuracionCero}+$F{CSEPMatCuracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="617" y="5" width="100" height="19" uuid="998f2600-5a05-4576-a565-5776bc0a7aa6"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("###,###,###").format($F{totalesCero}+$F{totales})]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

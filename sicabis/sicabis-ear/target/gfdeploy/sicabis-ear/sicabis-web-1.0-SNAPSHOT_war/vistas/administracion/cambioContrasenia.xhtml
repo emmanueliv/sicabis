@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="frmbCambio">
+                    <p:dialog visible="true" showEffect="clip" resizable="false" widgetVar="dialogCambioPass" modal="true" width="50%"
+                              header="Cambio de contraseña" closable="#{cambioContraseniaBean.breadCrumbVisible}" >
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="12">
+                            <h:outputText value="Es necesario realizar el cambio de contraseña" style="font-weight: bold"/>
+                        </b:panelGrid>
+                        <br></br>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Nombre de usuario:"/>
+                            <b:inputText value="#{cambioContraseniaBean.usuarioLogin.usuario}" disabled="true"/>
+                            <h:outputText value="Contraseña:"/>
+                            <p:password value="#{cambioContraseniaBean.usuarioLogin.contrasenia}"
+                                        feedback="true"
+                                        promptLabel="Ingresa tu contraseña" weakLabel="Nivel de seguridad: Bajo"
+                                        goodLabel="Nivel de seguridad: Fuerte" strongLabel="Nivel de seguridad: oontraseña segura"/>
+                        </b:panelGrid>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton  value="Actualizar" icon="floppy-disk" iconAlign="right" look="primary" actionListener="#{cambioContraseniaBean.guardarUsuario}"/>
+                            </b:buttonGroup>
+                        </div>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

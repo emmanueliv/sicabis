@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>SICABIS</title>
+        <h:outputStylesheet library="css" name="main.css"  />
+        <h:outputStylesheet library="css" name="style.css"  />
+        <h:outputStylesheet library="css" name="font-awesome.css" />
+        <h:outputStylesheet library="css" name="custom-theme-primefaces.css" />        
+    </h:head>
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="ad" value="#{loginBean.alertaDPN}"/>
+        </f:metadata>
+        <b:navBar brand="Sistema Integral de la Cadena de Abasto de Insumos para la Salud" brandHref="#" inverse="true" fluid="true"  />
+        <ui:include src="../templates/headerImage.xhtml"/>
+
+        <h:form id="formlogin" style="padding-top: 100px;">
+            <b:panel styleClass="panel-central" style="width: 430px; height: 30%; padding-top: 15px; border: none;" >
+                <h:panelGrid columns="1" style="margin: 0 auto; width: 100%;">
+                    <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" />
+                </h:panelGrid>
+                <h:panelGrid columns="1" style="margin: 0px auto;" styleClass="DataTable">
+                    <h3>Iniciar Sesión</h3>
+                    <b:inputText  placeholder="Usuario" id="userAccessKey" value="#{loginBean.usuario}" >
+                        <f:facet name="prepend">
+                            <b:icon name="user" />
+                        </f:facet>
+                    </b:inputText>
+
+                    <b:inputText id="userPassword" placeholder="Contraseña" type="password" value="#{loginBean.contrasenia}" >
+                        <f:facet name="prepend">
+                            <b:icon name="asterisk" />
+                        </f:facet>
+                    </b:inputText>                    
+                </h:panelGrid>
+                <h:panelGrid columns="2" styleClass="panel-central">
+                    <b:commandButton value="Ingresar" update=":formlogin" icon="log-in" iconAlign="right" size="lg" look="primary" styleClass="button-large-central" action="#{loginBean.login(request, response)}"  />
+                </h:panelGrid>
+            </b:panel>
+
+        </h:form>
+        <ui:include src="../templates/footer.xhtml"/>
+    </h:body>
+</html>
+

@@ -1,0 +1,247 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:outputStylesheet library="css" name="main.css"  />
+    <h:form>
+        <div style="margin-bottom: 70px">
+            <b:navBar id="menu" brand="SICABIS" brandHref="#" inverse="true" fluid="true" class="navbar-fixed-top">
+                <b:navbarLinks pull="right"><b:navLink value=" " href="#"></b:navLink></b:navbarLinks>
+                <b:navbarLinks pull="left">
+                    <b:dropMenu value="Planeación" icon="glyphicon-cog"
+                                rendered="#{loginBean.accesos.planeacion}">
+                        <b:dropMenu display="inline" value="Catálogo institucional de insumos para la salud" icon="glyphicon-cog" 
+                                    rendered="#{loginBean.accesos.catalogoInstitucionalInsumosSalud}">
+                            <b:navLink value="Tarea programada para la actualización del catálogo (SIAM a SICABIS)" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/catalogoInsumos.xhtml" icon="globe" style="width: 500px;float:right"
+                                       rendered="#{loginBean.accesos.tareaProgramadaActualizacionCatalogo}" />
+                        </b:dropMenu>
+                        <b:dropMenu value="Solicitud de insumos para la salud" icon="glyphicon-cog" 
+                                    rendered="#{loginBean.accesos.solicitudInsumosParaLaSalud}">
+                            <b:navLink value="Solicitud mensual" icon="globe"
+                                       href="#{loginBean.ctxPath}/vistas/rcb/solicitudUnidades.xhtml?idTipoSolicitud=1" />
+                            <b:navLink value="Solicitud de soporte de vida" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/solicitudUnidades.xhtml?idTipoSolicitud=2" />
+                        </b:dropMenu>
+                        <b:dropMenu value="Planeación mensual" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.planeacionMensual}">
+                            <b:navLink value="Consulta de solicitudes de unidades médicas" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/planeacionConsultaSolicitudes.xhtml"
+                                       rendered="#{loginBean.accesos.consultaSolicitudesUnidadesMedicas}"/>
+                            <b:navLink value="Distribución mensual" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/planeacionHistoricaConsulta.xhtml?idTipoSolicitud=1"
+                                       rendered="#{loginBean.accesos.distribucionMensual}"/>
+                            <b:navLink value="Distribución por soporte de vida" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/planeacionHistoricaConsulta.xhtml?idTipoSolicitud=2"
+                                       rendered="#{loginBean.accesos.distribucionSoporteVida}"/>
+                        </b:dropMenu>
+                        <b:dropMenu value="Demanda Programada Nacional" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.dpn}">
+                            <b:navLink value="Configuración día/mes solicitud normal" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/configuracionDiaMesSolicitudes.xhtml"
+                                       rendered="#{loginBean.accesos.configuracionDiaMes}"/>
+                            <b:navLink value="Consulta de demanda programada nacional preliminar" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/consultaDPN.xhtml"
+                                       rendered="#{loginBean.accesos.consultaDpn}"/>
+                            <b:navLink value="Reporte interactivo estadístico de consumo" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/alertasDpn.xhtml"
+                                       rendered="#{loginBean.accesos.alertasDpn}"/>
+                            <b:navLink value="Actualización Reporte Interactivo" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/actualizaciónReporteInteractivo.xhtml"
+                                       rendered="#{loginBean.accesos.alertasDpn}"/>
+                            <b:navLink value="Reporte interactivo estadístico de consumo2" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/reporteInteractivoConsumo.xhtml"
+                                       rendered="false"/>
+                            <b:navLink value="Configuración insumos de la demanda programada nacional" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/configuraInsumoDpn.xhtml"
+                                       rendered="#{loginBean.accesos.configuraInsumosDpn}"/>
+                        </b:dropMenu>
+                        <b:dropMenu value="Planeación anual" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.planeacionAnual}">
+                            <b:navLink value="Generación de anteproyecto (CR)" icon="globe" 
+                                       href="#{loginBean.ctxPath}/vistas/rcb/cr.xhtml"
+                                       rendered="#{loginBean.accesos.generacionAnteproyectoCR}"/>
+                        </b:dropMenu>
+                        <b:dropMenu value="Generación RCB" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.generacionRCB}">
+                            <b:navLink value="RCB creación y seguimiento" icon="globe" href="#{loginBean.ctxPath}/vistas/rcb/rcb.xhtml" 
+                                       rendered="#{loginBean.accesos.rcbCreacionSeguimiento}"/>
+                            <b:navLink value="Solicitud de investigación de mercado" icon="globe"
+                                       rendered="false"/>
+                        </b:dropMenu>       
+                        <b:navLink value="Orden de suministro" href="#{loginBean.ctxPath}/vistas/adquisicion/ordenSuministro.xhtml" 
+                                   icon="globe" rendered="#{loginBean.accesos.generacionPreOrdenSuministro}">
+                            <f:ajax listener="#{loginBean.tipoOrdenSuministro(0)}" />
+                        </b:navLink>
+                        <b:navLink rendered="true" value=" Descargar manual de usuario">
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" style="border: white;" class="pull-left">
+                                <p:fileDownload value="#{manualesBean.getFile(1)}" />
+                            </p:commandButton>
+                        </b:navLink>
+                    </b:dropMenu>
+                    <b:dropMenu value="Adquisición" icon="glyphicon-cog"
+                                rendered="#{loginBean.accesos.adquisicion}">
+                        <b:dropMenu value="Adjudicación" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.adjudicacion}">
+                            <b:navLink value="Procedimientos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/procedimiento.xhtml" 
+                                       rendered="#{loginBean.accesos.procedimientos}"/>
+                            <b:navLink value="Presentación de propuestas" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/propuestas.xhtml" 
+                                       rendered="#{loginBean.accesos.presentacionPropuestas}"/>
+                            <b:navLink value="Fallos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/fallos.xhtml" 
+                                       rendered="#{loginBean.accesos.fallos}"/>
+                        </b:dropMenu>
+                        <b:dropMenu value="Seguimiento Contratos" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.seguimientoContratos}">
+                            <b:navLink value="Contratos" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/contrato.xhtml" 
+                                       rendered="#{loginBean.accesos.contratos}"/>
+                            <b:navLink value="Convenios" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/convenio.xhtml"
+                                       rendered="#{loginBean.accesos.convenios}"/>
+                            <b:navLink value="Ordenes de Suministro" icon="globe" href="#{loginBean.ctxPath}/vistas/adquisicion/ordenSuministro.xhtml"
+                                       rendered="false">
+                                <f:ajax listener="false" />
+                            </b:navLink>
+                        </b:dropMenu>
+                        <b:dropMenu value="Penas Convencionales" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.penasConvencionales}">
+                            <b:navLink value="Cancelación y rescición" 
+                                       href="#{loginBean.ctxPath}/vistas/adquisicion/cancelacionRescision.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.cancelacionRescision}"/>
+                            <b:navLink value="Cancelaciones" href="#{loginBean.ctxPath}/vistas/adquisicion/verCancelacion.xhtml" icon="glyphicon-list-alt"
+                                       rendered="false"/>
+                            <b:navLink value="Rescisiones" href="#{loginBean.ctxPath}/vistas/adquisicion/verRescisiones.xhtml" icon="glyphicon-list-alt"
+                                       rendered="false"/>
+                        </b:dropMenu>
+                        <b:navLink  value="Investigación de mercado" icon="link" 
+                                    href="#{loginBean.ctxPath}/vistas/rcb/rcbConsultaInvestigacionMercado.xhtml"
+                                    rendered="#{loginBean.accesos.investigacionMercado}" />
+                        <b:navLink rendered="true" value=" Descargar manual">
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" style="border: white;" class="pull-left">
+                                <p:fileDownload value="#{manualesBean.getFile(2)}" />
+                            </p:commandButton>
+                        </b:navLink>
+                    </b:dropMenu>
+                    <b:dropMenu value="Recepción" icon="glyphicon-cog"
+                                rendered="#{loginBean.accesos.recepcion}">
+                        <b:navLink  value="Recepción documental" 
+                                    href="#{loginBean.ctxPath}/vistas/recepcion/recepcionDocumental.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.recepcionDocumental}"/>
+                        <b:navLink  value="Control de calidad" 
+                                    href="#{loginBean.ctxPath}/vistas/recepcion/controlCalidad.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.controlCalidad}"/>
+                        <b:navLink  value="Recepción de insumos para la salud" 
+                                    href="#{loginBean.ctxPath}/vistas/recepcion/recepcionInsumos.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.recepcionInsumosSalud}"/>
+                        <b:navLink  value="Recolección de insumos" 
+                                    href="#{loginBean.ctxPath}/vistas/recepcion/recoleccionInsumos.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.recoleccionInsumos}"/>
+                        <b:navLink  value="Canjes" href="#{loginBean.ctxPath}/vistas/recepcion/canjePermuta.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.canjes}"/>
+                        <b:navLink  value="Devoluciones" 
+                                    href="#{loginBean.ctxPath}/vistas/recepcion/devoluciones.xhtml" icon="glyphicon-list-alt"
+                                    rendered="#{loginBean.accesos.cierreDevoluciones}"/>
+                        <b:navLink rendered="true" value=" Descargar manual de usuario">
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" style="border: white;" class="pull-left">
+                                <p:fileDownload value="#{manualesBean.getFile(3)}" />
+                            </p:commandButton>
+                        </b:navLink>
+                    </b:dropMenu>
+                    <b:dropMenu value="Reportes" icon="glyphicon-cog"
+                                rendered="#{loginBean.accesos.reportes}">
+                        <b:navLink value="Reporte general de seguimiento" icon="globe"
+                                   href="#{loginBean.ctxPath}/vistas/reporteGeneral/reporteGeneral.xhtml" 
+                                   rendered="#{loginBean.accesos.reporteGeneralSeguimiento}"/>
+                        <b:navLink value="Reporte consolidado de adjudicaciones" icon="globe"
+                                   href="#{loginBean.ctxPath}/vistas/reporteGeneral/reporteConsolidado.xhtml" 
+                                   rendered="#{loginBean.accesos.reporteConsolidadoAdjudicaciones}"/>
+                        <b:dropMenu value="Reportes recepción" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.reporteRecepcion}">
+                            <b:navLink value="Reporte entradas cenadi" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptEntradasCenadi.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptEntradasCenadi}"/>
+                            <b:navLink value="Reporte piezas pendientes" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptPiezasPendientesAnual.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptPiezasPendientesAnual}"/>
+                            <b:navLink value="Reporte control calidad" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptControlCalidad.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptControlCalidad}"/>
+                            <b:navLink value="Reporte de insumos" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptReporteClaves.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptReporteClaves}"/>
+                            <b:navLink value="Reporte de devoluciones y entradas" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptReporteDevolucionesEntradas.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptReporteDevolucionesEntradas}"/>
+                            <b:navLink value="Reporte de devoluciones y entradas por estatus" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptReporteDevolucionesEntradasxEstatus.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptReporteDevolucionesEntradasxEstatus}"/>
+                            <b:navLink value="Reporte concentrado" 
+                                       href="#{loginBean.ctxPath}/vistas/reporteGeneral/rptConcentrado.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.rptConcentrado}"/>
+                        </b:dropMenu>
+                        <b:dropMenu value="Indicadores" icon="glyphicon-cog"
+                                    rendered="#{loginBean.accesos.indicadores}">
+                            <b:navLink value="Disponibilidad de Estados" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/mapa.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.disponibilidadEstados}"/>
+                            <b:navLink value="Disponibilidad Delegación" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/disponibilidadDelegaciones.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.disponibilidadDelegacion}"/>
+                            <b:navLink value="Disponibilidad G40" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/disponibilidadG40.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.disponibilidadG40}"/>
+                            <b:navLink value="Avance surtimiento real vs DPN" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/alertasOperativas.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.avanceSurtimiento}"/>
+                            <b:navLink value="Reporte de entradas de MyMCRQ al CENADI" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/entradasMymcqCenadi.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteEntregaCenadi}"/>
+                            <b:navLink value="Reporte general de existencias en CENADI" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/existenciaCenadiGeneral.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteGeneralExitenciaCenadi}"/>
+                            <b:navLink value="Reporte detallado de existencias en CENADI" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/existenciaCenadi.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteDetalleCenadi}"/>
+                            <b:navLink value="Reporte detallado de existencias UMUs" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/existenciaDetalleClaveUmu.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteDetalleUmus}"/>
+                            <b:navLink value="Reporte general exitencias en UMU en programas" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/existenciaPrograma.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.inidcadorProgramaUmu}"/>
+                            <b:navLink value="Reporte general exitencias UMUs" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/inidicadorExistenciaCenadiUmu.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteGeneralExitenciaUmu}"/>
+                            <b:navLink value="Reporte de entregas a unidades médicas" 
+                                       href="#{loginBean.ctxPath}/vistas/indicadores/remisionesElectronicas.xhtml" icon="glyphicon-list-alt" 
+                                       rendered="#{loginBean.accesos.reporteEntregaUmu}"/>
+                        </b:dropMenu>
+                        <b:navLink value="Existencias SIAM - CENADI" icon="globe"
+                                   href="#{loginBean.ctxPath}/vistas/indicadores/existenciasSiamSilodisa.xhtml" 
+                                   rendered="false"/>
+                    </b:dropMenu>
+                </b:navbarLinks>
+                <b:navbarLinks pull="right">
+                    <b:dropMenu value="Administración" icon="glyphicon-cog"
+                                rendered="#{loginBean.accesos.administracion}">
+                        <b:navLink value="Usuarios" href="#{loginBean.ctxPath}/vistas/administracion/usuarios.xhtml"
+                                   rendered="#{loginBean.accesos.usuarios}"/>
+                        <b:navLink value="Perfiles" href="#{loginBean.ctxPath}/vistas/administracion/perfiles2.xhtml"
+                                   rendered="#{loginBean.accesos.perfiles}"/>
+                        <b:navLink rendered="#{loginBean.accesos.catalogos}"/>
+                        <b:navLink value="Auditoría" href="#{loginBean.ctxPath}/vistas/administracion/auditoria/bitacora.xhtml"/>
+                        <b:navLink value="Catálogos" href="#{loginBean.ctxPath}/vistas/administracion/menuCatalogos.xhtml"
+                                   rendered="#{loginBean.accesos.catalogos}"/>
+                    </b:dropMenu>
+                    <b:dropMenu value="#{loginBean.usuarios.nombre}" icon="glyphicon-user" >
+                        <b:navCommandLink value="Cambiar contraseña" href="#{loginBean.ctxPath}/vistas/administracion/cambioContrasenia.xhtml"/>
+                        <b:navLink></b:navLink>
+                        <b:navLink header="Salir"></b:navLink>
+                        <b:navCommandLink value="Cerrar sesión" icon="log-out" action="#{loginBean.logout2}" />
+                    </b:dropMenu>
+                </b:navbarLinks>
+            </b:navBar>
+        </div>
+    </h:form>
+</ui:composition>

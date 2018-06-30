@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-22T16:21:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteEntradaCenadi" pageWidth="1800" pageHeight="595" orientation="Landscape" columnWidth="1760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="06ad7143-b507-4376-9ad9-449dd3a111c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listInfoControlCalidad" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="170" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="100" height="30" uuid="f6dcd96e-82dd-40ac-af1e-b54b3c4f211e"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="00d1abb9-0411-4bbf-91f5-6c88efa18044"/>
+				<text><![CDATA[Fecha Elaboración: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="645" y="10" width="550" height="110" uuid="3739f435-b5ff-4071-93db-74b029700488"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES
+OFICINA DE CONTROL DE CALIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="698" y="130" width="170" height="30" uuid="a4115f7c-3260-4230-9f90-bbee082043c5"/>
+				<text><![CDATA[Reporte de control de calidad de]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="868" y="130" width="100" height="30" uuid="2c58a7f9-2f2c-4dcc-8072-5be9619266b9"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="968" y="130" width="30" height="30" uuid="8302ad72-5c82-4334-93f9-74fe85b1b6c2"/>
+				<text><![CDATA[al]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="998" y="130" width="100" height="30" uuid="2b4bc311-9c5c-4289-aab1-14d2a5d800bf"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaFinal})]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="220" y="30" width="260" height="114" uuid="a3cc563f-0ced-4b11-8169-2639c53a30c9"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="160" width="1760" height="10" forecolor="#0D0C0C" backcolor="#B5AEAE" uuid="b00fb77b-b6ad-42b4-a626-55d99a794d6d"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="90" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="1760" height="90" uuid="09288cf4-4d51-4a1e-9e10-1383eb181ad5"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoControlCalidad})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteControlCalidad.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

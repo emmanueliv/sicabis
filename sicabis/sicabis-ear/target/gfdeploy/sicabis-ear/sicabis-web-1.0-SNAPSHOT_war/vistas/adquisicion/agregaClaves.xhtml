@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>Agregar claves</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+
+        <f:metadata>
+            <f:viewParam name="tipoCompra" value="#{agregarClavesBean.tipoCompra}"/>
+        </f:metadata>
+        <h:form style="width: 95%; margin: auto; padding-left: 3%">
+            <br></br>
+            <b:panelGrid colSpans="2,10">
+                <h:outputText value="RCB:"/>
+                <b:inputText style="width: 35%;text-transform:uppercase;" value="#{agregarClavesBean.numeroRCB}"/>
+            </b:panelGrid>
+            <div style="display:block; text-align:right">
+                <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" actionListener="#{agregarClavesBean.obtenerClaves}" />
+            </div>
+            <p:separator/>
+            <br></br>
+            <p:dataTable id="tablaRcbInsumo" var="rcbInsumo" value="#{agregarClavesBean.listaRcbInsumos}"
+                         selection="#{agregarClavesBean.listaRcbInsumosSelect}" rowKey="#{rcbInsumo.idRcbInsumos}"
+                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                         filteredValue="#{agregarClavesBean.listaRcbInsumosFilter}"
+                         rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                         rowsPerPageTemplate="10,15,20">
+                <p:column style="width:30px"> 
+                    <p:rowToggler />
+                </p:column>
+                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                <p:column headerText="ID" class="formatoTablas" filterBy="#{rcbInsumo.idInsumo.idInsumo}" filterMatchMode="contains" > 
+                    <h:outputText value="#{rcbInsumo.idInsumo.idInsumo}" />
+                </p:column>
+                <p:column headerText="Clave" class="formatoTablas" filterBy="#{rcbInsumo.claveInsumo}" filterMatchMode="contains" > 
+                    <h:outputText value="#{rcbInsumo.claveInsumo}" />
+                </p:column>
+                <p:column headerText="Descripción" class="formatoTablas"> 
+                    <h:outputText value="#{rcbInsumo.descripcionInsumo.substring(0,20)}" />
+                </p:column>
+                <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{rcbInsumo.cantidadPiezas}" filterMatchMode="contains" >
+                    <h:outputText value="#{rcbInsumo.cantidadPiezas}" />
+                </p:column>
+                <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{rcbInsumo.precioUnitario}" filterMatchMode="contains" > 
+                    <h:outputText value="#{rcbInsumo.precioUnitario}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Importe total" class="formatoTablas" filterBy="#{rcbInsumo.importe}" filterMatchMode="contains" >
+                    <h:outputText value="#{rcbInsumo.importe}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:rowExpansion >
+                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                        <h:panelGrid columns="1" >
+                            <h:outputText value="#{rcbInsumo.descripcionInsumo}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </p:rowExpansion>
+            </p:dataTable>
+            <br></br>
+            <h:outputText value="Listado de claves en procedimiento y desiertas." />
+            <p:dataTable id="tablaProcRcb" var="procRcb" value="#{agregarClavesBean.listaProcRcb}"
+                         selection="#{agregarClavesBean.listaProcRcbSelect}" rowKey="#{procRcb.idRcbInsumos.idRcbInsumos}"
+                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                         filteredValue="#{agregarClavesBean.listaProcRcbFilter}"
+                         rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                         rowsPerPageTemplate="10,15,20">
+                <p:column style="width:30px"> 
+                    <p:rowToggler />
+                </p:column>
+                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                <p:column headerText="ID" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.idInsumo.idInsumo}" filterMatchMode="contains" > 
+                    <h:outputText value="#{procRcb.idRcbInsumos.idInsumo.idInsumo}" />
+                </p:column>
+                <p:column headerText="Clave" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains" > 
+                    <h:outputText value="#{procRcb.idRcbInsumos.claveInsumo}" />
+                </p:column>
+                <p:column headerText="Descripción" class="formatoTablas"> 
+                    <h:outputText value="#{procRcb.idRcbInsumos.descripcionInsumo.substring(0,20)}" />
+                </p:column>
+                <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{procRcb.cantidadPiezas}" filterMatchMode="contains" >
+                    <h:outputText value="#{procRcb.cantidadPiezas}" />
+                </p:column>
+                <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{rcbInsumo.precioUnitario}" filterMatchMode="contains" > 
+                    <h:outputText value="#{procRcb.idRcbInsumos.precioUnitario}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Importe total" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                    <h:outputText value="#{procRcb.idRcbInsumos.importe}" >
+                        <f:convertNumber type="currency"  />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="No.Procedimiento" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                    <h:outputText value="#{procRcb.idProcedimiento.numeroProcedimiento}" />
+                </p:column>
+                <p:column headerText="En procedimiento / Desierta / No Desierta" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                    <h:outputText value="#{(procRcb.desierta == 0 and procRcb.desiertaParcial == 0)? 'En procedimiento' : (procRcb.desierta == 1 ? 'Desierta' : 'Desierta Parcial' ) }" />
+                </p:column>
+                <p:rowExpansion >
+                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                        <h:panelGrid columns="1" >
+                            <h:outputText value="#{procRcb.idRcbInsumos.descripcionInsumo}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </p:rowExpansion>
+            </p:dataTable>
+            <p:separator/>
+            <div style="display:block; text-align:right">
+                <b:buttonGroup>
+                    <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{agregarClavesBean.agregarClaves}" />
+                </b:buttonGroup>
+            </div>
+        </h:form>
+    </h:body>
+
+</html>

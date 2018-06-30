@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputStylesheet name="css/rcb.css" />
+        <!--        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>-->
+    </h:head>
+    <h:body>        
+        <h:form>
+            <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <p:graphicImage name="images/loader.gif" />
+            </p:dialog>
+            <f:metadata>
+                <f:viewParam name="idRcbInsumo" value="#{rcbDetalleInsumo.idRcbInsumo}"/>
+                <f:viewAction action="#{rcbDetalleInsumo.onload}" />
+            </f:metadata>
+            <p:messages id="messagesInsumo" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panel id="pnlDetalleInsumo" header="Detalle del insumo" style="margin-bottom:20px" toggleable="true" toggleOrientation="vertical" collapsed="false">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="inpClave"  value="Clave:" />                                 
+                    <p:inputText id= "inpClave" value="#{rcbDetalleInsumo.rcbInsumo.idInsumo.clave}"  readonly="#{rcbDetalleInsumo.deshabilitarInpClave}"
+                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                </h:panelGrid>
+                <br></br>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpDescripción"  value="Descripción:" />                                 
+                    <p:inputTextarea id="inpDescripción" value="#{rcbDetalleInsumo.rcbInsumo.idInsumo.descripcion}"  rows="5" cols="150" 
+                                     readonly="#{rcbDetalleInsumo.deshabilitarInpDescripcion}" 
+                                     style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                </h:panelGrid>
+                <br></br>
+                <h:panelGrid id="pnlExistencias"  columns="4" style="width: 100%;">
+                    <p:outputLabel for="inpExistencias"  value="Existencias:" />                                 
+                    <p:inputText  id="inpExistencias" value="#{rcbDetalleInsumo.rcbInsumo.existencias}" 
+                                  readonly="#{rcbDetalleInsumo.deshabilitarInpExistencias}" style="text-transform: uppercase" 
+                                  onblur="value = value.toUpperCase()"/>
+                    <p:outputLabel for="inpUnidad"  value="Unidad:" />                                 
+                    <p:inputText id="inpUnidad" value="#{rcbDetalleInsumo.rcbInsumo.idInsumo.idUnidadPieza.descripcion}" 
+                                 readonly="#{rcbDetalleInsumo.deshabilitarInpUnidad}" style="text-transform: uppercase" 
+                                 onblur="value = value.toUpperCase()"/>
+                    <p:outputLabel for="inpCantidad"  value="Cantidad:" />                                 
+                    <p:inputMask id="inpCantidad" value="#{rcbDetalleInsumo.rcbInsumo.cantidadPiezas}" 
+                                 mask="9?999999" maxlength="7" slotChar=" "  
+                                 required="true" requiredMessage="Debe Ingresar la Cantidad" 
+                                 readonly="#{rcbDetalleInsumo.deshabilitarInpCantidad}"  >
+                        <p:ajax event="blur" update="inpImporte pnlDetalleInvestigacion inpCantidadMinima inpCantidadMaxima" 
+                                listener="#{rcbDetalleInsumo.calcularImporte()}"/>
+                    </p:inputMask>
+                    <p:outputLabel for="inpPrecioUnitario" value="#{rcbDetalleInsumo.brequerido ? 'Precio unitario:' : 'Precio última adjudicación:'}" />                                 
+                    <p:inputNumber id="inpPrecioUnitario" value="#{rcbDetalleInsumo.rcbInsumo.precioUnitario}" 
+                                   decimalPlaces="2" size="9" required="#{rcbDetalleInsumo.brequerido}" 
+                                   requiredMessage="Debe ingresar el precio unitario" 
+                                   readonly="#{rcbDetalleInsumo.deshabilitarInpPrecioUnitario}">
+                        <p:ajax event="blur" update="inpImporte inpIva" listener="#{rcbDetalleInsumo.calcularImporte()}"/>
+                    </p:inputNumber>
+                    <p:outputLabel for="inpImporte"  value="Importe:" />                                 
+                    <p:inputText id="inpImporte" value="#{rcbDetalleInsumo.rcbInsumo.importe}" readonly="#{rcbDetalleInsumo.deshabilitarInpImporte}" 
+                                 style="text-transform: uppercase" onblur="value = value.toUpperCase()" >
+                        <p:ajax event="blur" update="inpIva" listener="#{rcbDetalleInsumo.calcularImporte()}"/>
+                    </p:inputText>
+                    <p:outputLabel for="inpIva"  value="Iva:" rendered="#{rcbDetalleInsumo.iva}"/>                                 
+                    <p:inputNumber id="inpIva" value="#{rcbDetalleInsumo.rcbInsumo.iva}" disabled="true" rendered="#{rcbDetalleInsumo.iva}"
+                                   style="text-transform: uppercase" onblur="value = value.toUpperCase()" decimalPlaces="2"/>
+                </h:panelGrid>                      
+            </p:panel>
+            <p:panel id="pnlDetalleInvestigacion" header="Detalle del insumo para la investigación de mercado" 
+                     style="margin-bottom:20px" toggleable="true" toggleOrientation="vertical" 
+                     collapsed="false" rendered="#{rcbDetalleInsumo.mostrarPanelInvestigacion}">
+
+                <h:inputHidden value="#{rcbDetalleInsumo.insumRcbSolInveMercado.idInsumosRcbSolicitudInvestigacionMercado}" />
+                <h:panelGrid columns="4" style="width: 100%;">                    
+                    <p:outputLabel for="inpCantidadMaxima"  value="Cantidad máxima:" />                                 
+                    <p:inputMask  id="inpCantidadMaxima" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.cantidadMaxima}"   
+                                  mask="9?999999" maxlength="7" slotChar=" " required="true" requiredMessage="Debe Ingresar una cantidad máxima"
+                                  readonly="#{rcbDetalleInsumo.deshabilitarInpCantidadMaxima}">
+                        <p:ajax event="blur" update="inpCantidadMinima" listener="#{rcbDetalleInsumo.calcularPorcentaje()}"/>
+                    </p:inputMask>                      
+                    <p:outputLabel for="inpCantidadMinima"  value="Cantidad mínima:" />                                 
+                    <p:inputMask  id="inpCantidadMinima" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.cantidadMinima}" 
+                                  mask="9?999999" maxlength="7" slotChar=" " 
+                                  required="true" requiredMessage="Debe Ingresar una Cantidad Minima" readonly="true"/>                    
+                    <p:outputLabel for="inpModalidaContratacion"  value="Modalidad de contratación:" />                                 
+                    <p:selectOneMenu id="inpModalidaContratacion"
+                                     required="true" requiredMessage="Debe ingresar la modalidad de contratación"
+                                     disabled="#{rcbDetalleInsumo.deshabilitarInpModalidaContratacion}"
+                                     value="#{rcbDetalleInsumo.insumRcbSolInveMercado.modalidadContratacion}" >
+                        <f:selectItems value="#{rcbDetalleInsumo.listaTipoContrato}" var="tipo"
+                                       itemValue="#{tipo.descripcion}"  itemLabel="#{tipo.descripcion}"/> 
+                    </p:selectOneMenu>
+                    <p:outputLabel for="inpNormasCumplir"  value="Normas a cumplir:" />                                 
+                    <p:inputText  id="inpNormasCumplir" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.normasCumplir}"  
+                                  readonly="#{rcbDetalleInsumo.deshabilitarInpNormasCumplir}" 
+                                  style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                    <p:outputLabel for="inpCaducidadBienes" value="Caducidad de los bienes:" />                                 
+                    <p:calendar id="inpCaducidadBienes" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.caducidadBienes}" 
+                                pattern="dd/MM/yyyy" mask="true"  
+                                readonly="#{rcbDetalleInsumo.deshabilitarInpCaducidadBienes}"/>
+                    <p:outputLabel for="inpPlazo" value="Plazo:" />                                 
+                    <p:inputText id="inpPlazo" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.plazo}" 
+                                 maxlength="50" required="true" requiredMessage="Debe ingresar un plazo" 
+                                 readonly="#{rcbDetalleInsumo.deshabilitarInpPlazo}"/>                      
+                </h:panelGrid>   
+                <br></br>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpCondicionesEntrega"  value="Condiciones de entrega:" />                                 
+                    <p:inputTextarea rows="5" cols="150" id="inpCondicionesEntrega" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.condicionesEntrega}" 
+                                     required="true" requiredMessage="Debe ingresar las condiciones de entrega" 
+                                     readonly="#{rcbDetalleInsumo.deshabilitarInpCondicionesEntrega}"
+                                     style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                </h:panelGrid>
+                <br></br>
+                <h:panelGrid columns="4" style="width: 100%;">
+                    <p:outputLabel for="inpRegSanitario"  value="Registro sanitario:" />                                 
+                    <p:selectOneMenu id ="inpRegSanitario" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.registroSanitario}"
+                                     required="true" requiredMessage="Debe ingresar el registro sanitario." 
+                                     disabled="#{rcbDetalleInsumo.deshabilitarInpRegSanitario}"
+                                     styleClass="" autoWidth="false">
+                        <f:selectItem itemValue="SI" itemLabel="SI" />
+                        <f:selectItem itemValue="NO" itemLabel="NO" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="inpFormaPago"  value="Forma de pago:" />                                 
+                    <p:inputText  id="inpFormaPago" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.formaPago}" 
+                                  readonly="#{rcbDetalleInsumo.deshabilitarInpFormaPago}"
+                                  style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                </h:panelGrid>
+                <br></br>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpGarantias"  value="Garantias:" />                                 
+                    <p:inputTextarea rows="5" cols="150" id="inpGarantias" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.garantias}" 
+                                     required="true" requiredMessage="Debe ingresar las garantias" 
+                                     readonly="#{rcbDetalleInsumo.deshabilitarInpGarantias}"
+                                     style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                </h:panelGrid>  
+                <br></br>
+                <p:outputLabel value="En caso de que el proceso de fabricación de los bienes requeridos sea superior a 60 días, señale el tiempo que le corresponda a su producto."/>
+                <br></br>
+                <br></br>
+                <h:panelGrid columns="2" style="width: 50%;">
+                    <p:outputLabel for="inpTiempo"  value="Tiempo: " />                                                     
+                    <p:selectOneMenu id="inpTiempo" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.tiempo}"
+                                     required="true" requiredMessage="Debe ingresar el tiempo"
+                                     disabled="#{rcbDetalleInsumo.deshabilitarInpTiempo}"
+                                     styleClass="" autoWidth="false">
+                        <f:selectItem itemValue="1" itemLabel="APLICA" />
+                        <f:selectItem itemValue="2" itemLabel="NO APLICA" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <br></br>
+                <p:outputLabel value="En caso de requerir capacitación indiquelo a continuación"/>
+                <br></br>
+                <br></br>
+                <h:panelGrid columns="2" style="width: 50%;">
+                    <p:outputLabel for="inpCapacitacion"  value="Capacitación:" />                                 
+                    <p:selectOneMenu id ="inpCapacitacion" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.capacitacion}"
+                                     required="true" requiredMessage="Debe ingresar capacitación"
+                                     disabled="#{rcbDetalleInsumo.deshabilitarInpCapacitacion}"
+                                     styleClass="" autoWidth="false">
+                        <f:selectItem itemValue="SI" itemLabel="SI" />
+                        <f:selectItem itemValue="NO" itemLabel="NO" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <h:panelGrid columns="2" style="width: 50%;">
+                    <p:outputLabel for="inpPuestaEnMarcha" value="Puesta en marcha:" />                                 
+                    <p:selectOneMenu id ="inpPuestaEnMarcha" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.puestaMarcha}"
+                                     disabled="#{rcbDetalleInsumo.deshabilitarInpPuestaEnMarcha}" styleClass="" autoWidth="false"
+                                     required="true" requiredMessage="Debe ingresar la puesta en marcha" >
+                        <f:selectItem itemValue="APLICA" itemLabel="APLICA" />
+                        <f:selectItem itemValue="NO APLICA" itemLabel="NO APLICA" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <br></br>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpPenasConv"  value="Penas convencionales por atraso:" />                                 
+                    <p:inputTextarea rows="5" cols="150" id="inpPenasConv" value="#{rcbDetalleInsumo.insumRcbSolInveMercado.penasAtraso}"  
+                                     required="true" requiredMessage="Debe ingresar penas " readonly="#{rcbDetalleInsumo.deshabilitarInpPenasConv}"
+                                     style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>                                                              
+                </h:panelGrid>
+            </p:panel>            
+            <p:messages id="messagesInsumos" showDetail="false" autoUpdate="true" closable="true" />
+            <h:panelGrid columns="2" style="width: 100%;">                        
+                <h:panelGroup style="display:block; text-align:right">
+                    <p:commandButton id="btnGuardarInsumoRcb" value="Guardar" styleClass="customModificar btn-primary" style="color: #fff"
+                                     actionListener="#{rcbDetalleInsumo.guardarInsumoRcb()}"
+                                     update="pnlDetalleInsumo pnlDetalleInvestigacion"
+                                     rendered="#{rcbDetalleInsumo.mostrarbtnGuardarInsumoRcb}"
+                                     />
+                </h:panelGroup>            
+            </h:panelGrid>            
+        </h:form>
+    </h:body>
+
+</html>

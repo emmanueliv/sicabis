@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.alertasDpn}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte interactivo estadístico de consumo" url="alertasDpn.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Reporte interactivo estadístico de consumo</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConfigura">
+                        <p:remoteCommand name="onload" action="#{alertaDpnBean.onload}" autoRun="true" update=":frmConfigura:idmessages" />
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelFiltros">
+                            <h:outputText value="Periodo"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectMes"
+                                             value="#{alertaDpnBean.mes}" disabled="#{alertaDpnBean.tipoUsuario == 6}" 
+                                             autoWidth="false" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{alertaDpnBean.listAlertasDpn}" var="ad"
+                                               itemLabel="#{ad.mes} - #{ad.anio}" itemValue="#{ad.mes}"/>
+                                <p:ajax event="change" listener="#{alertaDpnBean.cambiaValores}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="UR"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectDelegacion"
+                                             value="#{alertaDpnBean.ur}" disabled="#{alertaDpnBean.tipoUsuario == 6}"
+                                             autoWidth="false" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{alertaDpnBean.listUr}" var="ur"
+                                               itemValue="#{ur.ur}" itemLabel="#{ur.numUr} - #{ur.nombre}"/>
+                                <p:ajax event="change" listener="#{alertaDpnBean.cambiaValores}" />
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton id="buttonConsulta" value="Buscar" look="info" icon="search" iconAlign="right"
+                                                 process="@this, panelFiltros"
+                                                 actionListener="#{alertaDpnBean.consultarAlertas}" update="tabla, panelbuttons"
+                                                 rendered="#{alertaDpnBean.tipoUsuario != 6}"/>
+                            </b:buttonGroup>
+                        </div>
+                        <br/><br/>
+                        <p:fileUpload fileUploadListener="#{alertaDpnBean.cargarArchivo}" mode="advanced" 
+                                      update="tabla, idmessages" multiple="false" cancelLabel="Borrar archivo"
+                                      dragDropSupport="true" process="@this" allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                      uploadLabel="Guardar archivo" label="Selecciona archivo" 
+                                      invalidFileMessage="El archivo no es del tipo correcto" />
+                        <br></br>
+                        <p:remoteCommand name="editaCelda" update="tabla" />
+                        <p:dataTable id="tabla" value="#{alertaDpnBean.listAlertasEnvio}"
+                                     emptyMessage="No hay registros" var="alertas"
+                                     editable="true" reflow="true" rowKey="#{alertas.idAlertasEnvio}"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15,0"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     paginatorPosition="bottom"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})">
+                            <p:ajax event="rowEdit" listener="#{alertaDpnBean.editaCelda}" oncomplete="editaCelda();" />
+                            <f:facet name="header">
+                                Reporte interactivo estadístico de consumo
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xlsx" target="tabla" fileName="ReporteInteractivo" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column headerText="ID" >
+                                <p:outputLabel value="#{alertas.idAlertasEnvio}"/>
+                            </p:column>
+                            <p:column headerText="Clave" filterBy="#{alertas.idDpnInsumo.claveInsumo}" filterMatchMode="contains" 
+                                      sortBy="#{alertas.idDpnInsumo.claveInsumo}">
+                                <p:outputLabel value="#{alertas.idDpnInsumo.claveInsumo}"/>
+                            </p:column>
+                            <p:column headerText="Unidad médica" filterBy="#{alertas.idDpnInsumo.claveUnidad}" filterMatchMode="contains" 
+                                      sortBy="#{alertas.idDpnInsumo.claveUnidad}">
+                                <p:outputLabel value="#{alertas.idDpnInsumo.claveUnidad}"/>
+                            </p:column>
+                            <p:column headerText="DPN" filterBy="#{alertas.idDpnInsumo.piezasDpn}" filterMatchMode="contains" 
+                                      sortBy="#{alertas.idDpnInsumo.piezasDpn}">
+                                <p:outputLabel value="#{alertas.idDpnInsumo.piezasDpn}">
+                                    <f:convertNumber pattern="###,###,###" type="currency" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Consumo" filterBy="#{alertas.consumo}" filterMatchMode="contains"
+                                      sortBy="#{alertas.consumo}">
+                                <p:outputLabel value="#{alertas.consumo}">
+                                    <f:convertNumber pattern="###,###,###" type="currency" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="No requerida"  >
+                                <p:cellEditor rendered="#{alertaDpnBean.bactivo}">
+                                    <f:facet name="output"><h:outputText value="#{alertas.activo == 0 ? 'No Requerida' : 'Si requerida'}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneMenu style="width: 100%; height: 34px;" 
+                                                         autoWidth="false"
+                                                         value="#{alertas.activo}" 
+                                                         filter="true" filterMatchMode="contains">
+                                            <f:selectItem itemValue="1" itemLabel="Si requerida" />
+                                            <f:selectItem itemValue="0" itemLabel="No requerida" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                                <h:outputText value="#{alertas.activo == 0 ? 'No Requerida' : 'Si requerida'}" rendered="#{!alertaDpnBean.bactivo}" />
+                            </p:column>
+                            <p:column headerText="Estatus" >
+                                <p:outputLabel value="#{alertas.idEstatus.nombre}" />
+                            </p:column>
+                            <p:column headerText="DPN sugerida" >
+                                <p:cellEditor rendered="#{alertaDpnBean.bactivo}">
+                                    <f:facet name="output"><h:outputText value="#{alertas.dpnSugeridaUmu}" /></f:facet>
+                                    <f:facet name="input"><p:inputText id="modelInput" value="#{alertas.dpnSugeridaUmu}"/></f:facet>
+                                </p:cellEditor>
+                                <h:outputText value="#{alertas.dpnSugeridaUmu != -1 ? alertas.dpnSugeridaUmu : ''}" rendered="#{!alertaDpnBean.bactivo}" />
+                            </p:column>
+                            <p:column style="width:80px; text-align: center;" headerText="EDITAR REGISTRO" rendered="#{alertaDpnBean.bactivo}" exportable="false" >
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                        <br></br>
+                        <p:outputPanel style="text-align: right;" id="panelbuttons">
+                            <p:commandButton id="buttonGuarda" value="Guardar previo" icon="fa fa-floppy-o"
+                                             actionListener="#{alertaDpnBean.guardaAlerta(1)}"
+                                             process="@form" styleClass="btn btn-info"
+                                             rendered="#{!loginBean.esConsulta and alertaDpnBean.bactivo}"/>
+                            <p:commandButton value="Guardar y enviar" icon="fa fa-floppy-o"
+                                             styleClass="btn btn-primary" oncomplete="PF('dlg2').show();"
+                                             update="formDialog" process="@form"
+                                             rendered="#{!loginBean.esConsulta and alertaDpnBean.bactivo}" />
+                            <p:commandButton id="buttonGenera" value="Genera alerta" icon="fa fa-floppy-o"
+                                             oncomplete="PF('dlg3').show();"
+                                             update="formDialog" process="@form" styleClass="btn btn-info"
+                                             rendered="#{!loginBean.esConsulta and alertaDpnBean.badmin}"/>
+                            <p:commandButton id="buttonEnvia" value="Envía alerta" icon="fa fa-paper-plane"
+                                             oncomplete="PF('dlg4').show();" update="formDialog"
+                                             process="@form" styleClass="btn btn-success"
+                                             rendered="#{!loginBean.esConsulta and alertaDpnBean.badmin}"/>
+                        </p:outputPanel>
+                        <br/>
+                    </h:form>
+                    <h:form id="formDialog">
+                        <p:dialog id="dialog2" header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea enviar la DPN sugerida?, en caso de hacerlo esta ya no podrá ser cambiada de ninguna clabe"/>
+                            </p:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{alertaDpnBean.guardaAlerta(2)}" iconPos="right"
+                                                 oncomplete="PF('dlg2').hide();" update=":frmConfigura:panelbuttons, :frmConfigura:tabla"  />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg2').hide();"  />
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialog3" header="Genera alertas" widgetVar="dlg3" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="Selecciona la unidad que deseas actualizar o bien todas"/>
+                            </p:panelGrid>
+                            <b:panelGrid colSpans="2,4,2,4" id="panelFiltros">
+                                <h:outputText value="Periodo"/>
+                                <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectDelegacion2"
+                                                 value="#{alertaDpnBean.urConsulta}"
+                                                 autoWidth="false" >
+                                    <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                    <f:selectItems value="#{alertaDpnBean.listUr}" var="ur"
+                                                   itemValue="#{ur.ur}" itemLabel="#{ur.numUr} - #{ur.nombre}"/>
+                                    <p:ajax event="change" listener="#{alertaDpnBean.cambiaValores}" process="@this" />
+                                </p:selectOneMenu>
+                                <p:outputLabel/>
+                                <p:outputLabel/>
+                            </b:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{alertaDpnBean.obtieneAlertas}" iconPos="right"
+                                                 oncomplete="PF('dlg3').hide();" update=":frmConfigura"  />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg3').hide();"  />
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialog4" header="SELECCIONA USUARIO" widgetVar="dlg4" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="Selecciona el usuario al cual enviar las alertas"/>
+                            </p:panelGrid>
+                            <b:panelGrid colSpans="4,8" id="panelEnvio">
+                                <h:outputText value="Usuarios"/>
+                                <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUsuario"
+                                                 value="#{alertaDpnBean.idUsuario}"
+                                                 autoWidth="false" >
+                                    <f:selectItem itemValue="-1" itemLabel="Todos" />
+                                    <f:selectItems value="#{alertaDpnBean.listUsuarios}" var="usu"
+                                                   itemValue="#{usu.idUsuario.idUsuario}" itemLabel="#{usu.idUsuario.usuario}"/>
+                                    <p:ajax event="change" listener="#{alertaDpnBean.cambiaValores}" process="@this" />
+                                </p:selectOneMenu>
+                            </b:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{alertaDpnBean.ejecutaAlertaDPN}" iconPos="right"
+                                                 oncomplete="PF('dlg4').hide();" update=":frmConfigura"  />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg4').hide();"  />
+                            </div>
+                        </p:dialog>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.alertasDpn}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

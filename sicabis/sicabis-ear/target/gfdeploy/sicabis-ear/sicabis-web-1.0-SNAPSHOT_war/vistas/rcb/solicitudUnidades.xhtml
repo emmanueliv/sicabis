@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.solicitudInsumosParaLaSalud}">
+                <div id="contenido" class="ui-fluid">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Solicitud de insumos para la salud" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Solicitud de insumos para la salud</h2>
+
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+
+                    <h:form id='formSolicitud' style="width:100%; height: 100%" > 
+                        <p:separator />
+                        <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                            <!--tab NuevoRcb RCB +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <b:tab title="Nueva solicitud" rendered="#{!loginBean.accesos.solicitudInsumosParaLaSaludC}">
+                                <br></br>
+                                <h:panelGroup id="pnlNumRCB" style="display:block; text-align:center">
+                                    <p:outputLabel value="#{solicitudUnidadesBeanNuevo.solicitud.idTipoSolicitud.descripcion}" style="font-size:1.5em;"/> 
+                                    <h:inputHidden value="#{solicitudUnidadesBeanNuevo.solicitud.numeroSolicitud}" />
+                                </h:panelGroup>
+                                <br></br>
+                                <p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+                                <p:panelGrid id="pnlRCB" columns="4" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-2,ui-grid-col-5,ui-grid-col-2,ui-grid-col-7" layout="grid" style="width: 100%"> 
+                                    <p:outputLabel for="selectDelegacion" value="Delegación:" />  
+                                    <p:selectOneMenu id ="selectDelegacion" value="#{solicitudUnidadesBeanNuevo.delegacionSeleccionada.idDelegacion}" required="true" requiredMessage="-Seleccione una delegación" styleClass="">
+                                        <p:ajax listener="#{solicitudUnidadesBeanNuevo.cambiaDelegacion}" update="pnlRCB" />
+                                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                        <f:selectItems value="#{solicitudUnidadesBeanNuevo.listaDelegaciones}" var="delegacion"
+                                                       itemValue="#{delegacion.idDelegacion}"  itemLabel="#{delegacion.nombreDelegacion}"/>
+                                    </p:selectOneMenu>                                  
+                                    <p:outputLabel for="selectUnidadMedica" value="Unidad médica:" />                                 
+                                    <p:selectOneMenu id ="selectUnidadMedica" value="#{solicitudUnidadesBeanNuevo.solicitud.idUnidadesMedicas.idUnidadesMedicas}" required="true" requiredMessage="-Seleccione Unidad Médica" styleClass="">
+                                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                        <f:selectItems value="#{solicitudUnidadesBeanNuevo.delegacionSeleccionada.unidadesMedicasList}" var="unidadMedica"
+                                                       itemValue="#{unidadMedica.idUnidadesMedicas}"  itemLabel="#{unidadMedica.nombre}"/>
+                                    </p:selectOneMenu> 
+                                    <p:outputLabel for ="inpPeriodoSol" value="Periodo a solicitar:" />  
+                                    <p:inputText id= "inpPeriodoSol" value="#{solicitudUnidadesBeanNuevo.solicitud.periodoSolicitar}" required="true" requiredMessage="-Ingrese un periodo" styleClass="tamanioCampos"/>                                    
+                                    <p:outputLabel for ="selectArea" value="Subdirección:" />  
+                                    <p:selectOneMenu id ="selectArea" value="#{solicitudUnidadesBeanNuevo.solicitud.idArea.idArea}" required="true" requiredMessage="-Seleccione Subdirección" styleClass="">
+                                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                        <f:selectItems value="#{solicitudUnidadesBeanNuevo.listaAreas}" var="area"
+                                                       itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>                            
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Guardar"  look="primary" 
+                                                     actionListener="#{solicitudUnidadesBeanNuevo.guardar()}"
+                                                     update="formSolicitud" 
+                                                     />
+                                    <b:commandButton value="Limpiar"  look="danger"  process="@this" actionListener="#{solicitudUnidadesBeanNuevo.limpiarFrmNuevo}" />
+                                </div>                            
+                            </b:tab>
+
+                            <!-- tab consulta RCB  *******************  -->
+                            <b:tab title="Consultar solicitudes">
+                                <br></br>
+                                <p:panelGrid id="pnlBuscarSol" columns="4" columnClasses="" styleClass="ui-panelgrid-blank" layout="grid" style="width: 100%">  
+                                    <p:outputLabel value="No. Solicitud:" />                                 
+                                    <p:inputText id ="inpNumSol" value="#{solicitudUnidadesBean.solicitudConsulta.numeroSolicitud}" styleClass="tamanioCampos" />                                                         
+                                </p:panelGrid>                         
+                                <br></br>
+
+                                <h:panelGrid  columns="1" style="width: 100%;">
+
+                                    <h:panelGroup style="display:block; text-align:right">
+                                        <b:commandButton value="Buscar" actionListener="#{solicitudUnidadesBean.buscarSolicitud()}" look="info" 
+                                                         update="pnlTableSol tablaSol" process="pnlBuscarSol tablaSol"
+                                                         icon="search"
+                                                         />
+                                    </h:panelGroup>
+                                    <h:outputText id="lblTablaRcb" value="Lista de solicitudes:" />
+                                </h:panelGrid>
+                                <br></br>
+
+
+                                <h:panelGrid id="pnlTableSol" columns="2">
+                                    <p:dataTable id="tablaSol" var="solicitud" value="#{solicitudUnidadesBean.listaSolicitudes}" emptyMessage="--">
+                                        <p:column headerText="No. Solicitud" class="formatoTablas"> 
+                                            <h:outputText value="#{solicitud.numeroSolicitud}" />
+                                        </p:column>
+                                        <p:column headerText="Unidad médica" class="formatoTablas">
+                                            <h:outputText value="#{solicitud.idUnidadesMedicas.nombre}"/>                                    
+                                        </p:column>
+                                        <p:column headerText="Delegación" class="formatoTablas"> 
+                                            <h:outputText value="#{solicitud.idUnidadesMedicas.idDelegacion.nombreDelegacion}" />
+                                        </p:column>
+                                        <p:column headerText="Tipo solicitud" class="formatoTablas" > 
+                                            <h:outputText value="#{solicitud.idTipoSolicitud.descripcion}" />
+                                        </p:column>
+                                        <p:column headerText="Subdirección" class="formatoTablas" > 
+                                            <h:outputText value="#{solicitud.idArea.nombreArea}" />
+                                        </p:column>
+                                        <p:column headerText="Periodo" class="formatoTablas"> 
+                                            <h:outputText value="#{solicitud.periodoSolicitar}" />
+                                        </p:column>
+                                        <p:column headerText="Fecha de elaboración" class="formatoTablas"> 
+                                            <h:outputText value="#{solicitud.fechaAlta}">
+                                                <f:convertDateTime pattern="dd/MM/YYYY" />
+                                            </h:outputText>   
+                                        </p:column>
+                                        <p:column headerText="Estatus" class="formatoTablas"> 
+                                            <h:outputText value="#{solicitud.idEstatus.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Opciones" class="formatoTablas"> 
+                                            <b:commandButton value=""
+                                                             tooltip="Ver Detalle" 
+                                                             look="info" 
+                                                             icon="search" 
+                                                             iconAlign="right" 
+                                                             action="#{solicitudUnidadesBean.irSolicitudSeleccionadaDetalle(solicitud)}" process="@this" update="tablaSol" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>                            
+                            </b:tab>
+                            <!-- The next tab shows tabs aren't limited to text. You can put anything in a tab. -->
+                        </b:tabView>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                            <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                        </p:confirmDialog>
+
+                        <p:confirmDialog id="dlgContinuarCaptura" widgetVar="wdContCaptura" showEffect="fade"
+                                         hideEffect="fade" 
+                                         message="Datos guardados correctamente, ¿Desea continuar editando la solicitud">
+                            <p:commandLink value="Si" type="button"  styleClass="ui-confirmdialog-yes btn btn-primary" 
+                                           style="color: #fff;"
+                                           action="#{solicitudUnidadesBeanNuevo.irSolicitudDetalle(solicitudUnidadesBeanNuevo.idSolicitudCreada)}" process="@this" update="tablaSol"
+                                           oncomplete="PF('wdContCaptura').hide()"
+                                           />
+                            <p:commandLink value="No" type="button"
+                                           styleClass="ui-confirmdialog-no btn btn-danger"
+                                           process="@this" actionListener="#{solicitudUnidadesBeanNuevo.limpiarFrmNuevo}"
+                                           style="color: #fff;" 
+                                           oncomplete="PF('wdContCaptura').hide()"                                       
+                                           />
+                        </p:confirmDialog>
+
+
+
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.solicitudInsumosParaLaSalud}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

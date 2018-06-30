@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Agregar Nuevo Insumo</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputStylesheet name="css/rcb.css" />
+    </h:head>
+
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="clave" value="#{agregarInsumosBean.clave}"/>
+            <f:viewAction action="#{agregarInsumosBean.onload}" />
+        </f:metadata>
+        <h:form>
+            <p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panel id="pnlInsumo" header="Agregar insumos" style="margin-bottom:20px;width: 100%">
+                <b:panelGrid col-spans="2,4,2,4" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpClave"  value="Clave:" />                                 
+                    <p:inputText id= "inpClave" value="#{agregarInsumosBean.insumo.clave}" style="width: 40%;text-transform:uppercase;" 
+                                 required="true" requiredMessage="Ingrese una clave"/>
+                    <p:outputLabel for="inpPartidaPresup"  value="Partida presupuestal:" />                                 
+                    <p:inputText id= "inpPartidaPresup" value="#{agregarInsumosBean.insumo.partidaPresupuestal}" 
+                                 required="true" requiredMessage="Ingrese partida presupuestal" style="width: 40%;text-transform:uppercase;"/>
+                </b:panelGrid>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpDescripción"  value="Descripción:" />                                 
+                    <p:inputTextarea id="inpDescripción" value="#{agregarInsumosBean.insumo.descripcion}"  rows="5" cols="145" 
+                                     style="text-transform: uppercase; width: 100%" onblur="value = value.toUpperCase()" required="true" 
+                                     requiredMessage="Ingrese una descripción"/>
+                </h:panelGrid>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpIndicaciones"  value="Indicaciones:" />                                 
+                    <p:inputTextarea id="inpIndicaciones" value="#{agregarInsumosBean.insumo.indicaciones}"  rows="5" cols="145" 
+                                     style="text-transform: uppercase; width: 100%" onblur="value = value.toUpperCase()" required="true"
+                                     requiredMessage="Ingrese una indicaciones"
+                                     />
+                </h:panelGrid>
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="inpViaAdmon"  value="Vía de administración:" />                                 
+                    <p:inputTextarea id="inpViaAdmon" value="#{agregarInsumosBean.insumo.viaAdministracionDosis}"  rows="5" cols="145" 
+                                     style="text-transform: uppercase; width: 100%" onblur="value = value.toUpperCase()" required="true"
+                                     requiredMessage="Ingrese la via de administración"
+                                     />
+                </h:panelGrid>
+                <b:panelGrid id="pnlInsumo2" col-spans="2,4,2,4" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="selectClasificacion" value="Clasificación:" />  
+                    <p:selectOneMenu id ="selectClasificacion" value="#{agregarInsumosBean.insumo.idClasificacion.idClasificacion}"
+                                     required="true" requiredMessage="-Seleccione una clasificación" style="width: 40%; height: 25%"
+                                     >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listClasificaciones}" var="clasificacion"
+                                       itemValue="#{clasificacion.idClasificacion}"  itemLabel="#{clasificacion.descripcion}"/>
+                    </p:selectOneMenu>     
+
+                    <p:outputLabel for="selectNivel" value="Nivel:" />  
+                    <p:selectOneMenu id ="selectNivel" value="#{agregarInsumosBean.insumo.idNivel.idNivel}"
+                                     required="true" requiredMessage="Seleccione un nivel" 
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listNivel}" var="nivel"
+                                       itemValue="#{nivel.idNivel}"  itemLabel="#{nivel.descripcion}"/>
+                    </p:selectOneMenu>  
+
+                    <p:outputLabel for="selectUnidadPieza" value="Unidad de presentación:" />  
+                    <p:selectOneMenu id ="selectUnidadPieza" value="#{agregarInsumosBean.insumo.idUnidadPieza.idUnidadPieza}"
+                                     required="true" requiredMessage="Seleccione una unidad" 
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listUnidadPieza}" var="unidadP"
+                                       itemValue="#{unidadP.idUnidadPieza}"  itemLabel="#{unidadP.descripcion}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="selectGrupo" value="Grupo:" />  
+                    <p:selectOneMenu id ="selectGrupo" value="#{agregarInsumosBean.insumo.idGrupo.idGrupo}"
+                                     required="true" requiredMessage="Seleccione un grupo" 
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listGrupo}" var="grupo"
+                                       itemValue="#{grupo.idGrupo}"  itemLabel="#{grupo.descripcion}"/>
+                    </p:selectOneMenu>  
+                    <p:outputLabel for="selectPrograma" value="Programa:" />  
+                    <p:selectOneMenu id ="selectPrograma" value="#{agregarInsumosBean.asignacionInsumos.idPrograma.idPrograma}"
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listProgramas}" var="programa"
+                                       itemValue="#{programa.idPrograma}"  itemLabel="#{programa.descripcion}"/>
+                    </p:selectOneMenu>  
+                    <p:outputLabel for="selectGrupoTer" value="Grupo terapeutico:" />  
+                    <p:selectOneMenu id ="selectGrupoTer" value="#{agregarInsumosBean.insumo.idGrupoTerapeutico.idGrupoTerapeutico}"
+                                     required="true" requiredMessage="-Seleccione una grupo terapeutico" 
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listGrupoTeraputico}" var="grupot"
+                                       itemValue="#{grupot.idGrupoTerapeutico}"  itemLabel="#{grupot.descripcion}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="selectTipoInsumo" value="Tipo inusmo: *" />  
+                    <p:selectOneMenu id ="selectTipoInsumo" value="#{agregarInsumosBean.idTipoInsumo}"
+                                     required="true" requiredMessage="-Seleccione el tipo de insumo."
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listTipoInsumos}" var="tipoInsumos"
+                                       itemValue="#{tipoInsumos.idTipoInsumos}"  itemLabel="#{tipoInsumos.nombre}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="selectImportancia" value="Clasificación de insumos por importancia: *" />  
+                    <p:selectOneMenu id ="selectImportancia" value="#{agregarInsumosBean.idClasificacionImp}"
+                                     required="true" requiredMessage="-Seleccione una C¿clasificación de insumo por importancia."
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listClaImportancia}" var="clasImpo"
+                                       itemValue="#{clasImpo.idClasificacionImportancia}"  itemLabel="#{clasImpo.sigla}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="selectArea" value="Área:*" />  
+                    <p:selectOneMenu id ="selectArea" value="#{agregarInsumosBean.asignacionInsumos.idArea.idArea}"
+                                     style="width: 40%; height: 25%" >
+                        <f:selectItem itemValue="" itemLabel="Selecciona" />
+                        <f:selectItems value="#{agregarInsumosBean.listArea}" var="area"
+                                       itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                    </p:selectOneMenu>
+                </b:panelGrid>                 
+            </p:panel>  
+            <h:panelGroup style="display:block; text-align:right">
+                <p:commandButton id="btnGuardarInsumoRcb" value="Guardar" styleClass="customModificar btn-primary" style="color: #fff"
+                                 actionListener="#{agregarInsumosBean.guardarInsumo()}"
+                                 update="pnlInsumo"
+                                 />
+            </h:panelGroup>    
+        </h:form>
+    </h:body>
+
+</html>

@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido" class="ui-fluid">
+                <h2>Distribución histórica</h2>
+
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+
+                <h:form id='formSolicitud' style="width:100%; height: 100%" > 
+                    <p:separator />                 
+
+
+                    <p:panelGrid id="pnlAreas" columns="3" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-5"> 
+                        <p:outputLabel for="selectArea" value="Subdirección:" />  
+                        <p:selectOneMenu id ="selectArea" value="#{consultaPlaneacionBean.areaSelect.idArea}"  styleClass="" disabled="#{consultaPlaneacionBean.deshabilitaSelectArea}">
+                            <f:selectItem itemValue="" itemLabel="Selecciona" />
+                            <f:selectItems value="#{consultaPlaneacionBean.listaAreas}" var="area"
+                                           itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                        </p:selectOneMenu>                                                                       
+                    </p:panelGrid>
+                    <br></br>
+                    <h:panelGrid  columns="1" style="width: 100%;">  
+                        <h:panelGroup style="display:block; text-align:right">
+                            <b:commandButton value="Generar distribución" look="info" action="#{consultaPlaneacionBean.seleccionaVistaPorArea()}"
+                                             update="pnlAreas " process="selectArea"
+                                             icon="plus"
+                                             />
+                        </h:panelGroup>
+                        <h:outputText id="lblSolMensuales" value="Lista de distribuciones:" />
+                    </h:panelGrid>
+                    <br></br>
+                    <h:panelGrid id="pnlTableSol" columns="2">
+                        <p:dataTable id="tablaSolicitudMensual" var="planeacion" value="#{consultaPlaneacionBean.listPlaneaciones}"
+                                     filteredValue="#{consultaPlaneacionBean.listPlaneacionesFilter}"
+                                     widgetVar="wvTablaSolicitudMensual"
+                                     rows="10"
+                                     emptyMessage="No hay registros."
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaSolicitudMensual" fileName="planeacion" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column filterBy="#{planeacion.numeroPlaneacion}"   
+                                      filterMatchMode="contains" headerText="Subdirección" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacion.numeroPlaneacion}" />
+                            </p:column>
+                            <p:column filterBy="#{planeacion.idArea.nombreArea}"   
+                                      filterMatchMode="contains" headerText="Subdirección" 
+                                      class="formatoTablas">
+                                <h:inputHidden value="#{planeacion.idPlaneacion}" />
+                                <h:outputText value="#{planeacion.idArea.nombreArea}" />
+                            </p:column>
+                            <p:column headerText="Fecha de creación " class="formatoTablas" > 
+                                <h:outputText value="#{planeacion.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                </h:outputText>
+                            </p:column>      
+                            <p:column headerText="Opciones" colspan="1" style="text-align: center" class="" exportable="false">                                 
+                                <b:commandButton value=""
+                                                 tooltip="Ver Detalle" 
+                                                 look="info" 
+                                                 icon="search" 
+                                                 iconAlign="right" 
+                                                 action="#{consultaPlaneacionBean.irPlaneacionDetalle(planeacion)}"
+                                                 process="@this" update="tablaSolicitudMensual" />
+                            </p:column>
+                        </p:dataTable>  
+                    </h:panelGrid>                                        
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

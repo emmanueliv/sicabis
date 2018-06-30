@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-06-16T18:14:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subInsumos1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b003c43a-2b56-4e3d-8ef0-36f3f89f58a1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="clave" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="idClave" class="java.lang.Integer"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="cantidadPiezas" class="java.lang.Integer"/>
+	<field name="unidadPieza" class="java.lang.String"/>
+	<field name="importeClave" class="java.math.BigDecimal"/>
+	<field name="nep" class="java.lang.String"/>
+	<field name="oficio" class="java.lang.String"/>
+	<field name="rcb" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="-15" y="4" width="50" height="18" uuid="b3415e6e-b8c4-4564-80e0-4ad4c78c9a2e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[RENGLÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="4" width="60" height="19" uuid="690b9641-cb77-4ca1-b9fa-dec318948926"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CLAVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="3" width="55" height="30" uuid="7f1cd48a-e100-44a3-8aaf-82d96d3d4999"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PRECIO UNITARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="3" width="80" height="20" uuid="b9769dc6-0b62-4090-bde4-995b132bb14f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="4" width="50" height="19" uuid="7971888c-b7c6-4553-8243-f58cf4722e76"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="4" width="40" height="18" uuid="0267b97a-b9e7-4269-ac78-b701e22c913a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[UNIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="504" y="3" width="46" height="20" uuid="d1f8b1aa-7005-4998-ba81-5af137391c08"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="250" splitType="Stretch">
+			<textField>
+				<reportElement x="300" y="10" width="50" height="30" uuid="445ca17f-6c63-4da9-b944-0eaf1cb58a13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidadPiezas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-15" y="10" width="41" height="30" uuid="6d4d295e-3902-41fe-9dad-9d51a40bbfe2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="90" width="80" height="30" uuid="2bfb81e1-11b6-492a-8c62-8442ee62899d"/>
+				<textFieldExpression><![CDATA[$F{oficio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-16" y="90" width="41" height="39" uuid="0e86bcb5-aa6e-424b-abcf-56266bdb174c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[OFICIO DE SUFICIENCIA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="30" y="10" width="80" height="30" uuid="27c8ee1c-9ac3-4b7e-878d-91880f62d2d9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-15" y="130" width="40" height="30" uuid="10a13119-89fe-48ac-a20b-a545e9b65585"/>
+				<text><![CDATA[RCB]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="504" y="10" width="46" height="30" uuid="7895dbd7-5107-4ef7-a43a-75dd82313b35"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$"+$F{importeClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="10" width="54" height="30" uuid="a695f012-fff5-4ad9-9059-e6a432b92737"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$" + $F{precioUnitario} ]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-15" y="50" width="41" height="30" uuid="b0cbebe8-3685-49ac-9fd6-6c256c43f195"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NEP]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="30" y="130" width="80" height="30" uuid="13c9ea94-caeb-4c6f-aca9-188147675435"/>
+				<textFieldExpression><![CDATA[$F{rcb}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="10" width="47" height="30" uuid="df3baa95-bf9d-412b-97ce-2b8c5af5f081"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidadPieza}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="10" width="170" height="240" uuid="412a2e25-9ecb-423e-ace7-1a5549d1e252"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="50" width="80" height="30" uuid="a3de8586-7498-4a9a-8a32-2535e1653c76"/>
+				<textFieldExpression><![CDATA[$F{nep}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

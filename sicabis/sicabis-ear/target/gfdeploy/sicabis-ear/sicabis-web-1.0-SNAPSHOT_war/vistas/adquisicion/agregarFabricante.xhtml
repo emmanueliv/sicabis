@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <title>Agregar Fabricante</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="clave" value="#{agregarFabricanteBean.clave}"/>
+        </f:metadata>
+        <h:form id="formfab" style="width: 95%; margin: auto; padding-left: 3%">
+            <br></br>
+            <b:panelGrid columns="4">
+                <h:outputText value="Proveedor:"/>
+                <b:inputText value="#{agregarFabricanteBean.nombreProveedor}" disabled="true" />
+                <h:outputText value="Clave"/>
+                <b:inputText value="#{agregarFabricanteBean.clave}" disabled="true" />
+            </b:panelGrid>
+            <p:fieldset style="margin-bottom:20px; font-size: 12px;">
+                <b:panelGrid col-spans="2,10">
+                    <h:outputText value="Fabricante:"/>
+                    <p:selectOneMenu  style="width: 38%; height: 34px;" id ="idProveedor" 
+                                      value="#{agregarFabricanteBean.idFabricante}" >
+                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                        <f:selectItem itemValue="-2" itemLabel="Nuevo ..." />
+                        <f:selectItems value="#{agregarFabricanteBean.listaFabricantes}" var="fabricante"
+                                       itemValue="#{fabricante.idFabricante}"  itemLabel="#{fabricante.nombre}"/>
+                        <p:ajax event="change" listener="#{agregarFabricanteBean.cambiaFabricante}" update="formfab" />
+                    </p:selectOneMenu>
+                </b:panelGrid>
+                <br></br>
+                <b:panelGrid col-spans="2,4,2,4" rendered="#{agregarFabricanteBean.bnuevo}">
+                    <h:outputText value="Nombre:"/>
+                    <b:inputText value="#{agregarFabricanteBean.nombreFabricante}" />
+                    <h:outputText value="Registro sanitario:"/>
+                    <b:inputText value="#{agregarFabricanteBean.registroSanitario}" />
+                </b:panelGrid>
+                <div style="display:block; text-align:right">
+                    <b:commandButton value="Agregar" look="info" icon="plus" iconAlign="right" update="formfab" >
+                        <f:ajax listener="#{agregarFabricanteBean.agregarFabricante}" execute="@form" />
+                    </b:commandButton>
+                </div>
+                <p:separator/>
+                <br></br>
+                <p:dataTable id="tablaProvFab" var="fabricante" value="#{agregarFabricanteBean.listaFabricanteAux}"
+                             emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                             filteredValue="#{agregarFabricanteBean.listaFabricanteAuxFilter}"
+                             rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                             rowsPerPageTemplate="10,15,20">
+                    <p:column headerText="Fabricante" class="formatoTablas" filterBy="#{fabricante.nombre}" filterMatchMode="contains" > 
+                        <h:outputText value="#{fabricante.nombre}" />
+                    </p:column>
+                    <p:column headerText="Clave" class="formatoTablas" filterBy="#{fabricante.registroSanitario}" filterMatchMode="contains" > 
+                        <h:outputText value="#{fabricante.registroSanitario}" />
+                    </p:column>
+                    <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                        <div>
+                            <b:commandButton id="btnQuitarProvFab" value="" tooltip="Quitar Fabricante" look="danger" icon="remove" iconAlign="right" 
+                                             update="formfab" actionListener="#{agregarFabricanteBean.quitaFabricante(fabricante)}" />
+                        </div>                                                                       
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+            <p:separator/>
+            <div style="display:block; text-align:right">
+                <b:buttonGroup>
+                    <b:commandButton value="Guardar" look="primary" icon="floppy-disk" iconAlign="right" actionListener="#{agregarFabricanteBean.aceptar}" />
+                </b:buttonGroup>
+            </div>
+        </h:form>
+    </h:body>
+
+</html>

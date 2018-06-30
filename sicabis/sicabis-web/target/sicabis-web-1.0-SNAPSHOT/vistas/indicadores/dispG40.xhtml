@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>SICABIS</title>
+        <h:outputStylesheet library="css" name="main.css"  />
+        <h:outputStylesheet library="css" name="style.css"  />
+        <h:outputStylesheet library="css" name="font-awesome.css" />
+        <h:outputStylesheet library="css" name="custom-theme-primefaces.css" />
+        <h:outputStylesheet name="css/rcb.css" />
+    </h:head>
+    <h:body id="body">
+        <div id="contenido">
+            <h:outputScript library="js" name="jquery.min.js" />
+            <h:outputScript library="js" name="raphael-min.js" />
+            <h:outputScript library="js" name="jquery.mousewheel.min.js" />
+            <h:outputScript library="js" name="jquery.mapael.js" />
+            <h:outputScript library="js" name="index.js" />
+            <h:outputLabel id="listaMapa" styleClass="hide" value="#{disponibilidadG40Bean.datosEstadosFormatoJSON}"/>
+            <!--la seccion con los styleClass maparea2 y map dibujan el mapa-->
+            <h2 style="text-align: center;color:blue" >Disponibilidad G40 al #{disponibilidadG40Bean.fecha}</h2>
+            <br></br>
+            <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+            <b:panelGrid colSpans="8,4" >
+                <b:panelGrid colSpans="12" styleClass="maparea2">
+                    <b:panelGrid colSpans="12" styleClass="map">
+                    </b:panelGrid>
+                </b:panelGrid>
+                <p:dataTable var="color" style="width: 95%;" value="#{disponibilidadG40Bean.listacolores}">
+                    <f:facet name="header">
+                        República Mexicana - Disponibilidad G40
+                    </f:facet>
+                    <p:column headerText="Porcentajes"  > 
+                        <h:outputText value="#{disponibilidadG40Bean.truncar(color.porcentajeInicial)} - #{disponibilidadG40Bean.truncar(color.porcentajeFinal)} %" />
+                    </p:column>
+                    <p:column headerText="Color">
+                        <b:well style=" margin: 0 auto; width: 5px; background-color: #{color.hexColor}" size="sm" />
+                    </p:column>
+                </p:dataTable>
+            </b:panelGrid>               
+            <br></br>
+            <b:panelGrid colSpans="2,2,2,2,2,2" >
+                <h:outputText value="Total claves autorizadas: "  />
+                <h:outputText value="#{disponibilidadG40Bean.clavesAut}" style="color: blue;font-weight: bolder" >
+                    <f:convertNumber locale="en-US" />
+                </h:outputText>
+                <h:outputText value="Total claves disponibles: " />
+                <h:outputText value="#{disponibilidadG40Bean.clavesDisp}" style="color: blue;font-weight: bolder" >
+                    <f:convertNumber locale="en-US" />
+                </h:outputText>
+                <h:outputText value="Total disponibilidad: " />
+                <h:outputText value="#{disponibilidadG40Bean.disponibilidad} %" style="color: blue;font-weight: bolder">
+                    <f:convertNumber locale="en-US" pattern="#0.00" />
+                </h:outputText>
+            </b:panelGrid>
+            <br></br>
+            <h:form id="formaTabla">
+                <p:dataTable var="listaDatosMapa" value="#{disponibilidadG40Bean.dispG40List}" style="margin-bottom:40px;"
+                             emptyMessage="#{loginBean.mensajeTablaVacia}" >
+                    <p:column style="width:30px"> 
+                        <p:rowToggler />
+                    </p:column>
+                    <p:column headerText="Estado" class="formatoTablas" sortBy="#{listaDatosMapa.idDelegacion.nombreDelegacion}" >
+                        <h:outputText value="#{listaDatosMapa.idDelegacion.nombreDelegacion}" />
+                    </p:column>
+                    <p:column headerText="Umu" class="formatoTablas" sortBy="#{listaDatosMapa.umu}" >
+                        <h:outputText value="#{listaDatosMapa.umu}" />
+                    </p:column>
+                    <p:column headerText="Nombre" class="formatoTablas" sortBy="#{listaDatosMapa.nombre}">
+                        <h:outputText value="#{listaDatosMapa.nombre}" />
+                    </p:column>
+                    <p:column headerText="Claves Autorizadas" class="formatoTablas" sortBy="#{listaDatosMapa.clavesAutorizadas}">
+                        <h:outputText value="#{listaDatosMapa.clavesAutorizadas}" >
+                            <f:convertNumber locale="en-US" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Claves Disponibles" class="formatoTablas" sortBy="#{listaDatosMapa.clavesDisponibles}">
+                        <h:outputText value="#{listaDatosMapa.clavesDisponibles}" >
+                            <f:convertNumber locale="en-US" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Disponibilidad" class="formatoTablas" sortBy="#{listaDatosMapa.disponibilidad}">
+                        <h:outputText value="#{listaDatosMapa.disponibilidad}" >
+                            <f:convertNumber locale="en-US" pattern="#0.00" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <br/>
+        </div>
+    </h:body>
+</html>
+

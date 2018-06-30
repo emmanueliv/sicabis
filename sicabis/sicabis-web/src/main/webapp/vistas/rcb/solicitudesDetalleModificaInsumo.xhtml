@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputStylesheet name="css/rcb.css" />
+        <!--        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>-->
+    </h:head>
+    <h:body>        
+        <h:form id="frmInsumPaciente">
+            <f:metadata>
+                <f:viewParam name="idSolicitud" value="#{solicitudesDetallePacienteInsumo.idSolicitud}"/>
+                <f:viewParam name="idSolicitudesInsumosPacientes" value="#{solicitudesDetallePacienteInsumo.idSolicitudesInsumosPacientes}"/>
+                <f:viewAction action="#{solicitudesDetallePacienteInsumo.onload}" />
+            </f:metadata>
+            <p:messages id="messagesInsumos" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panel id="pnlBusquedaInsumo" header="Detalle de insumo" style="margin-bottom:20px" toggleable="true" toggleOrientation="vertical" collapsed="false">
+                <p:panelGrid  id="pnlDetalleInsumo" columns="4" layout="grid"  styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpClave"  value="Clave:" />                                 
+                    <p:inputText  id="inpClave" value="#{solicitudesDetallePacienteInsumo.insumos.clave}" readonly="true" />
+                </p:panelGrid>   
+                <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel for="inpDescripcion"  value="Descripción:" />                                 
+                    <p:inputTextarea rows="5" cols="150" id="inpDescripcion" value="#{solicitudesDetallePacienteInsumo.insumos.descripcion}"  readonly="true"/>                                          
+                </p:panelGrid>   
+            </p:panel>
+            <p:messages id="messagesInsumosAgregar" showDetail="false" autoUpdate="true" closable="true" />
+            <p:panelGrid  id="pnlCantidadInsumo" columns="3" layout="grid"  styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-2">
+                <p:outputLabel for="inpCantidad"  value="Cantidad:" />                                 
+                <p:inputNumber id="inpCantidad" value="#{solicitudesDetallePacienteInsumo.cantidadInsumo}" required="true" requiredMessage="Debe Ingresar una Cantidad" readonly="#{solicitudesDetallePacienteInsumo.deshabilitarInpCantidad}" decimalPlaces="0" size="9" minValue="1"  />
+                <b:commandButton actionListener="#{solicitudesDetallePacienteInsumo.modificarInsumo}"
+                                 process="pnlCantidadInsumo"
+                                 update="pnlCantidadInsumo messagesInsumosAgregar"
+                                 value="Modificar" look="primary" icon="plus" iconAlign="left"
+                                 />
+            </p:panelGrid>                       
+        </h:form>
+    </h:body>
+
+</html>

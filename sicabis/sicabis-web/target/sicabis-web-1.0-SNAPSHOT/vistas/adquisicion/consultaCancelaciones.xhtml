@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h:form id="nuevo">
+                    <h2>Cancelaciones</h2>
+                    <p:separator/>
+                    <h:outputLabel id="cancelacionInicio" rendered="#{consultaCancelacionesBean.verInicio}"  value="En Inicio de Cancelacion"/>
+                    <h:outputLabel id="cancelacion"  rendered="#{consultaCancelacionesBean.verCancelado}" value="Cancelado"/>
+                    <br></br>
+                    <br></br>
+                    <b:panelGrid colSpans="2,2,2,2,2,2">
+                        <h:outputLabel value="Proveedor"/>
+                        <b:inputText id="proveedor" disabled="true" value="#{consultaCancelacionesBean.nombreProveedor}"/>
+                        <h:outputLabel value="Fecha de entrega inicial"/>
+                        <b:inputText id="fi" disabled="true" value="#{consultaCancelacionesBean.fechaInicio}" >
+                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                        </b:inputText>
+                        <h:outputLabel  value="Fecha de entrega final" />
+                        <b:inputText id="ff" disabled="true" value="#{consultaCancelacionesBean.fechaFin}">
+                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                        </b:inputText>
+                    </b:panelGrid>
+                    <br></br>
+                    <b:panelGrid colSpans="2,2,2,2,2,2">
+                        <h:outputLabel value="Clave"/>
+                        <b:inputText id="claveDetalle" disabled="true" value="#{consultaCancelacionesBean.clave}"/>
+                        <h:outputLabel value="No. Orden"/>
+                        <b:inputText id="cantidad2" disabled="true" value="#{consultaCancelacionesBean.numeroOrden}" />
+                        <h:outputLabel value="Contrato" />
+                        <b:inputText id="Lote1" disabled="true" value="#{consultaCancelacionesBean.contrato}"/>
+                    </b:panelGrid>
+                    <br></br>
+                    <h3>Cantidades recibidas y pendientes</h3>
+                    <p:fieldset >
+                        <b:panelGrid columns="4">
+                            <h:outputLabel value="Cantidad solicitada"/>
+                            <b:inputText id="cantidad1" disabled="true" value="#{consultaCancelacionesBean.cantidadPiezasSolicitadas}"/>
+                            <h:outputLabel value="Importe total"/>
+                            <b:inputText id="importe" disabled="true" value="#{consultaCancelacionesBean.importeTotal}" />
+                            <h:outputLabel  value="Cantidad de piezas recibidas" />
+                            <b:inputText disabled="true" id="cPr" value="#{consultaCancelacionesBean.cantidadPiezasRecibida}"/>
+                            <h:outputLabel  value="Importe recibido" />
+                            <b:inputText disabled="true" id="ir" value="#{consultaCancelacionesBean.importeRecibido}"/>
+                            <h:outputLabel value="Cantidad de piezas pendientes" />
+                            <b:inputText disabled="true" id="cp" value="#{consultaCancelacionesBean.cantidadPiezasPendientes}"/>
+                            <h:outputLabel value="Importe pendiente" />
+                            <b:inputText disabled="true" id="ip" value="#{consultaCancelacionesBean.importePendiente}"/>
+                            <h:outputLabel value="Precio unitario" />
+                            <b:inputText disabled="true" id="pu" value="#{consultaCancelacionesBean.precioUnitario}"/>
+                        </b:panelGrid>
+                    </p:fieldset>
+                    <p:separator />
+                    <b:panelGrid  rendered="#{consultaCancelacionesBean.verRemision}" columns="1">
+                        <h3>Entregas en Almacen</h3>
+                    </b:panelGrid>
+                    <p:dataTable rendered="#{consultaCancelacionesBean.verRemision}" id="canjePermuta" emptyMessage="No existen registros" rows="10"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                 {totalRecords}, Página: {currentPage}/{totalPages})"
+                                 rowsPerPageTemplate="5,10,15" 
+                                 var="reco" value="#{consultaCancelacionesBean.remiList}" >
+                        <f:facet name="{Exporters}">
+                            <h:commandLink immediate="true">
+                                <p:graphicImage name="images/excel.png" width="24"/>
+                                <p:dataExporter type="xls" target="listaOrden" fileName="OrdenSuministro" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column headerText="Registro de control">
+                            <h:outputText value="#{reco.registroControl}" />
+                        </p:column>
+                        <p:column headerText="Folio de remisión">
+                            <h:outputText value="#{reco.folioRemision}" />
+                        </p:column>
+                        <p:column headerText="Fecha de remisión">
+                            <h:outputText value="#{reco.fechaRemision}" >
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{reco.idEstatus.nombre}" />
+                        </p:column>
+                    </p:dataTable>
+                    <br></br>
+                    <h3>Porcentaje de Incumplimiento</h3>
+                    <p:fieldset >
+                        <b:panelGrid columns="2">
+                            <h:outputLabel value="Cantidad"/>
+                            <b:inputText id="cantidaP" disabled="true" value="#{consultaCancelacionesBean.cantidadPiezasPendientes}"/>
+                            <h:outputLabel value="Importe total"/>
+                            <b:inputText id="importeP" disabled="true" value="#{consultaCancelacionesBean.importePendiente}" />
+                            <h:outputLabel value="Porcentaje" />
+                            <b:inputText id="porcentaje" disabled="true" value="#{consultaCancelacionesBean.porcentajeIncumplimiento}"/>
+                        </b:panelGrid>
+                    </p:fieldset>
+                    <br></br>
+                </h:form>  
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

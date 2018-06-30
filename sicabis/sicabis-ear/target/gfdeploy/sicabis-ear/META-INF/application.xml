@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
+  <display-name>sicabis-ear</display-name>
+  <module>
+    <ejb>sicabis-ejb-modelo-1.0-SNAPSHOT.jar</ejb>
+  </module>
+  <module>
+    <ejb>sicabis-ejb-siam-1.0-SNAPSHOT.jar</ejb>
+  </module>
+  <module>
+    <ejb>sicabis-ejb-sipeav-1.0-SNAPSHOT.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>sicabis-web-1.0-SNAPSHOT.war</web-uri>
+      <context-root>/sicabis-web</context-root>
+    </web>
+  </module>
+  <library-directory>lib</library-directory>
+</application>

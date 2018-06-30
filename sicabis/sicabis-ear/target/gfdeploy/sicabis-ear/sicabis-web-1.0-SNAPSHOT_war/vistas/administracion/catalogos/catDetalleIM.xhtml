@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.detalleIM}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Catálogos" url="../menuCatalogos.xhtml" />
+                            <p:menuitem value="Catálogo Investigación de Mercado" url="catDetalleIM.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Catálogo investigación de mercado</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" >
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.detalleIMC}">
+                            <br></br>
+                            <h:form id="frmbNuevo">
+                                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Jefatura:"/>
+                                    <p:selectOneMenu id="selectJefatura" value="#{catDetalleImBean.catDetalleIm.idJefatura}" 
+                                                     style="width: 100%; height: 34px;" 
+                                                     converter="selectConverter" autoWidth="false"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue=""/>
+                                        <f:selectItems value="#{catDetalleImBean.jefaturaList}" var="jefatura"
+                                                       itemValue="#{jefatura}" itemLabel="#{jefatura.nombre}"/>
+                                        <p:ajax event="change" listener="#{catDetalleImBean.redireccionaExiste}" process="@this" />
+                                    </p:selectOneMenu>
+                                    <h:outputText value="Normas a cumplir:" />                                 
+                                    <p:inputText id="normasCumplir" value="#{catDetalleImBean.catDetalleIm.normasCumplir}"
+                                                 style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    
+                                    <h:outputText value="Plazo:" />                                 
+                                    <p:inputText id="plazo" value="#{catDetalleImBean.catDetalleIm.plazo}"
+                                                 style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText value="Formas de pago:" />                                 
+                                    <p:inputText id="formaPago" value="#{catDetalleImBean.catDetalleIm.formaPago}"
+                                                 style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid colSpans="6,6">
+                                    <p:inputTextarea rows="5" id="condicionesEntrega" placeholder="Condiciones de entrega"
+                                                     value="#{catDetalleImBean.catDetalleIm.condicionesEntrega}"
+                                                     style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <p:inputTextarea rows="5" id="garantias" placeholder="Garantias"
+                                                     value="#{catDetalleImBean.catDetalleIm.garantias}"
+                                                     style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <p:inputTextarea rows="5" id="penasAtraso" placeholder="Penas Convencionales"
+                                                     value="#{catDetalleImBean.catDetalleIm.penasAtraso}"
+                                                     style="width: 100%; height: 34px; text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText/>
+                                </b:panelGrid>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                         update=":frmbNuevo" actionListener="#{catDetalleImBean.guardar}"/>
+                                        <b:commandButton value="Limpiar" look="danger" icon="remove" iconAlign="right" 
+                                                         actionListener="#{catDetalleImBean.cancel}" process="@none"/>
+                                    </b:buttonGroup>
+                                </div>
+                                <br></br>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Detalle Investigación de Mercado">
+                            <h:form id="frmFiltros">
+                                <br></br>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Jefatura:"/>
+                                    <p:selectOneMenu id="selectJefaturaB" value="#{catDetalleImBean.idJefatura}" 
+                                                     style="width: 100%; height: 34px;"
+                                                     converter="selectConverter" autoWidth="false"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue="-1"/>
+                                        <f:selectItems value="#{catDetalleImBean.jefaturaList}" var="jefaturaB"
+                                                       itemValue="#{jefaturaB.idJefatura}" itemLabel="#{jefaturaB.nombre}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                     actionListener="#{catDetalleImBean.consultar}" 
+                                                     update=":formaTabla,idmessages2" />
+                                </div>
+                            </h:form>
+                            <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true"/>
+                            <h:form id="formaTabla">
+                                <p:dataTable id="tabla" value="#{catDetalleImBean.catDetalleImList}"
+                                             emptyMessage="No hay registros" var="catDIM"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             paginatorPosition="bottom">
+
+                                    <p:column headerText="Jefatura">
+                                        <p:outputLabel value="#{catDIM.idJefatura.nombre}"/>
+                                    </p:column>
+                                    <p:column headerText="Usuario">
+                                        <p:outputLabel value="#{catDIM.idUsuario.nombre} #{catDIM.idUsuario.apellidoPaterno}"/>
+                                    </p:column>
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" 
+                                                                 actionListener="#{catDetalleImBean.modificarRedirect(catDIM)}" 
+                                                                 id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" iconAlign="right" 
+                                                                 actionListener="#{catDetalleImBean.mostrarDialogo(catDIM)}" 
+                                                                 update=":formaTabla" id="btnEliminar" rendered="#{!loginBean.esConsulta}"/>
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el registro" showEffect="clip" 
+                                          resizable="true" widgetVar="dialogElimina" modal="true" width="50%">
+                                    <p:separator/>
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" 
+                                                         actionListener="#{catDetalleImBean.elimina}" update=":formaTabla" />
+                                        <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" 
+                                                         actionListener="#{catDetalleImBean.cancel}" process="@this" /> 
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.detalleIM}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.perfiles}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Perfiles" url="perfiles.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Perfiles</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.perfilesC}">
+                            <br></br>
+                            <h:form id="frmTab">
+                                <p:messages id="idmessages" showDetail="false" closable="true" />
+                                <b:panelGrid col-spans="2,4,2,4">
+                                    <h:outputText value="Nombre:"/>
+                                    <b:inputText value="#{perfiles2Bean.nombre}" style="text-transform: uppercase" 
+                                                 onblur="value = value.toUpperCase()">
+                                        <p:ajax event="blur" listener="#{perfilesBean.validaNombre}" update="@this, idmessages" />
+                                    </b:inputText>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                </b:panelGrid>
+
+                                <p:dataTable var="menuPadre" value="#{perfiles2Bean.listaMenuPerfilDTO}">
+                                    <f:facet name="header">
+                                        Seleccione los menús del listado
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{menuPadre.menu.descripcion}" />
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:dataTable var="menus" value="#{menuPadre.listMenuPerfil}"
+                                                     editable="true" editMode="cell" widgetVar="menusFinal">
+                                            <p:column headerText="Nombre">
+                                                <h:outputText value="#{menus.idMenu.descripcion}" />
+                                            </p:column>
+                                            <p:column headerText="Opción">
+                                                <h:panelGrid columns="1"  style="margin-bottom:10px;" cellpadding="5">
+                                                    <p:selectOneRadio value="#{menus.consulta}" layout="grid" columns="3" >
+                                                        <f:selectItem itemLabel="No asignado" itemValue="-1" />
+                                                        <f:selectItem itemLabel="Modificar" itemValue="0" />
+                                                        <f:selectItem itemLabel="Consultar" itemValue="1" />
+                                                        <p:ajax event="change" process="@this" listener="#{perfiles2Bean.agrega(menus)}" />
+                                                    </p:selectOneRadio>
+                                                </h:panelGrid>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton  value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                          actionListener="#{perfiles2Bean.guardaPerfil}" process="frmTab"/>
+                                        <b:commandButton  value="Limpiar" look="danger" icon="remove" iconAlign="right" 
+                                                          actionListener="#{perfiles2Bean.cancel}" />
+                                    </b:buttonGroup>
+                                </div>
+                                <br></br>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Perfiles">
+                            <br></br>
+                            <h:form id="frmTabB">
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Nombre:" />
+                                    <b:inputText  value="#{perfiles2Bean.nombre}" id="nombrePer"
+                                                  style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText value="Estatus:"/>
+                                    <p:selectOneMenu id="activo" value="#{perfiles2Bean.activo}" style="width: 100%; height: 34px;">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue="-1"/>
+                                        <f:selectItem itemLabel="Inactivo" itemValue="0"/>
+                                        <f:selectItem itemLabel="Activo" itemValue="1"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                     actionListener="#{perfiles2Bean.obtenerPerfiles}" update="formaTabla"
+                                                     process="nombrePer, activo"/>
+                                </div>
+                                <p:separator/>
+                            </h:form>
+                            <br/>
+                            <p:messages id="idmessages" showDetail="false" closable="true"/>
+                            <h:form id="formaTabla">
+
+                                <p:dataTable id="tablaPerfiles" value="#{perfiles2Bean.listaPerfiles}" var="perfil" 
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaPerfiles" fileName="perfiles" />
+                                        </h:commandLink>                                
+                                    </f:facet>
+                                    <p:column headerText="Nombre">
+                                        <p:outputLabel id="name" value="#{perfil.nombre}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Estatus">
+                                        <p:outputLabel value="Activo" rendered="#{perfil.activo == 1}"/>
+                                        <p:outputLabel value="Inactivo" rendered="#{perfil.activo != 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" 
+                                                                 actionListener="#{perfiles2Bean.modificarRedirect(perfil)}" 
+                                                                 update=":frmTabB, :frmTab" id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" iconAlign="right" 
+                                                                 actionListener="#{perfiles2Bean.eliminar(perfil)}" 
+                                                                 update=":formaTabla" rendered="#{!loginBean.accesos.perfilesC}" id="btnEliminar"/>
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el perfil '#{perfiles2Bean.nombre}'" 
+                                          showEffect="clip" resizable="true" widgetVar="dialogElimina" modal="true" width="50%">
+                                    <p:separator/>
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" 
+                                                         actionListener="#{perfiles2Bean.eliminaPerfil}" update=":formaTabla, :frmTabB" />
+                                        <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" 
+                                                         actionListener="#{perfiles2Bean.cancel}" update=":formaTabla" /> 
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.perfiles}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+
+        </ui:define>
+    </ui:composition>
+</html>

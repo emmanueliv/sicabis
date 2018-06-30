@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.rcbCreacionSeguimiento}">
+                <h:outputStylesheet name="css/rcb.css" />
+                <div id="contenido" class="ui-fluid">
+
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="RCB Creación y Seguimiento" url="rcb.xhtml" />
+                            <p:menuitem value="Detalle del RCB" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+
+                    <h2>RCB</h2>
+
+                    <h:form id='formRCB' style="width:100%; height: 100%" > 
+                        <!--tab NuevoRcb RCB +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                        <br></br>
+                        <h:panelGroup id="pnlNumRCB" style="display:block; text-align:center">
+                            <p:outputLabel value="#{rcbBeanDetalles.rcb.numero}" style="color: #4A90E2;font-size:1.5em;"/> 
+                            <h:inputHidden value="#{rcbBeanDetalles.rcb.numero}" />
+                        </h:panelGroup>
+                        <br></br>
+                        <p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+                        <p:panelGrid id="pnlRCB" columns="4" styleClass="ui-panelgrid-blank" layout="grid" style="width: 100%"> 
+                            <p:outputLabel for="selectTipoCompra" value="Tipo de compra:" />  
+                            <p:selectOneMenu id ="selectTipoCompra" value="#{rcbBeanDetalles.rcb.idTipoCompra.idTipoCompra}"
+                                             required="true" requiredMessage="-Seleccione un tipo de compra" 
+                                             disabled="#{rcbBeanDetalles.deshabilitarselTipoCompra}" styleClass="">
+                                <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                <f:selectItems value="#{rcbBeanDetalles.listaTipoCompra}" var="tipoCompra"
+                                               itemValue="#{tipoCompra.idTipoCompra}"  itemLabel="#{tipoCompra.nombre}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Estatus:" />                                 
+                            <p:outputLabel value="#{rcbBeanDetalles.rcb.idEstatus.nombre}" />
+                            
+                            <p:outputLabel value="Área:" />
+                            <p:outputLabel value="#{rcbBeanDetalles.rcb.idArea.nombreArea}" />
+                            <p:outputLabel value="Jefatura:" />
+                            <p:outputLabel value="#{rcbBeanDetalles.rcb.idJefatura.nombre}" />
+                            
+                            <p:outputLabel value="Número RCB:" />                                 
+                            <p:inputText id="numRcb" value="#{rcbBeanDetalles.rcb.numero}" styleClass="tamanioCampos"/>
+                            <p:outputLabel for="inpClave" value="Folio:" /> 
+                            <p:inputText id= "inpClave" value="#{rcbBeanDetalles.rcb.clave}" required="#{!rcbBeanDetalles.deshabilitarInpClave}"  
+                                         requiredMessage="-Ingrese un Folio"
+                                         disabled="#{rcbBeanDetalles.deshabilitarInpClave}" styleClass="tamanioCampos">
+                            </p:inputText>
+                            
+                            <p:outputLabel for="inpNumOficio" value="Número de Oficio:" />
+                            <p:inputText id="inpNumOficio" value="#{rcbBeanDetalles.rcb.numeroOficio}" 
+                                         required="true" requiredMessage="-Ingrese número de oficio" styleClass="tamanioCampos"
+                                         disabled="#{rcbBeanDetalles.deshabilitarInpDestino}"
+                                         style="text-transform: uppercase">
+                            </p:inputText>
+                            <p:outputLabel for ="inpDestino" value="Destino de los bienes:" />
+                            <p:outputLabel value="#{rcbBeanDetalles.rcb.destino}"
+                                           rendered="#{rcbBeanDetalles.deshabilitarInpDestino}" />
+                            <p:selectOneMenu id ="inpDestino" value="#{rcbBeanDetalles.rcb.destino}"
+                                             disabled="#{rcbBeanDetalles.deshabilitarInpDestino}"
+                                             rendered="#{!rcbBeanDetalles.deshabilitarInpDestino}"
+                                             required="true" requiredMessage="-Ingrese un destino"
+                                             styleClass="" autoWidth="false">
+                                <f:selectItem itemValue="" itemLabel="Selecciona" />
+                                <f:selectItem itemValue="CENADI" itemLabel="CENADI" />
+                                <f:selectItem itemValue="ALMACÉN CENTRAL" itemLabel="ALMACÉN CENTRAL" />
+                                <f:selectItem itemValue="ENTREGA DIRECTA" itemLabel="ENTREGA DIRECTA" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel for="fechaelaboracion" value="Fecha de elaboración:" />                                 
+                            <p:calendar id="fechaelaboracion" value="#{rcbBeanDetalles.rcb.fechaElaboracion}" pattern="dd/MM/yyyy" mask="true"
+                                        required="true" requiredMessage="- Fecha de elaboración" 
+                                        disabled="#{rcbBeanDetalles.deshabilitarFechaelaboracion}" styleClass="tamanioCampos" />
+                            <p:outputLabel for="inpPeriod" value="Periodo a cubrir:" />                                 
+                            <p:inputMask id= "inpPeriod" value="#{rcbBeanDetalles.rcb.periodo}" required="true" mask="9?999" maxlength="4" 
+                                         slotChar=" " disabled="#{rcbBeanDetalles.deshabilitarInpPeriod}" styleClass="tamanioCampos"/>
+                            
+                            <p:outputLabel for="inpOficio" value="Oficio de suficiencia presupuestal:" />
+                            <p:inputText id= "inpOficio" value="#{rcbBeanDetalles.rcb.oficioSuficienciaPresupuestal}" 
+                                         disabled="#{rcbBeanDetalles.desHabilitarOficioSuficiencia}" 
+                                         required="#{rcbBeanDetalles.requiredHabilitarOficioSuficiencia}" 
+                                         requiredMessage="Ingrese el oficio de suficiencia" styleClass="tamanioCampos"
+                                         style="text-transform: uppercase">
+                            </p:inputText>
+                            <p:outputLabel for="inpNep" value="NEP:" />                                 
+                            <p:inputText id= "inpNep" value="#{rcbBeanDetalles.rcb.nep}" disabled="#{rcbBeanDetalles.desHabilitarNep}"
+                                         maxlength="40"
+                                         required="#{rcbBeanDetalles.requiredHabilitarNep}" 
+                                         requiredMessage="Ingrese el NEP, el campo debe ser de 40 caracteres numericos" styleClass="tamanioCampos">
+                                <f:validateRegex
+                                    pattern="[0-9]+" />
+                            </p:inputText>
+                            
+                            <p:outputLabel for="fechaOficio" value="Fecha de oficio de suficiencia:" />                                 
+                            <p:calendar id="fechaOficio" value="#{rcbBeanDetalles.rcb.fechaOficioSuficiencia}" pattern="dd/MM/yyyy" mask="true" 
+                                        required="#{rcbBeanDetalles.requiredHabilitarNep}" requiredMessage="- Debe seleccionar Fecha Oficio de Suficiencia" 
+                                        disabled="#{rcbBeanDetalles.desHabilitarOficioSuficiencia}" styleClass="tamanioCampos" />
+                            <p:outputLabel for ="diasOficio" value="Dias de vigencia oficio suficiencia:" />  
+                            <p:inputText id= "diasOficio" value="#{rcbBeanDetalles.rcb.diasOficio}" required="true" maxlength="5"
+                                         requiredMessage="-Ingrese dias de vigencia del oficio de suficiencia:" 
+                                         disabled="#{rcbBeanDetalles.desHabilitarOficioSuficiencia}"
+                                         styleClass="tamanioCampos"/>
+                            
+                            <p:outputLabel for="selectGrupo"  value="Grupo:" />      
+                            <p:selectManyMenu id ="selectGrupo" value="#{rcbBeanDetalles.gruposSeleccionados}" disabled="#{rcbBeanDetalles.deshabilitarInpGrupo}" required="true" requiredMessage="-Seleccione un o mas Grupos" >
+                                <f:selectItems value="#{rcbBeanDetalles.listaGrupos}" var="grupo"
+                                               itemValue="#{grupo.idGrupo}"  itemLabel="#{grupo.grupo}"/>
+                            </p:selectManyMenu> 
+                            <h:outputText />
+                        </p:panelGrid>  
+                        <br></br>
+                        <h:panelGrid  columns="2" style="width: 100%;">
+                            <h:outputText  value="Lista de insumos por requerir" />
+
+                            <h:panelGroup style="display:block; text-align:right" rendered="#{!loginBean.accesos.rcbCreacionSeguimientoC}">
+                                <p:commandLink value="Agregar insumo"  actionListener="#{rcbBeanDetalles.seleccionaInsumo}" process="@this"
+                                               styleClass="btn btn-primary" disabled="#{rcbBeanDetalles.desHabilitarBtnAgregarInsumo}">
+                                    <p:ajax event="dialogReturn" listener="#{rcbBeanDetalles.insumoSeleccionado}" 
+                                            update="tablaRcbInsumo messages" oncomplete="PF('wvTablaRcbInsumo').filter();"/>
+                                </p:commandLink>
+                                <p:commandLink value="Cargar RCB anterior" 
+                                               actionListener="#{rcbBeanDetalles.cargarRCBAnterior}" 
+                                               update="tablaRcbInsumo messages" process="@this"
+                                               styleClass="btn btn-info"
+                                               disabled="#{rcbBeanDetalles.desHabilitarBtnCargarRcbAnterior}"
+                                               oncomplete="PF('wvTablaRcbInsumo').filter()">
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de cargar la RCB anterior, esta acción eliminará los insumos seleccionados?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                                <p:commandLink value="Eliminar todo" 
+                                               actionListener="#{rcbBeanDetalles.eliminarInsumos}" 
+                                               update="tablaRcbInsumo" process="@this"
+                                               styleClass="btn btn-danger"
+                                               disabled="#{rcbBeanDetalles.desHabilitarBtnEliminarInsumos}"
+                                               oncomplete="PF('wvTablaRcbInsumo').filter();">
+                                    <p:confirm header="Confirmación" message="¿Esta seguro de eliminar la lista de insumos?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br></br>
+                        <div id="divTable" style="width: 100%;">
+                            <p:dataTable id="tablaRcbInsumo" var="rcbInsumo" value="#{rcbBeanDetalles.listRcbinsumosDto}"
+                                         filteredValue="#{rcbBeanDetalles.listRcbinsumosDtoFilter}"
+                                         widgetVar="wvTablaRcbInsumo"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20"
+                                         emptyMessage="No hay registros">   
+                                <p:ajax event="filter" listener="#{rcbBeanDetalles.filterListener}"/>
+                                <p:ajax event="page"  listener="#{rcbBeanDetalles.pageListener}" />
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaRcbInsumo" fileName="rcbDetalle" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.claveInsumo}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.claveInsumo}" />
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.descripcionInsumo}"   filterMatchMode="contains" headerText="Descripción" class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.descripcionInsumo.substring(0,20)}" />
+                                </p:column>
+                                <p:column headerText="Existencias" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.existencias}" />
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.idInsumo.idUnidadPieza.descripcion}"   filterMatchMode="contains" headerText="Unidad " class="formatoTablas"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.idInsumo.idUnidadPieza.descripcion}" />
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.cantidadPiezas}"   filterMatchMode="contains" headerText="Cantidad" class="formatoTablas"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.cantidadPiezas}"/>
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.precioUnitario}"   filterMatchMode="contains" headerText="Precio unitario" class="formatoTablas"> 
+                                    <p:inputNumber value="#{rcbInsumo.rcbInsumo.precioUnitario}" decimalPlaces="2" size="6" required="true"
+                                                   requiredMessage="-Agregue precio unitario en la lista de insumos"  
+                                                   rendered="#{rcbBeanDetalles.mostrarCampoPrecioUnitario}"/> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.precioUnitario}" rendered="#{rcbBeanDetalles.mostrarTextoPrecioUnitario}">
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>                                
+                                </p:column>
+                                <p:column filterBy="#{rcbInsumo.rcbInsumo.importe}"   filterMatchMode="contains" headerText="Importe" class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rcbInsumo.rcbInsumo.importe}">
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Opciones" colspan="2" style="text-align: center" class="" exportable="false" > 
+                                    <p:commandButton id="btnModificarInsumo" value=""  icon="fa fa-fw fa-edit" iconPos="left"
+                                                     styleClass="customModificar btn-primary" rendered="#{!loginBean.accesos.rcbCreacionSeguimientoC}"
+                                                     style="color: #fff;width:30px;height:30px;font-size: 110%;" 
+                                                     disabled="#{rcbBeanDetalles.desHabilitarBtnModificar}"
+                                                     actionListener="#{rcbBeanDetalles.seleccionaInsumoAmodificar(rcbInsumo)}"
+                                                     process="@this" >
+                                        <p:ajax event="dialogReturn" listener="#{rcbBeanDetalles.insumoModificadoSeleccionado}" update="tablaRcbInsumo" />
+                                    </p:commandButton>
+                                    <p:tooltip for="btnModificarInsumo" value="Modificar insumo" position="top"/> 
+                                    <p:commandButton id="btnEliminarInsumo" value="" icon="fa fa-trash-o" iconPos="center" styleClass="customEliminar btn-danger" style="color: #fff;width:30px;height:30px;font-size: 110%;" disabled="#{rcbBeanDetalles.desHabilitarBtnEliminar}"
+                                                     actionListener="#{rcbBeanDetalles.eliminarInsumo(rcbInsumo)}" 
+                                                     update="tablaRcbInsumo" process="@this"
+                                                     rendered="#{!loginBean.accesos.rcbCreacionSeguimientoC}">
+                                        <p:confirm header="Confirmación" message="¿Esta seguro de eliminar el insumo?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    <p:tooltip for="btnEliminarInsumo" value="Eliminar insumo" position="top"/> 
+                                </p:column>
+                                <p:rowExpansion >
+                                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{rcbInsumo.rcbInsumo.idInsumo.descripcion}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column colspan="7" style="text-align:right" footerText="Total:" />                                        
+                                        <p:column  id="colImporteTotal" class="formatoTablas">
+                                            <f:facet name="footer">
+                                                <h:outputText value="#{rcbBeanDetalles.rcb.importeTotal}">
+                                                    <f:convertNumber type="currency"  />
+                                                </h:outputText>                                        
+                                            </f:facet>                                        
+                                        </p:column>
+                                        <p:column colspan="2"></p:column>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:dataTable>  
+                        </div>
+                        <br></br>
+                        <p:panelGrid id="pnlArchivos" columns="1" styleClass="ui-panelgrid-blank" layout="grid" rendered="#{rcbBeanDetalles.mostrarCargaArchivos}" >       
+                            <p:outputLabel value="Carga de archivos"/>
+                            <br></br>                        
+                            <h:outputText value="Tipo de documento:" />                            
+                            <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                             value="#{rcbBeanDetalles.archivosBean.idTipoDocumento}">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{rcbBeanDetalles.archivosBean.listaTipoDocs}" var="tipoDocs"
+                                               itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                <p:ajax event="change" listener="#{rcbBeanDetalles.archivosBean.cambiaTipoDoc}" />
+                            </p:selectOneMenu>                            
+                            <br></br>
+                            <p:fileUpload fileUploadListener="#{rcbBeanDetalles.archivosBean.guardarArchivos}" mode="advanced" dragDropSupport="true" process="@this,selectTipoDocs"
+                                          uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                          rendered="#{rcbBeanDetalles.mostrarCargaArchivos}" multiple="false" 
+                                          />
+                            <br></br>
+                            <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{rcbBeanDetalles.archivosBean.listaRepoDocsDto}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{rcbBeanDetalles.mostrarCargaArchivos}" >                                
+                                <p:column headerText="Nombre de archivo" class="formatoTablas">
+                                    <h:outputText value="#{listaRepoDocs.nombre}" />
+                                </p:column>
+                                <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                    <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                        <p:fileDownload value="#{listaRepoDocs.file}" />
+                                    </b:commandButton>
+                                    <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                     update="tablaRepoDocs" actionListener="#{rcbBeanDetalles.archivosBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                    </b:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                <p:panelGrid>
+                                    <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                </p:panelGrid>
+                                <b:buttonGroup>
+                                    <b:commandButton actionListener="#{rcbBeanDetalles.archivosBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" update="pnlArchivos" />
+                                    <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                </b:buttonGroup>
+                            </p:dialog>
+                        </p:panelGrid>
+                        <p:separator rendered="#{!loginBean.accesos.rcbCreacionSeguimientoC}"/>
+                        <p:panel rendered="#{!loginBean.accesos.rcbCreacionSeguimientoC}" style="border: none">
+                            <div style="display:block; text-align:right;">
+                                <b:commandButton value="Guardar"  look="primary" onclick="ajax:rcbBeanDetalles.guardarRCB()" update="formRCB" 
+                                                 icon="floppy-disk" iconAlign="right" rendered="#{rcbBeanDetalles.mostrarBtnGuardar}"/>
+                                <b:commandButton value="Aceptar"  look="primary" actionListener="#{rcbBeanDetalles.guardarRCB()}" update="formRCB" 
+                                                 icon="ok" iconAlign="right" rendered="#{rcbBeanDetalles.mostrarBtnAceptarIm}"
+                                                 />
+                                <b:commandButton value="Completar RCB"  look="info" actionListener="#{rcbBeanDetalles.guardarRCB()}" update="formRCB" 
+                                                 icon="ok" iconAlign="right" rendered="#{rcbBeanDetalles.mostrarBtnCompletarRcb}"/>
+                                <b:commandButton value= "Resuelta"  look="info" actionListener="#{rcbBeanDetalles.guardarRCB()}" update="formRCB" 
+                                                 icon="ok" iconAlign="right" rendered="#{rcbBeanDetalles.mostrarBtnImResuelta}"
+                                                 />
+                                <p:outputLabel rendered="#{rcbBeanDetalles.mostrarMsjEsperandoIM}" value="#{rcbBeanDetalles.lbMsjEsperandoIM}" style="color:  #51AE6A; font-size: medium"/>
+                                <b:commandButton value="Solicitar investigación de mercado"  look="info" onclick="ajax:rcbBeanDetalles.guardarRCB()" 
+                                                 update="formRCB" icon="shopping-cart" iconAlign="right"
+                                                 rendered="#{rcbBeanDetalles.mostrarBtnInvestMercado}"/>
+                                <b:commandButton value="Imprimir RCB"  look="info" immediate="true"
+                                                 action="#{rcbBeanDetalles.imprimirRcb}" ajax="false" icon="print" iconAlign="right" 
+                                                 rendered="#{rcbBeanDetalles.mostrarBtnImprimirRcb}"
+                                                 />
+                                <b:commandButton value="Limpiar"  look="danger" update="pnlNumRCB pnlRCB tablaRcbInsumo"  process="@this" 
+                                                 iconAlign="right" icon="remove"
+                                                 actionListener="#{rcbBeanDetalles.limpiarFrmNuevo}" rendered="#{rcbBeanDetalles.mostrarBtnLimpiar}"/>
+                            </div>    
+                        </p:panel>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <div style="display:block; text-align:right">
+                                <p:commandLink value="Si" type="button" styleClass="ui-confirmdialog-yes btn btn-primary" style="color: #fff;" />
+                                <p:commandLink value="No" type="button" styleClass="ui-confirmdialog-no btn btn-danger" style="color: #fff;" />
+                            </div>
+                        </p:confirmDialog>
+
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.rcbCreacionSeguimiento}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

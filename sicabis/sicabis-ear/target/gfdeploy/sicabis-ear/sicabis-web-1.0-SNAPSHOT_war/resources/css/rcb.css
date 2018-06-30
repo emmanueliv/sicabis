@@ -1,0 +1,144 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 31/08/2016, 12:30:01 PM
+    Author     : erik
+*/
+
+.outerpanelgrid>tbody>tr{
+    border: none !important;
+}
+.outerpanelgrid>tbody>tr>td{
+    border: none !important;
+}
+
+.formatoTablas{
+    font-size: 80%;
+    text-align: center;
+}
+
+
+.btninfo {
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+.btndialog {
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.colorLetra {
+    color: #ffffff;
+}
+
+
+.customEliminar.ui-button{
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: inherit;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    margin-right: 0;
+    padding: 4px;
+    /*    width: 18%;*/
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.customModificar.ui-button{
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    margin-right: 0;
+    padding: 4px;
+    width: 18%;
+    text-align: center;
+    vertical-align: middle;
+    /*    white-space: nowrap;*/
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+
+.customInfo.ui-button{
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    margin-right: 0;
+    padding: 4px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+
+.ui-button {
+    color: #ffffff
+}
+
+.tamanioCampos{
+    width: 350px;
+}
+
+.tamanioCampos.ui-calendar{
+    width: 350px;
+}
+
+.tamanioCampos.ui-selectonemenu.ui-widget.ui-state-default.ui-corner-all{
+    width: 350px;
+}
+
+.tamanioCampos.ui-inputfield.ui-widget.ui-state-default.ui-corner-all.hasDatepicker{
+    width: 350px;
+}
+
+.dtitulo.ui-dialog-titlebar.ui-widget-header.ui-helper-clearfix.ui-corner-top{
+    background: #004c75;
+}
+
+.titulo{
+    background: #004c75;
+}
+
+.ui-selectlistbox-listcontainer{
+    height:100px !important;
+}

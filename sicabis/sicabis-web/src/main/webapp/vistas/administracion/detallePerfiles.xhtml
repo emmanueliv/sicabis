@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.perfiles}">
+                <div id="contenido">
+                    <h:form id="frmTab">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../../menuInicio.xhtml" />
+                            <p:menuitem value="Perfiles" url="perfiles.xhtml" />
+                            <p:menuitem value="Detalle del perfil" url="catPerfiles.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                        <h2>Detalle del perfil</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid col-spans="2,10">
+                            <h:outputText value="Nombre:"/>
+                            <b:inputText value="#{detallePerfilesBean.nombre}" style="width: 38%;text-transform: uppercase" onblur="value = value.toUpperCase()">
+                                <p:ajax event="blur" listener="#{detallePerfilesBean.validaNombre()}" update="@this, idmessages" />
+                            </b:inputText>
+                        </b:panelGrid>
+                        <h:outputText value="Es perfil de consulta:"/>
+                        <p:selectBooleanCheckbox value="#{detallePerfilesBean.tipoPerfil}" >
+                            <p:ajax event="change" listener="#{detallePerfilesBean.cambiaTipo()}" update=":frmTab" />
+                        </p:selectBooleanCheckbox>
+                        <br/>
+                        <b:panelGrid col-spans="2,10">
+                            <p:selectManyCheckbox id="manycheckC" value="#{detallePerfilesBean.seleccionMenuPrincipal}" layout="responsive" columns="1" rendered="#{detallePerfilesBean.tipoPerfil}">
+                                <f:selectItems value="#{detallePerfilesBean.listaMenuPrincipal}" var="principalC" itemLabel="#{principalC.descripcion}" itemValue="#{principalC.idTarea.idTarea}" />
+                                <p:ajax event="change" listener="#{detallePerfilesBean.cambiaSeleccion(1)}" update=":frmTab" />
+                            </p:selectManyCheckbox>
+                            <br/>
+                            <p:selectManyCheckbox id="manycheckA" value="#{detallePerfilesBean.seleccionMenuPrincipal}" layout="responsive" columns="1" rendered="#{!detallePerfilesBean.tipoPerfil}">
+                                <f:selectItems value="#{detallePerfilesBean.listaMenuPrincipal2}" var="principalA" itemLabel="#{principalA.descripcion}" itemValue="#{principalA.idTarea.idTarea}" />
+                                <p:ajax event="change" listener="#{detallePerfilesBean.cambiaSeleccion(2)}" update=":frmTab" />
+                            </p:selectManyCheckbox>
+                            <br/>
+                        </b:panelGrid>
+                        <p:selectOneRadio id="oneradio" value="#{detallePerfilesBean.idMenuR}" columns="1" rendered="#{!detallePerfilesBean.tipoPerfil}">
+                            <f:selectItems value="#{detallePerfilesBean.listaMenuPrincipalSeleccion}" var="principalRadio" itemLabel="#{principalRadio.descripcion}" itemValue="#{principalRadio.idTarea.idTarea}"/>
+                            <p:ajax event="change" listener="#{detallePerfilesBean.cambiaSeleccion(2)}" update=":frmTab" />
+                        </p:selectOneRadio>
+                        <br/>
+                        <p:pickList id="pickList" value="#{detallePerfilesBean.listaDualMenu}" var="menu" itemLabel="#{menu.descripcion}" itemValue="#{menu.idMenu}"
+                                    showCheckbox="false" responsive="true" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
+                            <f:facet name="sourceCaption">Menús</f:facet>
+                            <f:facet name="targetCaption">Seleccionados</f:facet>
+                        </p:pickList>
+
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton  value="Actualizar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                  actionListener="#{detallePerfilesBean.guardarActualizarPerfil()}" update=":frmTab" 
+                                                  rendered="#{!loginBean.accesos.perfilesC}"/>
+                            </b:buttonGroup>
+                        </div>
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.perfiles}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

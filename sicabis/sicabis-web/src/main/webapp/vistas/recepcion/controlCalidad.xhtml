@@ -1,0 +1,399 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.controlCalidad}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Control de Calidad" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Control de calidad</h2>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" styleClass="DataTable" >
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.controlCalidadC}">
+                            <h:form id="nuevoControl">
+                                <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{controlCalidadBean.verMensaje}" ></p:messages>
+                                <br></br>
+                                <b:panelGrid colSpans="2,10">
+                                    <h:outputLabel value="Buscar"/>
+                                    <b:inputText id="registroControl" style="width: 450px;"  placeholder="Registro de control" 
+                                                 value="#{controlCalidadBean.registroControl}" />
+
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton process="@this,registroControl" type="submit" value="Buscar" 
+                                                     look="info" iconAlign="right" update="nuevoControl dictamen" 
+                                                     icon="search" actionListener="#{controlCalidadBean.remisionByRegistro}"/>
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable id="remisionC" emptyMessage="No existen registros"  rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15"
+                                             var="remisiones" value="#{controlCalidadBean.remisionRegistroList}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisionC" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Registro de control">
+                                        <h:outputText value="#{remisiones.registroControl}" />
+                                    </p:column>
+                                    <p:column headerText="Proveedor">
+                                        <h:outputText value="#{remisiones.proveedor}" />
+                                    </p:column>
+                                    <p:column headerText="No. Licitación">
+                                        <h:outputText value="#{remisiones.numeroProcedimiento}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{remisiones.clave}"/>
+                                    </p:column>
+                                    <p:column headerText="Descripción">
+                                        <h:outputText value="#{remisiones.descripcion.substring(0,20)}"/>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{remisiones.cantidadRecibidaRemision}" >
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Unidad">
+                                        <h:outputText value="#{remisiones.unidadPieza}" />
+                                    </p:column>
+                                    <p:column headerText="Precio unitario">
+                                        <h:outputText value="#{remisiones.importeTotal}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Importe">
+                                        <h:outputText value="#{remisiones.importe}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid  columns="1" columnClasses="label,value" style="width:300px">
+                                            <f:facet name="header">
+                                                Descripción
+                                            </f:facet>
+                                            <h:outputText value="#{remisiones.descripcion}" />
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                                <b:panelGrid colSpans="12" rendered="#{controlCalidadBean.verFolio}" >
+                                    <h4>Folio de Caducidad</h4>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs2" var="listaRepoDocs" value="#{controlCalidadBean.listaRepoDocsDto2}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{controlCalidadBean.verFolio}" >                                
+                                    <p:column headerText="Nombre archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.idTipoDocumento.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <b:panelGrid colSpans="6,6">
+                                    <p:selectOneMenu id="pasar" rendered="#{controlCalidadBean.verFolio}" 
+                                                     value="#{controlCalidadBean.folio}" style="width:100%; height: 34px; " >
+                                        <f:selectItem itemLabel="SELECCIONA ..." itemValue="-1" />
+                                        <f:selectItem itemLabel="APROBAR CADUCIDAD O FABRICACIÓN" itemValue="1" />
+                                        <f:selectItem itemLabel="NO APROBAR" itemValue="2" />
+                                        <p:ajax update="@form" event="change" listener="#{controlCalidadBean.desabilitarBoton}"/>
+                                    </p:selectOneMenu>
+                                    <h:outputLabel/>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:separator/>
+                                <h4>Fabricante con registro sanitario</h4>
+                                <br></br>
+                                <b:panelGrid colSpans="2,4,2,4"  >
+                                    <h:outputLabel rendered="#{controlCalidadBean.mostrarRegistroSanitario}" value="Registro sanitario"/>      
+                                    <b:inputText disabled="true" rendered="#{controlCalidadBean.mostrarRegistroSanitario}" 
+                                                 placeholder="Registro sanitario" id="registroSanitario" value="#{controlCalidadBean.registroSanitario}"/>
+                                    <h:outputLabel rendered="#{controlCalidadBean.mostrarRegistroSanitario}" value="Fabricante"/>
+                                    <p:selectOneMenu id="fabricantes" rendered="#{controlCalidadBean.mostrarOneMenu}" 
+                                                     value="#{controlCalidadBean.idFabricante}"  style="width:100%; height: 34px; " >
+                                        <f:selectItem itemLabel="Seleciona fabricante" itemValue="-1" />
+                                        <f:selectItem itemLabel="Nuevo" itemValue="-2" />
+                                        <f:selectItems value="#{controlCalidadBean.fabricantesList}" var="fabricante" 
+                                                       itemLabel="#{fabricante.nombre}" itemValue="#{fabricante.idFabricante}"  />
+                                        <p:ajax update="nuevoControl" event="change"  listener="#{controlCalidadBean.buscarFabricanteById()}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,4,2,4" rendered="#{controlCalidadBean.idFabricante == -2}">
+                                    <h:outputText value="Registro nuevo fabricante" style="font-weight: bold"/>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                    <h:outputText value="Nombre:"/>
+                                    <b:inputText value="#{controlCalidadBean.fabricantes.nombre}" />
+                                    <h:outputText value="Registro sanitario:"/>
+                                    <b:inputText value="#{controlCalidadBean.fabricantes.registroSanitario}" />
+                                    <div style="display:block; text-align:right">
+                                        <b:commandButton value="Agregar" look="info" icon="plus" iconAlign="right" update="nuevoControl" >
+                                            <f:ajax listener="#{controlCalidadBean.agregarFabricante()}" execute="@form" />
+                                        </b:commandButton>
+                                    </div>
+                                </b:panelGrid>
+                                <br></br>
+
+                                <p:separator /> 
+                                <h4>Inspección por atributos</h4>
+                                <br></br>
+                                <b:panelGrid colSpans="2,10" >
+                                    <h:outputLabel value="Tamaño de muestra"/>
+                                    <b:inputText  disabled="true" style="width: 38%;" id="cantidadRecibida" value="#{controlCalidadBean.cantidadRecibida}"/>
+                                    <h:outputLabel  value="Nivel de inspección"/>
+                                    <b:inputText disabled="true"  style="width: 38%;" id="inspeccion"  value="#{controlCalidadBean.inspeccion}"/>
+                                    <h:outputLabel  value="Nivel de calidad aceptable"/>
+                                    <b:inputText disabled="true" style="width: 38%;"   placeholder="Defecto" id="defecto1"  value="#{controlCalidadBean.defecto}"/>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:dataTable id="tablaLotes" value="#{controlCalidadBean.lotesList}"
+                                             emptyMessage="No hay registros" var="lote"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             editable="true" editMode="cell">
+
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaLotes" fileName="registroBitacora" />
+                                        </h:commandLink>
+                                    </f:facet>
+
+                                    <p:column headerText="Lote">
+                                        <h:outputLabel value="#{lote.lote}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha de fabricación">
+                                        <h:outputLabel value="#{lote.fechaFabricacion}">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Fecha de caducidad">
+                                        <h:outputLabel value="#{lote.fechaCaducidad}">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Cantidad por lote">
+                                        <h:outputLabel value="#{lote.cantidadLote}">
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Cantidad de muestra a verificar">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{lote.cantidadRecibidaControlCalidad}" >
+                                                    <f:convertNumber pattern="###,###,###" />
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:inputNumber decimalPlaces="0" emptyValue="zero" minValue="0" value="#{lote.cantidadRecibidaControlCalidad}" />
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <p:selectOneMenu  style="height: 34px; width: 49%;" id="dictamen"   value="#{controlCalidadBean.seleccionarDictamen}">
+                                    <f:selectItem itemLabel="SELECCIONAR DICTAMEN" itemValue="-1"/>
+                                    <f:selectItem itemLabel="APROBADO" itemValue="1" />
+                                    <f:selectItem itemLabel="DEVOLUCIÓN" itemValue="2" />
+                                    <f:selectItem itemLabel="MODIFICAR" itemValue="3"/>
+                                    <p:ajax update=":nuevoControl:devo2, :nuevoControl:mostrar" listener="#{controlCalidadBean.mostrarDefecto()}" />
+                                </p:selectOneMenu>
+                                <br></br>
+                                <b:panelGrid columns="1"  id="devo2">
+                                    <p:selectOneMenu style="height: 34px; width: 49%;" id="devo" rendered="#{controlCalidadBean.verDetalleDefecto}"  
+                                                     value="#{controlCalidadBean.idPresentacion}">
+                                        <f:selectItem itemLabel="SELECCIONAR MOTIVO DE DEVOLUCIÓN" itemValue="-1" />
+                                        <f:selectItems value="#{controlCalidadBean.presentacionList}" var="devolucion" itemLabel="#{devolucion.presentacion}" itemValue="#{devolucion.idPresentacion}" />
+                                        <p:ajax update=":nuevoControl:mostrar"  listener="#{controlCalidadBean.mostrarObservaciones()}" />
+                                    </p:selectOneMenu>
+                                </b:panelGrid> 
+                                <br></br>
+                                <b:panelGrid columns="1"  id="mostrar">
+                                    <b:inputTextarea id="defecto2"  rendered="#{controlCalidadBean.verObservaciones}"  
+                                                     style="width: 49%;" placeholder="Descripcion del defecto" 
+                                                     value="#{controlCalidadBean.descripcionDefecto}" />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton   look="primary" icon="floppy-disk" iconAlign="right" value="Guardar" 
+                                                       rendered="#{controlCalidadBean.verBoton}" update="nuevoControl" 
+                                                       actionListener="#{controlCalidadBean.guardarControlCalidad()}"/>
+                                </div>
+                                <p:separator />
+                                <b:panelGrid col-spans="12" rendered="#{controlCalidadBean.verCargaDocumentos}" >
+                                    <h3>Carga de Archivos</h3>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,10" rendered="#{controlCalidadBean.verCargaDocumentos}" >
+                                    <h:outputText value="Tipo documento:" />
+                                    <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                     value="#{controlCalidadBean.idTipoDocumento}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{controlCalidadBean.listaTipoDocs}" var="tipoDocs"
+                                                       itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                        <p:ajax update="selectTipoDocs" listener="#{controlCalidadBean.cambiaTipoDoc}" />
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:fileUpload fileUploadListener="#{controlCalidadBean.guardarArchivos}" mode="advanced" multiple="false" dragDropSupport="true" process="@this, selectTipoDocs"
+                                              uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                              rendered="#{controlCalidadBean.verCargaDocumentos}"  
+                                              />
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{controlCalidadBean.listaRepoDocsDto}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{controlCalidadBean.verCargaDocumentos}" >                                
+                                    <p:column headerText="Nombre archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                        <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                         update="tablaRepoDocs" actionListener="#{controlCalidadBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                    </p:panelGrid>
+                                    <b:buttonGroup>
+                                        <b:commandButton action="#{controlCalidadBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                        <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Remisiones" >
+                            <h:form id="frmNew">
+                                <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true" rendered="#{controlCalidadBean.verMensaje2}" />
+                                <h4>Consultar remisiones</h4>
+                                <br></br>
+                                <b:panelGrid colSpans="2,2,2,2,2,2" size="xs">
+                                    <h:outputLabel value="Registro de control"/>
+                                    <b:inputText placeholder="Registro de control" value="#{controlCalidadBean.registroControl}" ></b:inputText>
+                                    <h:outputLabel value="Fecha de inicio"/>
+                                    <p:calendar placeholder="Fecha de inicio" id="effect" value="#{controlCalidadBean.fechaInicio}" style="height: 34px;" showOn="button" locale="es" />
+                                    <h:outputLabel value="Fecha fin"/>
+                                    <p:calendar placeholder="Fecha fin" id="effect2" value="#{controlCalidadBean.fechaFin}" style="height: 34px;"  showOn="button"  />
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="info" value="Buscar" icon="search" iconAlign="right" actionListener="#{controlCalidadBean.remisionByRegistroControl()}"  update="frmNew" ></b:commandButton> 
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable id="remisiones"
+                                             emptyMessage="No existen registros"  rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                             {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" var="remisionesR" value="#{controlCalidadBean.remisionesRegistro}">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="remisiones" fileName="Remisiones" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column headerText="Descripción">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column  headerText="Registro de control">
+                                        <h:outputText value="#{remisionesR.registroControl}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}"
+                                                      rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisionesR.idCanjePermuta.idInsumoCanje.clave}" 
+                                                      rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{remisionesR.cantidadRecibida}">
+                                            <f:convertNumber pattern="###,###,###" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Contrato" >
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                                    </p:column>
+                                    <p:column headerText="Almacén" >
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.idAlmacen.nombreAlmacen}" />
+                                    </p:column>
+                                    <p:column headerText="Documento" >
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}"/>
+                                    </p:column>
+                                    <p:column headerText="Proveedor">
+                                        <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" 
+                                                      rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{remisionesR.idCanjePermuta.proveedor.nombreProveedor}" 
+                                                      rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                    </p:column>
+                                    <p:column headerText="Estatus">
+                                        <h:outputText value="#{remisionesR.idEstatus.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" style="text-align: center">
+                                        <b:commandButton ajax="true" look="info" icon="search" iconAlign="right" value="" tooltip="Ver detalle" 
+                                                         id="controlId" action="#{controlCalidadBean.verDettaleRemision()}" >   
+                                            <f:setPropertyActionListener value="#{remisionesR}" target="#{controlCalidadBean.remisiones}"/>
+                                        </b:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{remisionesR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" 
+                                                              rendered="#{remisionesR.idCanjePermuta == null}"/>
+                                                <h:outputText value="#{remisionesR.idCanjePermuta.idInsumoCanje.descripcion}" 
+                                                              rendered="#{remisionesR.idCanjePermuta != null}"/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:form>    
+                        </b:tab>
+                    </b:tabView> 
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.controlCalidad}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

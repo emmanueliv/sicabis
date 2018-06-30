@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.consultaDpn}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Consulta de la demanda programada nacional preliminar" url="consultaDPN.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Consulta de la demanda programada nacional preliminar</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConsulta">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Clave:"/>
+                            <p:inputText id="clave" value="#{consultaDPNBean.clave}" style="width: 100%; height: 34px;" />
+                            <h:outputText value="UMU"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad" autoWidth="false"
+                                             value="#{consultaDPNBean.claveUnidad}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{consultaDPNBean.listaUnidadesMedicas}" var="unidad"
+                                               itemValue="#{unidad.clavePresupuestal}" itemLabel="#{unidad.nombre}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Año:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id="selectAnio" 
+                                             value="#{consultaDPNBean.anio}" >
+                                <f:selectItem itemLabel="#{consultaDPNBean.anioAux}" itemValue="#{consultaDPNBean.anioAux}" />
+                                <f:selectItem itemLabel="#{consultaDPNBean.anioAux-1}" itemValue="#{consultaDPNBean.anioAux-1}" />
+                                <p:ajax event="change" listener="#{consultaDPNBean.cambiaAnio}" process="@this" update="selectMes" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Periodo:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id="selectMes" 
+                                             value="#{consultaDPNBean.idPeriodoMes}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItem itemValue="-2" itemLabel="Actual"/>
+                                <f:selectItems value="#{consultaDPNBean.listaDpnAux}" var="periodo"
+                                               itemLabel="#{periodo.dpnMes}" itemValue="#{periodo.idDpn}" />
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                             actionListener="#{consultaDPNBean.consultar}" update="tablaDpn, panelbutton, panelObserva" />
+                            <b:commandButton value="llenaConsumo" look="info" icon="search" iconAlign="right" rendered="false"
+                                             actionListener="#{consultaDPNBean.llenaConsumo}" />
+                        </div>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Agregar" icon="glyphicon-plus" icon-align="right" look="info" 
+                                             rendered="false"
+                                             style="margin-bottom: 15px"/>
+                        </div>
+                        <br/><br/>
+                        <p:fileUpload fileUploadListener="#{consultaDPNBean.cargaDpn}" mode="advanced" 
+                                      update="tablaDpn, idmessages" multiple="false" cancelLabel="Borrar archivo"
+                                      dragDropSupport="true" process="@this" allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                      uploadLabel="Guardar archivo" label="Selecciona archivo" 
+                                      invalidFileMessage="El archivo no es del tipo correcto" />
+                        <br></br>
+                        <p:dataTable id="tablaDpn" var="listaDpnInsumos" value="#{consultaDPNBean.listaDpnInsumo}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="10" editable="true" editMode="cell"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="20,50,100,200">
+                            <p:ajax event="cellEdit" />
+                            <f:facet name="header">
+                                Demanda Programada Nacional Preliminar
+                                <p:commandButton id="toggler" type="button" value="Columnas" style="float:right" icon="ui-icon-calculator" />
+                                <p:columnToggler datasource="tablaDpn" trigger="toggler" />
+                            </f:facet>
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xlsx" target="tablaDpn" fileName="dpnInsumos" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column headerText="Clave" class="formatoTablas"
+                                      filterBy="#{listaDpnInsumos.claveInsumo}" filterMatchMode="contains" 
+                                      sortBy="#{listaDpnInsumos.claveInsumo}">
+                                <h:outputText value="#{listaDpnInsumos.claveInsumo}" />
+                            </p:column>
+                            <p:column headerText="Descripción clave" class="formatoTablas" exportable="false"
+                                      filterBy="#{listaDpnInsumos.descripcionInsumo}" filterMatchMode="contains" 
+                                      sortBy="#{listaDpnInsumos.descripcionInsumo}">
+                                <h:outputText value="#{listaDpnInsumos.descripcionInsumo.substring(0,20)}" />
+                            </p:column>
+                            <p:column headerText="Clave UMU" class="formatoTablas"
+                                      filterBy="#{listaDpnInsumos.claveUnidad}" filterMatchMode="contains"
+                                      sortBy="#{listaDpnInsumos.claveUnidad}">
+                                <h:outputText value="#{listaDpnInsumos.claveUnidad}" />
+                            </p:column>
+                            <p:column headerText="Nombre UMU" class="formatoTablas" exportable="false"
+                                      filterBy="#{listaDpnInsumos.nombreUnidad}" filterMatchMode="contains" 
+                                      sortBy="#{listaDpnInsumos.nombreUnidad}">
+                                <h:outputText value="#{listaDpnInsumos.nombreUnidad}" />
+                            </p:column>
+                            <p:column headerText="Existencias en la UMU (Tercerizador)" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.existenciasCenadi}">
+                                <h:outputText value="#{listaDpnInsumos.existenciasCenadi}" />
+                            </p:column>
+                            <p:column headerText="Consumo (SIAM) 1 mes" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.salidasSiam}">
+                                <h:outputText value="#{listaDpnInsumos.salidasSiam}" />
+                            </p:column>
+                            <p:column headerText="Consumo (SIAM) 3 meses (promedio)" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.salidasSiam3}">
+                                <h:outputText value="#{listaDpnInsumos.salidasSiam3}" />
+                            </p:column>
+                            <p:column headerText="Cobertura 2 meses (promedio)" class="formatoTablas" exportable="false"
+                                      sortBy="#{listaDpnInsumos.coberturas}">
+                                <h:outputText value="#{listaDpnInsumos.coberturas}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.precioUnitario}">
+                                <h:outputText value="#{listaDpnInsumos.precioUnitario}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="DPN anterior" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.piezasDpnAnterior}">
+                                <h:outputText value="#{listaDpnInsumos.piezasDpnAnterior}" />
+                            </p:column>
+                            <p:column headerText="Importe anterior" class="formatoTablas" exportable="false" >
+                                <h:outputText value="#{listaDpnInsumos.precioUnitario * listaDpnInsumos.piezasDpnAnterior}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Piezas propuestas DPN" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.piezasPropuestasDpn}">
+                                <h:outputText value="#{listaDpnInsumos.piezasPropuestasDpn}" />
+                            </p:column>
+                            <p:column headerText="Importe" class="formatoTablas" exportable="false">
+                                <h:outputText value="#{listaDpnInsumos.precioUnitario * listaDpnInsumos.piezasPropuestasDpn}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Piezas sugeridas UMU" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.dpnSugerida}" exportable="false">
+                                <h:outputText value="#{listaDpnInsumos.dpnSugerida != -1 ? listaDpnInsumos.dpnSugerida : 'No Requerida'}" />
+                            </p:column>
+                            <p:column headerText="Piezas DPN final" class="formatoTablas" 
+                                      sortBy="#{listaDpnInsumos.piezasDpn}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{listaDpnInsumos.piezasDpn}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber decimalPlaces="0" minValue="0"
+                                                       symbolPosition="s" emptyValue="zero" 
+                                                       value="#{listaDpnInsumos.piezasDpn}" >
+                                        </p:inputNumber>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Resultado" class="formatoTablas" exportable="false"
+                                      filterBy="#{listaDpnInsumos.resultado}" filterMatchMode="contains" 
+                                      sortBy="#{listaDpnInsumos.resultado}" >
+                                <h:outputText value="#{listaDpnInsumos.resultado}" />
+                            </p:column>
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="13" style="text-align:right" footerText="Total:" />
+                                    <p:column footerText="#{consultaDPNBean.totalPiezas}" />
+                                </p:row>
+                            </p:columnGroup>
+                            <p:rowExpansion>
+                                <p:panel id="basic" header="Descripción clave completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{listaDpnInsumos.descripcionInsumo}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel id="basic2" header="Descripción UMU completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{listaDpnInsumos.nombreUnidad}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <br/>
+                        <h:panelGroup id="panelObserva" style="display:block; text-align:right" >
+                            <p:inputTextarea id="inpDescripción" value="#{consultaDPNBean.observaciones}"  rows="5" cols="145" 
+                                             style="text-transform: uppercase; width: 100%" onblur="value = value.toUpperCase()" />
+                        </h:panelGroup>
+                        <br/>
+                        <h:panelGroup id="panelbutton" style="display:block; text-align:right">
+                            <p:commandButton id="buttonGuarda" value="Guardar previo" icon="fa fa-floppy-o"
+                                             actionListener="#{consultaDPNBean.guardar}"
+                                             process="@form"
+                                             styleClass="btn btn-info"
+                                             rendered="#{!loginBean.esConsulta and consultaDPNBean.bguarda}"
+                                             update="panelbutton"/>
+                            <p:commandButton value="Guardar y enviar a autorización" icon="fa fa-floppy-o"
+                                             styleClass="btn btn-primary" oncomplete="PF('dlg1').show();"
+                                             update="formDialog, panelbutton" process="@form"
+                                             rendered="#{!loginBean.esConsulta and consultaDPNBean.benvia}" />
+                            <p:commandButton value="Regresar por observación" icon="fa fa-floppy-o"
+                                             update="formDialog, panelbutton" styleClass="btn btn-info" process="@form"
+                                             oncomplete="PF('dlg3').show();"
+                                             rendered="#{!loginBean.esConsulta and consultaDPNBean.bobservacion}"/>
+                            <p:commandButton value="Autorizar" icon="fa fa-floppy-o" process="@form"
+                                             update="formDialog" styleClass="btn btn-primary"
+                                             oncomplete="PF('dlg2').show();"
+                                             rendered="#{!loginBean.esConsulta and consultaDPNBean.bautoriza}"/>
+                        </h:panelGroup>
+                        <br/>
+                    </h:form>
+                    <h:form id="formDialog">
+                        <p:dialog id="dialog1" header="Confirmación" widgetVar="dlg1" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea enviar la DPN a autorización, en caso de hacerlo no podrá cambiar o generar otra DPN para el periodo actual"/>
+                            </p:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{consultaDPNBean.enviarAutoriza}" iconPos="right"
+                                                 oncomplete="PF('dlg1').hide();" update="dialog1, :frmConsulta:panelbutton" />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg1').hide();" update="dialog1" />
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialog2" header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea autorizar la DPN?, en caso de hacerlo esta ya no podrá ser cambiada"/>
+                            </p:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{consultaDPNBean.autoriza}" iconPos="right"
+                                                 oncomplete="PF('dlg2').hide();" update="dialog2, :frmConsulta:panelbutton" />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg2').hide();" update="dialog2" />
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialog3" header="Confirmación" widgetVar="dlg3" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="La DPN será enviada con las observaciones, ¿Desea continuar?"/>
+                            </p:panelGrid>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <p:commandButton value="Si" icon="fa fa-check" styleClass="customModificar btn btn-primary"
+                                                 action="#{consultaDPNBean.observar}" iconPos="right"
+                                                 oncomplete="PF('dlg3').hide();" update="dialog3, :frmConsulta:panelbutton" />
+                                <p:commandButton value="No" icon="fa fa-trash-o" iconPos="right" styleClass="customEliminar btn-danger"
+                                                 oncomplete="PF('dlg3').hide();" update="dialog3" />
+                            </div>
+                        </p:dialog>
+                        <p:dialog id="dialogAgrega" header="Agrega claves" widgetVar="dlg1" minHeight="70" modal="true">
+                            
+                        </p:dialog>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.consultaDpn}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

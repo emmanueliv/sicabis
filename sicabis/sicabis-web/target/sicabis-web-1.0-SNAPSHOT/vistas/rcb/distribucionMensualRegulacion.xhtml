@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido" class="ui-fluid">
+                <h2>Distribución regulación</h2>
+
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+
+                <h:form id='formDistribucion' style="width:100%; height: 100%" > 
+                    <p:separator />                 
+
+
+                    <p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+                    <p:panelGrid  id="pnlProyec" columns="4" layout="grid" styleClass="ui-panelgrid-blank" rendered="#{distribucionMensualBean.mostrarPnlProyec}" >
+
+                        <p:outputLabel for="selectMesesProyec" value="Proyección (meses):" />  
+                        <p:selectOneMenu id ="selectMesesProyec" value="#{distribucionMensualBean.planeacion.mesesProyeccion}" >
+                            <f:selectItem itemValue="-1" itemLabel="Selecciona" />                                        
+                            <f:selectItem itemValue="1" itemLabel="1" />
+                            <f:selectItem itemValue="2" itemLabel="2" />
+                            <f:selectItem itemValue="3" itemLabel="3" />
+                            <f:selectItem itemValue="4" itemLabel="4" />
+                            <f:selectItem itemValue="5" itemLabel="5" />
+                            <f:selectItem itemValue="6" itemLabel="6" />
+                            <f:selectItem itemValue="7" itemLabel="7" />
+                            <f:selectItem itemValue="8" itemLabel="8" />
+                            <f:selectItem itemValue="9" itemLabel="9" />
+                            <f:selectItem itemValue="10" itemLabel="10" />
+                            <f:selectItem itemValue="11" itemLabel="11" />
+                        </p:selectOneMenu>   
+
+                        <p:outputLabel for="mesI" value="Mes inicial:"/>
+                        <p:calendar id="mesI" value="#{distribucionMensualBean.planeacion.fechaInicial}" pattern="dd/MM/yyyy" mask="true" required="true" requiredMessage="-Ingrese fecha para asiganción de mes inicial" styleClass="tamanioCampos"/>  
+                    </p:panelGrid>
+                    <h:panelGroup style="display:block; text-align:right">
+                        <b:commandButton value="Proyectar" actionListener="#{distribucionMensualBean.generarProyeccion()}"
+                                         update="pnlProyec"
+                                         look="primary"  icon="refresh" />
+
+                    </h:panelGroup>
+                    <h:outputText id="lblSolMensuales" value="Lista de insumos" />
+                    <br></br>
+                    <h:panelGrid id="pnlTableDist" columns="2">
+                        <p:dataTable id="tablaDistMensual" var="planeacionDetalle" value="#{distribucionMensualBean.listplanDetalle}"
+                                     filteredValue="#{distribucionMensualBean.listplanDetalleFilter}"
+                                     widgetVar="wvTablaDistMensual"
+                                     rowKey="#{planeacionDetalle.idInsumo.idInsumo}"
+                                     rows="10"
+                                     paginator="true"
+                                     editable="true" editMode="cell"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <p:ajax event="cellEdit" listener="#{distribucionMensualBean.onCellEdit}" 
+                                    update=":formDistribucion:tablaDistMensual" 
+                                    />
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaDistMensual" fileName="distribucion" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px" exportable="false"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column filterBy="#{planeacionDetalle.idInsumo.clave}"   
+                                      filterMatchMode="contains" headerText="Clave" 
+                                      class="formatoTablas">
+                                <h:inputHidden value="#{planeacionDetalle.idPlaneacionDetalle}" />
+                                <h:outputText value="#{planeacionDetalle.idInsumo.clave}" />
+                            </p:column>
+                            <p:column filterBy="#{planeacionDetalle.idInsumo.descripcion}"   
+                                      filterMatchMode="contains" headerText="Descripción" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idInsumo.descripcion}">
+                                    <f:converter converterId="recortarCadena"/>  
+                                </h:outputText>
+                            </p:column>   
+                            <p:column headerText="Tipo de solicitud" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idPlaneacion.idTipoSolicitud.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Existencia en el CENADI" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.existenciasCenadi}" />
+                            </p:column>
+                            <p:column headerText="Insumos pendientes por contrato" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.insumosPendientesContratos}" />
+                            </p:column>
+                            <p:column headerText="Cantidad solicitada" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.cantidadSolicitada}" />
+                            </p:column>
+                            <p:column headerText="Cantidad proyectada *" 
+                                      class="formatoTablas">
+                                <p:cellEditor id="idCellPiezas">
+                                    <f:facet name="output">
+                                        <h:outputText value="#{planeacionDetalle.cantidadProyectada}">
+                                            <f:convertNumber integerOnly="true"  />
+                                        </h:outputText>   
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber id="inpCantidadProy" value="#{planeacionDetalle.cantidadProyectada}" decimalPlaces="0" size="9" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>                            
+                            <p:column headerText="Unidad médica" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idUnidadesMedicas.nombre}" />
+                            </p:column>
+                            <p:column headerText="Delegación" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idUnidadesMedicas.idDelegacion.nombreDelegacion}" />
+                            </p:column>
+                            <p:column headerText="Nombre" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idPaciente.nombre} #{planeacionDetalle.idPaciente.apaterno} #{planeacionDetalle.idPaciente.amaterno}" />
+                            </p:column>
+                            <p:column headerText="Genero" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idPaciente.genero==0?'M':'F'}" />
+                            </p:column>
+                            <p:column headerText="Edad:" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{distribucionMensualBean.calculaEdad(planeacionDetalle.idPaciente.fechaNacimiento)}"/>
+                            </p:column>
+                            <p:column headerText="Expediente" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idPaciente.expedinete}" />
+                            </p:column>
+                            <p:column headerText="Diagnóstico" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.idPaciente.diagnostico}" />
+                            </p:column>
+                            <p:column headerText="Necesidad" 
+                                      class="formatoTablas">
+                                <h:outputText value="#{planeacionDetalle.necesidadPeriodoSiguiente}" />
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{planeacionDetalle.idInsumo.descripcion}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>  
+                    </h:panelGrid>   
+                    <br></br>
+                    <div style="display:block; text-align:right">                        
+                        <b:commandButton value="Guardar"  look="primary" 
+                                         actionListener="#{distribucionMensualBean.guardarPlaneacion}"
+                                         update="formDistribucion"                                          
+                                         />
+                    </div>    
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

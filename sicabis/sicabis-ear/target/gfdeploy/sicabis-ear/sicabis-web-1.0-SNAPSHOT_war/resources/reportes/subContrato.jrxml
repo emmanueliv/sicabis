@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-06-16T12:58:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subContrato" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4591fbbb-b248-4052-a1a4-1f69a50ea044">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="clave" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="idClave" class="java.lang.Integer"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="cantidadPiezas" class="java.lang.Integer"/>
+	<field name="unidadPieza" class="java.lang.String"/>
+	<field name="importeClave" class="java.math.BigDecimal"/>
+	<field name="nep" class="java.lang.String"/>
+	<field name="oficio" class="java.lang.String"/>
+	<field name="rcb" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="4" width="60" height="19" uuid="bfd24fbe-5402-4f37-98e3-a0f569ee0ba5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CLAVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="3" width="80" height="20" uuid="b8693869-d2ea-43ae-afc6-b6d8e49eca38"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-15" y="4" width="50" height="18" uuid="74eed118-d2d2-421e-89d5-be4a4d086239"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[RENGLÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="4" width="50" height="19" uuid="969f47b6-044e-4e8b-b8b4-b19b9b8b71a3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="4" width="40" height="18" uuid="1653b79d-94ad-4c29-86ec-ec72cfcb7652"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[UNIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="3" width="55" height="30" uuid="2c8a1ad9-27a0-495f-86b3-a06ed5126b7c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PRECIO UNITARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="504" y="3" width="46" height="20" uuid="91b68956-c13f-42b3-bdc6-08de0226aa74"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="250" splitType="Stretch">
+			<textField>
+				<reportElement x="30" y="10" width="80" height="30" uuid="3b3dfcd9-b8d1-4b6e-9a5d-e0ae516e8f38"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-15" y="10" width="41" height="30" uuid="cff5d20f-9db2-4f17-a69f-2a26f8294bf9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="10" width="50" height="30" uuid="edef4f74-f332-42bd-8cd8-5029cc37fa7f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidadPiezas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="10" width="47" height="30" uuid="bbd87257-ac7c-4a09-9334-d1d73ab46a86"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidadPieza}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="10" width="54" height="30" uuid="f1e4bef7-c2a6-46b7-8cfb-32f2d055ca14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$" + $F{precioUnitario} ]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="504" y="10" width="46" height="30" uuid="8bac83b8-327e-4def-a041-0bff717bff9a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$"+$F{importeClave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="10" width="170" height="240" uuid="dbe65648-518b-41b9-b269-4e4f4cdb43e4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="50" width="80" height="30" uuid="e2c42df2-b295-4bfe-b155-a112bb322cab"/>
+				<textFieldExpression><![CDATA[$F{nep}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="90" width="80" height="30" uuid="084ebc5c-8fd9-4a40-9220-e1c77360d2f2"/>
+				<textFieldExpression><![CDATA[$F{oficio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="130" width="80" height="30" uuid="818192b8-b70c-4ca9-b295-f40d08ed573a"/>
+				<textFieldExpression><![CDATA[$F{rcb}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-15" y="50" width="41" height="30" uuid="7519ee53-1616-40a4-b30c-ec746af35102"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NEP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-16" y="90" width="41" height="39" uuid="a4f1bac7-cc03-4f34-be42-3854e287cfa2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[OFICIO DE SUFICIENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-15" y="130" width="40" height="30" uuid="67c5d4d5-e901-4549-a746-e20f5ab231a5"/>
+				<text><![CDATA[RCB]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

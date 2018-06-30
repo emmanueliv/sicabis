@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.perfiles}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Perfiles" url="perfiles.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Perfiles</h2>
+                    <br></br>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}">
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.perfilesC}">
+                            <br></br>
+                            <h:form id="frmTab">
+                                <p:messages id="idmessages" showDetail="false"  closable="true" rendered="#{perfilesBean.messageGuardar}" />
+                                <b:panelGrid col-spans="2,4,2,4">
+                                    <h:outputText value="Nombre:"/>
+                                    <b:inputText value="#{perfilesBean.nombre}" style="text-transform: uppercase" 
+                                                 onblur="value = value.toUpperCase()">
+                                        <p:ajax event="blur" listener="#{perfilesBean.validaNombre()}" update="@this, idmessages" />
+                                    </b:inputText>
+                                    <h:outputText value=""/>
+                                    <h:outputText value=""/>
+                                </b:panelGrid>
+                                <h:outputText value="Es perfil de consulta:"/>
+                                <p:selectBooleanCheckbox value="#{perfilesBean.tipoPerfil}" >
+                                    <p:ajax event="change" listener="#{perfilesBean.cambiaTipo()}" update=":frmTab" />
+                                </p:selectBooleanCheckbox>
+                                <br/>
+                                <b:panelGrid col-spans="2,10">
+                                    <p:selectManyCheckbox id="manycheckC" value="#{perfilesBean.seleccionMenuPrincipal}" layout="responsive" columns="1" rendered="#{perfilesBean.tipoPerfil}">
+                                        <f:selectItems value="#{perfilesBean.listaMenuPrincipal}" var="principalC" itemLabel="#{principalC.descripcion}" itemValue="#{principalC.idTarea.idTarea}"/>
+                                        <p:ajax event="change" listener="#{perfilesBean.cambiaSeleccion(1)}" update=":frmTab" />
+                                    </p:selectManyCheckbox>
+                                    <br/>
+                                    <p:selectManyCheckbox id="manycheckA" value="#{perfilesBean.seleccionMenuPrincipal}" layout="responsive" columns="1" rendered="#{!perfilesBean.tipoPerfil}">
+                                        <f:selectItems value="#{perfilesBean.listaMenuPrincipal2}" var="principalA" itemLabel="#{principalA.descripcion}" itemValue="#{principalA.idTarea.idTarea}" />
+                                        <p:ajax event="change" listener="#{perfilesBean.cambiaSeleccion(2)}" update=":frmTab" />
+                                    </p:selectManyCheckbox>
+                                    <br/>
+                                </b:panelGrid>
+                                <p:selectOneRadio id="oneradio" value="#{perfilesBean.idMenuR}" columns="1" rendered="#{!perfilesBean.tipoPerfil}" >
+                                    <f:selectItems value="#{perfilesBean.listaMenuPrincipalSeleccion}" var="principalRadio" itemLabel="#{principalRadio.descripcion}" itemValue="#{principalRadio.idTarea.idTarea}"/>
+                                    <p:ajax event="change" listener="#{perfilesBean.cambiaSeleccion(2)}" update=":frmTab" />
+                                </p:selectOneRadio>
+                                <br/>
+                                <p:pickList id="pickList" value="#{perfilesBean.listaDualMenu}" var="menu" itemLabel="#{menu.descripcion}" itemValue="#{menu.idMenu}"
+                                            showCheckbox="false" responsive="true" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
+                                    <f:facet name="sourceCaption">Menús</f:facet>
+                                    <f:facet name="targetCaption">Seleccionados</f:facet>
+                                </p:pickList>
+
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton  value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" actionListener="#{perfilesBean.guardarActualizarPerfil()}" update=":frmTab, :formaTabla" />
+                                        <b:commandButton  value="Limpiar" look="danger" icon="remove" iconAlign="right" actionListener="#{perfilesBean.cancel()}" />
+                                    </b:buttonGroup>
+                                </div>
+                                <br></br>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Perfiles">
+                            <br></br>
+                            <h:form id="frmTabB">
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Nombre:" />
+                                    <b:inputText  value="#{perfilesBean.nombre}" id="nombrePer"
+                                                  style="text-transform: uppercase" onblur="value = value.toUpperCase()"/>
+                                    <h:outputText value="Estatus:"/>
+                                    <p:selectOneMenu id="activo" value="#{perfilesBean.activo}" style="width: 100%; height: 34px;">
+                                        <f:selectItem itemLabel="Selecciona..." itemValue="-1"/>
+                                        <f:selectItem itemLabel="Inactivo" itemValue="0"/>
+                                        <f:selectItem itemLabel="Activo" itemValue="1"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                     actionListener="#{perfilesBean.obtenerPerfiles()}" update="formaTabla"
+                                                     process="nombrePer, activo"/>
+                                </div>
+                                <p:separator/>
+                            </h:form>
+                            <br/>
+                            <p:messages id="idmessages" showDetail="false"   closable="true" rendered="#{perfilesBean.mensajeBorrar}" />
+                            <h:form id="formaTabla">
+                                
+                                <p:dataTable id="tablaPerfiles" value="#{perfilesBean.listaPerfiles}" var="perfil" 
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaPerfiles" fileName="perfiles" />
+                                        </h:commandLink>                                
+                                    </f:facet>
+                                    <p:column headerText="Nombre">
+                                        <p:outputLabel id="name" value="#{perfil.nombre}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Estatus">
+                                        <p:outputLabel value="Activo" rendered="#{perfil.activo == 1}"/>
+                                        <p:outputLabel value="Inactivo" rendered="#{perfil.activo != 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Opciones" >
+                                        <p:outputPanel style="text-align: center;">
+                                            <b:buttonGroup>
+                                                <!--modificar-->
+                                                <b:commandButton value="" look="primary" icon="search" iconAlign="right" actionListener="#{perfilesBean.modificarRedirect(perfil)}" 
+                                                                 update=":frmTabB, :frmTab" id="btnModificar"/>
+                                                <p:tooltip for="btnModificar" value="Ver detalle" position="top"/>
+                                                <!--eliminar-->
+                                                <b:commandButton value="" look="danger" icon="remove" iconAlign="right" actionListener="#{perfilesBean.eliminar(perfil)}" 
+                                                                 update=":formaTabla" rendered="#{!loginBean.esConsulta}" id="btnEliminar"/>
+                                                <p:tooltip for="btnEliminar" value="Eliminar" position="top"/>
+                                            </b:buttonGroup>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dialog closable="true" header="Esta seguro que desea eliminar el perfil '#{perfilesBean.nombre}'" showEffect="clip" resizable="true" widgetVar="dialogElimina" modal="true" width="50%">
+                                    <p:separator/>
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" actionListener="#{perfilesBean.guardarActualizarPerfil()}" update=":formaTabla, :frmTabB" />
+                                        <b:commandButton value="Cancelar" look="danger" icon="remove" iconAlign="right" actionListener="#{perfilesBean.cancel()}" update=":formaTabla" /> 
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.perfiles}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+
+        </ui:define>
+    </ui:composition>
+</html>

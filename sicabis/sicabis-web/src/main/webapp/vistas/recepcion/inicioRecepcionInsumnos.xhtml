@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.recepcionInsumosSalud}">
+                <div id="contenido">
+                    <h2>Recepcion de Insumos de la Salud</h2>
+                    <p:separator />
+                    <p:dataTable emptyMessage="No existen registros" paginator="false" rows="10" var="remisiones" value="#{recepcionInsumosBean.remisionesList}">
+                        <p:column headerText="Registro Control">
+                            <h:outputText value="#{remisiones.registroControl}" />
+                        </p:column>
+                        <p:column headerText="Clave">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" />
+                        </p:column>
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion}" />
+                        </p:column>
+                        <p:column headerText="Cantidad">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.cantidadSuministrar}" />
+                        </p:column>
+                        <p:column headerText="Contrato">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                        </p:column>
+                        <p:column headerText="Almacen">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.idAlmacen.nombreAlmacen}" />
+                        </p:column>
+                        <p:column headerText="Documento">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}"/>
+                        </p:column>
+                        <p:column headerText="Folio de Remisión">
+                            <h:outputText value="#{remisiones.folioRemision}" />
+                        </p:column>
+                        <p:column headerText="Fecha de Remision">
+                            <h:outputText value="#{remisiones.fechaRemision}" />
+                        </p:column>
+                        <p:column headerText="Proveedor">
+                            <h:outputText value="#{remisiones.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor}" />
+                        </p:column>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{remisiones.idEstatus.nombre}" />
+                        </p:column>
+                        <p:column headerText="Opcines">
+                            <p:commandButton value="Ver detalle" styleClass="primary" style="width: 100px;"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.recepcionInsumosSalud}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1"/>-->
+        <title>SICABIS</title>
+        <h:outputStylesheet library="css" name="main.css"  />
+        <h:outputStylesheet library="css" name="style.css"  />
+        <h:outputStylesheet library="css" name="font-awesome.css" />
+        <h:outputStylesheet library="css" name="custom-theme-primefaces.css" />
+        <h:outputStylesheet name="css/rcb.css" />
+
+    </h:head>
+    <h:body id="body">
+        <ui:include src="/templates/header.xhtml"/>
+        <c:if test="${loginBean.isLogged}">
+            <!--<ui:include src="menu.xhtml"/>-->
+            <ui:insert name="content"></ui:insert>
+        </c:if>
+        <c:if test="${!loginBean.isLogged}">
+            <h:form id="formlogin">
+                <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                    <h:panelGrid columns="1" styleClass="panel-central">
+                        <h:outputLabel value="Su sesión ha expirado, regresar al login" style="padding-right: 10px" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" styleClass="panel-central">
+                        <b:commandButton value="Ir a Inicio" update=":formlogin" icon="repeat" iconAlign="right" size="lg" look="primary" styleClass="button-large-central" action="#{loginBean.logout(request, response)}" />
+                    </h:panelGrid>
+                </b:panel>
+            </h:form>
+        </c:if>
+    </h:body>
+    
+   
+</html>
+

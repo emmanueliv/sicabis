@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.reporteDetalleCenadi}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte detallado de existencias en el CENADI" url="existenciaCenadi.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2 style="text-align: center;" >Reporte detallado de existencias en CENADI</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConsulta">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelConsulta">
+                            <h:outputText value="Fecha entre:"/>
+                            <b:panelGrid colSpans="6,6" id="panelFechas">
+                                <p:calendar id="effect"  value="#{indicadorExistenciaCenadiSetBean.fechaInicio}" showOn="button" locale="es" />
+                                <p:calendar id="effect2" value="#{indicadorExistenciaCenadiSetBean.fechaFin}" showOn="button" locale="es" />
+                            </b:panelGrid>
+                            <h:outputText value="Tipo de clave"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad" autoWidth="false"
+                                             value="#{indicadorExistenciaCenadiSetBean.tipoClave}"
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItem itemValue="DPN" itemLabel="DPN"/>
+                                <f:selectItem itemValue="PROGRAMA" itemLabel="PROGRAMA"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Nombre"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad2" autoWidth="false"
+                                             value="#{indicadorExistenciaCenadiSetBean.clave2}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{indicadorExistenciaCenadiSetBean.insumosList}" var="insumos" 
+                                               itemValue="#{insumos.clave}" itemLabel="#{insumos.descripcion}"/>  
+                            </p:selectOneMenu>
+                            <h:outputText value="Clave"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectUnidad1" autoWidth="false"
+                                             value="#{indicadorExistenciaCenadiSetBean.clave}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{indicadorExistenciaCenadiSetBean.insumosList}" var="insumos" 
+                                               itemValue="#{insumos.clave}" itemLabel="#{insumos.clave}"/>  
+                            </p:selectOneMenu>
+                            <h:outputText value="Subinventario"/>
+                            <b:inputText id="subinventario" value="#{indicadorExistenciaCenadiSetBean.subinventario}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Localizador"/>
+                            <b:inputText id="localizador" value="#{indicadorExistenciaCenadiSetBean.localizador}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Lote"/>
+                            <b:inputText id="lote" value="#{indicadorExistenciaCenadiSetBean.lote}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                        </b:panelGrid>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" process="panelConsulta"   
+                                             actionListener="#{indicadorExistenciaCenadiSetBean.buscarClaveByFiltros}" update="tablaDpn2" />
+                        </div>
+                        <p:separator/>
+                        <p:dataTable id="tablaDpn2" var="existencia" 
+                                     value="#{indicadorExistenciaCenadiSetBean.historicoListConsul}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="10" paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20,50">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaDpn2" fileName="existencias" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Fecha inventario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaInventario}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Clave" class="formatoTablas" >
+                                <h:outputText value="#{existencia.clave}" />
+                            </p:column>
+                            <p:column headerText="Partida presupuestal" class="formatoTablas" >
+                                <h:outputText value="#{existencia.partidaPresupuestal}" />
+                            </p:column>
+                            <p:column headerText="Tipo clave" class="formatoTablas" >
+                                <h:outputText value="#{existencia.tipo}" />
+                            </p:column>
+                            <p:column headerText="Subinventario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.subinventario}" />
+                            </p:column>
+                            <p:column headerText="Localizador" class="formatoTablas" >
+                                <h:outputText value="#{existencia.localizador}" />
+                            </p:column>
+                            <p:column headerText="Lote" class="formatoTablas" >
+                                <h:outputText value="#{existencia.lote}" />
+                            </p:column>
+                            <p:column headerText="Fecha caducidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaCaducidad}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cantidad" class="formatoTablas" >
+                                <h:outputText value="#{existencia.existencia}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.precioUnitario}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Importe" class="formatoTablas" >
+                                <h:outputText value="#{existencia.precioUnitario * existencia.importe}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Proveedor" class="formatoTablas" >
+                                <h:outputText value="#{existencia.proveedor}" />
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{existencia.nombre}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reporteDetalleCenadi}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

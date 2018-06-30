@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.canjes}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Canjes y Permutas" url="canjePermuta" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Canjes</h2>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" styleClass="DataTable" >
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.canjesC}">
+                            <h:form id="nuevo">
+                                <br></br>
+                                <p:messages id="idmessages" rendered="#{canjeBean.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                                <h3>Proveedor</h3>
+                                <p:separator />
+                                <b:panelGrid id="proveedores" colSpans="2,4,2,4">
+                                    <h:outputLabel value="Proveedor:"/>                 
+                                    <p:selectOneMenu id="proveedorSelect" value="#{canjeBean.provSelect}"  style="width:100%; height: 34px; " 
+                                                     converter="selectConverter" autoWidth="false" filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecciona un proveedor" itemValue="" />
+                                        <f:selectItems value="#{canjeBean.proveedoresList}" var="proveedor"  
+                                                       itemLabel="#{proveedor.numeroProveedor} #{proveedor.nombreProveedor}" itemValue="#{proveedor}"  />
+                                    </p:selectOneMenu>
+                                    <h:outputLabel value="Operación"/>
+                                    <p:selectOneMenu id="operacion"  value="#{canjeBean.operacion}"  style="width: 100%;height: 34px;" autoWidth="false">
+                                        <f:selectItem itemLabel="Selecione una operación" itemValue="-1" />
+                                        <f:selectItem itemLabel="Canje" itemValue="1" />
+                                        <f:selectItem itemLabel="Permuta" itemValue="2" />
+                                        <p:ajax event="valueChange" listener="#{canjeBean.operacion}" update="recibido,entrega" process="@this"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <h3>Insumo a entregar</h3>
+                                <p:separator />
+                                <br></br>
+                                <p:fieldset id="entrega">
+                                    <b:panelGrid colSpans="2,4,2,4">
+                                        <h:outputLabel value="Clave"/>
+                                        <p:inputText id="clave" value="#{canjeBean.clave}" style="width:400px; height:34px"/>
+                                        <h:outputLabel value="Cantidad"/>
+                                        <b:inputText id="cantidad" value="#{canjeBean.cantidad}" style="width:400px; height:34px" />
+                                        <h:outputLabel value="Lote"/>
+                                        <b:inputText id="lote" value="#{canjeBean.loteEntregar}"/>
+                                        <h:outputLabel value="" />
+                                        <h:outputLabel value="" />
+                                    </b:panelGrid>
+                                </p:fieldset>
+                                <br></br>
+                                <h3>Insumo recibido</h3>
+                                <p:separator />
+                                <br></br>
+                                <p:fieldset id="recibido">
+                                    <b:panelGrid colSpans="2,4,2,4">
+                                        <h:outputLabel value="Clave"/>
+                                        <b:inputText id="clave2" value="#{canjeBean.claveEntregado}"/>
+                                        <h:outputLabel value="Cantidad"/>
+                                        <b:inputText id="cantidad2" value="#{canjeBean.cantidadCanjePermuta}" />
+                                        <h:outputLabel value="Lote"/>
+                                        <b:inputText id="loteRec" value="#{canjeBean.lote}"/>
+                                        <h:outputLabel value="Precio Unitario" />
+                                        <b:inputText id="precio" value="#{canjeBean.precioU}">
+                                            <f:convertNumber locale="en-US" pattern="#0.00" />
+                                        </b:inputText>
+                                        <h:outputLabel value="Fecha de Caducidad"/>
+                                        <p:calendar id="fechaC" value="#{canjeBean.fechaC}"  showOn="button" pattern="dd/MM/yyyy" mask="true" />
+                                        <h:outputLabel value="Fecha de Fabricación"/>
+                                        <p:calendar id="fechaF" value="#{canjeBean.fechaF}"  showOn="button" pattern="dd/MM/yyyy" mask="true" />
+                                    </b:panelGrid>
+                                </p:fieldset>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="primary" value="Agregar" icon="plus" iconAlign="right"
+                                                     actionListener="#{canjeBean.agregar}" update="nuevo"/>
+                                </div>
+                                <br></br>
+                                <p:messages id="idmessages2" rendered="#{canjeBean.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                                <p:dataTable id="tablaCanjePermuta" emptyMessage="#{loginBean.mensajeTablaVacia}" rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" 
+                                             var="canjePermuta" value="#{canjeBean.listaCanjePermuta}" >
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaCanjePermuta" fileName="CanjePermuta" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column colspan="5" headerText="Entregado" />
+                                            <p:column colspan="5" headerText="Recibido" />
+                                            <p:column rowspan="2" headerText="Canje / Permuta" />
+                                            <p:column rowspan="2" headerText="Opciones" />
+                                        </p:row>
+                                        <p:row>
+                                            <p:column headerText="Clave" />
+                                            <p:column headerText="Cantidad" />
+                                            <p:column headerText="Lote" />
+                                            <p:column headerText="Precio" />
+                                            <p:column headerText="Fecha de caducidad" />
+
+                                            <p:column headerText="Clave" />
+                                            <p:column headerText="Cantidad" />
+                                            <p:column headerText="Lote" />
+                                            <p:column headerText="Precio" />
+                                            <p:column headerText="Fecha de caducidad" />
+                                        </p:row>
+                                    </p:columnGroup> 
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.idInsumo.clave}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.cantidadInsumoOriginal}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.lote}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.precio}" >
+                                            <f:convertNumber type="currency" locale="en-US" pattern="#0.00" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.fechaCaducidad}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.idInsumoCanje.clave}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.cantidadInsumoCanje}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.loteEntregado}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.precioCanjePermuta}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.fechaCaducidadCanje}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.tipoCanje}" />
+                                    </p:column>
+
+                                    <p:column headerText="Opciones">
+                                        <div align="center">
+                                            <b:commandButton id="btnQuitar" value="" tooltip="Quitar" look="danger" icon="remove" iconAlign="right" 
+                                                             update="nuevo" actionListener="#{canjeBean.quitarClaves(canjePermuta)}" />
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                                <br/>
+                                <div style="display:block; text-align:right">
+
+                                </div>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="primary" value="Guardar" icon="floppy-disk" iconAlign="right"
+                                                     update="nuevo, formDialog"
+                                                     actionListener="#{canjeBean.confirmaGuardar}" />
+                                    <b:commandButton look="primary" value="Imprimir canje" icon="print" iconAlign="right" 
+                                                     actionListener="#{canjeBean.descargarRemision}" 
+                                                     rendered="#{canjeBean.verBotonRemision}">
+                                        <p:fileDownload value="#{canjeBean.file}" />
+                                    </b:commandButton>
+                                </div>
+                                <br></br>
+                                <p:separator />
+                                <b:panelGrid col-spans="12" rendered="#{canjeBean.verCargaDocumentos}" >
+                                    <h3>Carga de archivos</h3>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,10" rendered="#{canjeBean.verCargaDocumentos}" >
+                                    <h:outputText value="Tipo de documento:" />
+                                    <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                     value="#{canjeBean.idTipoDocumento}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{canjeBean.listaTipoDocs}" var="tipoDocs"
+                                                       itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                        <p:ajax update="selectTipoDocs" listener="#{canjeBean.cambiaTipoDoc()}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:fileUpload fileUploadListener="#{canjeBean.guardarArchivos}" mode="advanced" multiple="false" dragDropSupport="true" process="@this, selectTipoDocs"
+                                              uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                              rendered="#{canjeBean.verCargaDocumentos}"  
+                                              />
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{canjeBean.listaRepoDocsDto}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{canjeBean.verCargaDocumentos}" >                                
+                                    <p:column headerText="Nombre del archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                        <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                         update="tablaRepoDocs, formDialog" actionListener="#{canjeBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator rendered="#{canjeBean.verCargaDocumentos}"/> 
+                                <br></br>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg1" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="Se generarán #{canjeBean.listaCanjePermuta.size()} remisiones ¿Esta seguro de guardar las remisiones?"/>
+                                    </p:panelGrid>
+                                    <p:separator/>
+                                    <div style="display:block; text-align:right">
+                                        <b:buttonGroup>
+                                            <b:commandButton action="#{canjeBean.guardar}" look="primary" update="nuevo" ajax="true"
+                                                             value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg1').hide();" />
+                                            <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg1').hide();"/>
+                                        </b:buttonGroup>
+                                    </div>
+                                </p:dialog>
+                                <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                    </p:panelGrid>
+                                    <b:buttonGroup>
+                                        <b:commandButton action="#{canjeBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                        <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Canjes y permutas" >
+                            <h:form id="frmNew">
+                                <p:messages id="idmessages2" showDetail="false" autoUpdate="true" closable="true"  />
+                                <h4>Consultar canjes y permutas</h4>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" iconAlign="right" update="tablaCanjePermutaBuscar" 
+                                                     icon="search" actionListener="#{canjeBean.canje}"/>
+                                </div>
+                                <p:separator/> 
+                                <p:dataTable id="tablaCanjePermutaBuscar" emptyMessage="#{loginBean.mensajeTablaVacia}" rows="10"
+                                             paginator="true" var="canjePermuta" value="#{canjeBean.canjeList}"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} 
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" >
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaCanjePermutaBuscar" fileName="CanjePermuta" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column colspan="5" headerText="Entregado" />
+                                            <p:column colspan="5" headerText="Recibido" />
+                                            <p:column rowspan="2" headerText="Canje / Permuta" />
+                                            <p:column rowspan="2" headerText="Registro Control" />
+                                        </p:row>
+                                        <p:row>
+                                            <p:column headerText="Clave" />
+                                            <p:column headerText="Cantidad" />
+                                            <p:column headerText="Lote" />
+                                            <p:column headerText="Precio" />
+                                            <p:column headerText="Fecha de caducidad" />
+
+                                            <p:column headerText="Clave" />
+                                            <p:column headerText="Cantidad" />
+                                            <p:column headerText="Lote" />
+                                            <p:column headerText="Precio" />
+                                            <p:column headerText="Fecha de caducidad" />
+                                        </p:row>
+                                    </p:columnGroup> 
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.idInsumo.clave}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.cantidadInsumoOriginal}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.lote}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.precio}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.fechaCaducidad}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.idInsumoCanje.clave}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.cantidadInsumoCanje}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.loteEntregado}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.precioCanjePermuta}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.fechaCaducidadCanje}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.tipoCanje}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{canjePermuta.folio}" />
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator/>
+                            </h:form>    
+                        </b:tab>
+                    </b:tabView> 
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.canjes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

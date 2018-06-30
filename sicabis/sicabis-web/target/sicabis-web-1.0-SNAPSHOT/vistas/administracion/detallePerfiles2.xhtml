@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.perfiles}">
+                <div id="contenido">
+                    <h:form id="frmTab">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Perfiles" url="perfiles2.xhtml" />
+                            <p:menuitem value="Detalle del perfil" url="detallePerfiles2.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                        <h2>Detalle del perfil</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid col-spans="2,4,2,4">
+                            <h:outputText value="Nombre:"/>
+                            <b:inputText value="#{detallePerfiles2Bean.nombre}" style="text-transform: uppercase" 
+                                         onblur="value = value.toUpperCase()">
+                                <p:ajax event="blur" listener="#{detallePerfiles2Bean.validaNombre}" update="@this, idmessages" />
+                            </b:inputText>
+                            <h:outputText value=""/>
+                            <h:outputText value=""/>
+                        </b:panelGrid>
+
+                        <p:dataTable var="menuPadre" value="#{detallePerfiles2Bean.listaMenuPerfilDTO}">
+                            <f:facet name="header">
+                                Seleccione los menús del listado
+                            </f:facet>
+                            <p:column style="width:30px">
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{menuPadre.menu.descripcion}" />
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:dataTable var="menus" value="#{menuPadre.listMenuPerfil}"
+                                             editable="true" editMode="cell" widgetVar="menusFinal">
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{menus.idMenu.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Opción">
+                                        <h:panelGrid columns="1"  style="margin-bottom:10px;" cellpadding="5">
+                                            <p:selectOneRadio value="#{menus.consulta}" layout="grid" columns="3" >
+                                                <f:selectItem itemLabel="No asignado" itemValue="-1" />
+                                                <f:selectItem itemLabel="Modificar" itemValue="0" />
+                                                <f:selectItem itemLabel="Consultar" itemValue="1" />
+                                                <p:ajax event="change" process="@this" listener="#{detallePerfiles2Bean.agrega(menus)}" />
+                                            </p:selectOneRadio>
+                                        </h:panelGrid>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton  value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                  actionListener="#{detallePerfiles2Bean.actualizaPerfil}" process="frmTab"
+                                                  rendered="#{!loginBean.accesos.perfilesC}"/>
+                                <b:commandButton  value="Limpiar" look="danger" icon="remove" iconAlign="right" 
+                                                  actionListener="#{detallePerfiles2Bean.cancel}" />
+                            </b:buttonGroup>
+                        </div>
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.perfiles}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

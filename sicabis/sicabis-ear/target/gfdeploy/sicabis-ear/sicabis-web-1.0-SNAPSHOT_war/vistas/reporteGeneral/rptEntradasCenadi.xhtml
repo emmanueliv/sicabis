@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.rptEntradasCenadi}">
+                <div id="contenido">
+                    <h:form>
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage name="images/loader.gif" />
+                        </p:dialog>
+
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte de Entradas al Cenadi(Medicamentos)" url="rptEntradasCenadi.hxtml" disabled="true"/>
+                        </p:breadCrumb>
+
+                        <h2>Reporte de Entradas al Cenadi</h2>
+                        <br></br>
+
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelDatos">
+                            <p:outputLabel for="rptC" value="Reportes:"/>
+                            <p:selectOneMenu id="rptC" value="#{rptEntradasCenadiBean.reporte}" style="width: 100%; height: 34px;">
+                                <f:selectItem itemLabel="Seleccione" itemValue="-1" />
+                                <f:selectItem itemValue="1" itemLabel="Reporte de entradas al cenadi" />
+                                <f:selectItem itemValue="2" itemLabel="Reporte preliminar" />                                
+                            </p:selectOneMenu> 
+                            <p:outputLabel for="provedor" value="Proovedor"  />
+                            <p:selectOneMenu id="provedor" value="#{rptEntradasCenadiBean.proveedor}" 
+                                             effect="fade" var="pro" style="width: 100%; height: 34px;" filter="true" 
+                                             autoWidth="false"
+                                             filterMatchMode="startsWith">
+                                <f:selectItem itemValue="-1" itemLabel="Seleccione" />
+                                <f:selectItems value="#{rptEntradasCenadiBean.listProveedores}" var="p" itemLabel="#{p.nombreProveedor}" itemValue="#{p.nombreProveedor}" />
+                                <p:column>
+                                    <h:outputText value="#{pro.nombreProveedor}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="insumos" value="Insumos"  />
+                            <p:selectOneMenu id="insumos" value="#{rptEntradasCenadiBean.insumo}"
+                                             effect="fade" var="insumo" style="width: 100%; height: 34px;" 
+                                             filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemValue="-1" itemLabel="Seleccione" />
+                                <f:selectItems value="#{rptEntradasCenadiBean.listInsumos}" var="i" itemLabel="#{i.clave}" itemValue="#{i.clave}" />
+                                <p:column>
+                                    <h:outputText value="#{insumo.clave}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="tpinsumo" value="Tipo de insumos"  />
+                            <p:selectOneMenu id="tpinsumo" value="#{rptEntradasCenadiBean.tipoInsumo}"
+                                             effect="fade" style="width: 100%; height: 34px;" 
+                                             filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemValue="-1" itemLabel="Seleccione" />
+                                <f:selectItems value="#{rptEntradasCenadiBean.listTipoInsumos}" var="tpi" itemLabel="#{tpi.nombre}" itemValue="#{tpi.idTipoInsumos}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel value="Fecha de Inicial:" style="font-size: 12px" />
+                            <p:calendar id="fechaInicial" style="width: 100%; height: 34px;" mask="true" showOn="button"
+                                        value="#{rptEntradasCenadiBean.encabezadosReportesDTO.fechaInicial}" pattern="dd/MM/yyyy" />
+                            <h:outputLabel value="Fecha de Final:" style="font-size: 12px" />
+                            <p:calendar id="fechaFinal" style="width: 100%; height: 34px;" mask="true" showOn="button"
+                                        value="#{rptEntradasCenadiBean.encabezadosReportesDTO.fechaFinal}" pattern="dd/MM/yyyy" />
+                            <h:outputText value=""/>
+                        </b:panelGrid>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" process="panelDatos export" 
+                                             iconAlign="right" update="tablaRptExistenciasCenadi export" 
+                                             actionListener="#{rptEntradasCenadiBean.buscarLista}" >
+                            </b:commandButton>
+                        </div>           
+                        <br></br>
+                        <div id="divTable" style="width: 100%;">
+                            <p:dataTable id="tablaRptExistenciasCenadi" var="rptExistencias" value="#{rptEntradasCenadiBean.listECDtO}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="10,15,20" >
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="tablaRptExistenciasCenadi" fileName="Reporte Existencias" />
+                                    </h:commandLink>                                
+                                </f:facet>
+                                <p:column style="width:30px" exportable="false"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column filterBy="#{rptExistencias.claveInsumo}"   
+                                          filterMatchMode="contains" headerText="Clave" 
+                                          class="formatoTablas" style="width:10%"> 
+                                    <h:outputText value="#{rptExistencias.claveInsumo}" />
+                                </p:column>
+                                <p:column filterBy="#{rptExistencias.nombreProveedor}" filterMatchMode="contains" headerText="Proveedor" class="formatoTablas" style="width:15%"> 
+                                    <h:outputText value="#{rptExistencias.nombreProveedor}" />
+                                </p:column>
+                                <p:column headerText="No.Alta" class="formatoTablas" style="width:7%"> 
+                                    <h:outputText value="#{rptExistencias.idRemision}" />
+                                </p:column>
+                                <p:column headerText="Cont" class="formatoTablas" > 
+                                    <h:outputText value="#{rptExistencias.registroControl}" />
+                                </p:column>    
+                                <p:column headerText="Cantidad" class="formatoTablas" > 
+                                    <h:outputText value="#{rptExistencias.cantidadPiezas}" />
+                                </p:column>  
+                                <p:column headerText="Precio" class="formatoTablas" > 
+                                    <h:outputText value="$#{rptExistencias.precioUnitario}" />
+                                </p:column>  
+                                <p:column headerText="Contrato" class="formatoTablas" > 
+                                    <h:outputText value="#{rptExistencias.numeroContrato}" />
+                                </p:column>  
+                            </p:dataTable>  
+                        </div>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup id="export">
+                                <b:commandButton value="Exportar" icon="search" iconAlign="right" 
+                                                 rendered="#{rptEntradasCenadiBean.rptactivo == 1}"
+                                                 look="info" immediate="true" ajax="false"
+                                                 action="#{rptEntradasCenadiBean.exportarExcel}"/>
+                            </b:buttonGroup>
+                        </div>
+                        <p:separator/>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.reportes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este modulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

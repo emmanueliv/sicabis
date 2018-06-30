@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1"/>-->
+        <title>SICABIS</title>
+        <h:outputStylesheet library="css" name="style.css"  />
+        <h:outputStylesheet library="css" name="font-awesome.css" />
+        <h:outputStylesheet library="css" name="custom-theme-primefaces.css" />
+        <h:outputStylesheet name="css/rcb.css" />
+
+    </h:head>
+    <h:body>
+        <b:navBar id="menu" brand="SICABIS - Sistema Integral de la Cadena de Abasto de Insumos para la Salud" brandHref="#" inverse="true" fluid="true" class="navbar-fixed-top">                                   
+        </b:navBar>
+            <div id="contenido" class="ui-fluid">
+                <h2>Proyección </h2>
+
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+
+                <h:form id='formProyeccion' style="width:100%; height: 100%" > 
+                    <h2>Proyección de necesidades </h2>
+                    <p:separator />                 
+
+
+                    <p:panelGrid id="pnlAreas" columns="3" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-5,ui-grid-col-1"> 
+                    </p:panelGrid>
+                    <br></br>
+                    <h:panelGrid id="pnlTableSol" columns="2">
+                        <p:dataTable id="cars" var="car" value="#{proyeccionNecesidadInsumos.listProyeccion}" widgetVar="carsTable" filteredValue="#{proyeccionNecesidadInsumos.setListProyeccionFilter(listProyeccionFilter)}">                    
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column    
+                                headerText="Clave" 
+                                class="formatoTablas">
+                                <h:outputText value="#{car.insumo.descripcion}" converter="recortarCadena" />
+                            </p:column>
+                            <p:columns value="#{proyeccionNecesidadInsumos.columns}" var="column" columnIndexVar="colIndex" class="formatoTablas">
+                                <f:facet name="header">
+                                    <h:outputText value="#{column.header}" />
+                                </f:facet>
+                                <h:outputText value="#{car[column.property]}" />
+                            </p:columns>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{car.insumo.descripcion}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                    </h:panelGrid>                                        
+                </h:form>
+            </div>
+    </h:body>
+</html>
+

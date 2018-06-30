@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-07-20T12:50:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="convenioInsumos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="93686c82-e830-4174-97be-5a46da83d415">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nombreProveedor" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="fechaContrato" class="java.util.Date"/>
+	<field name="partida" class="java.lang.String"/>
+	<field name="nep" class="java.lang.String"/>
+	<field name="numeroProcedimiento" class="java.lang.String"/>
+	<field name="fundamentoLegal" class="java.lang.String"/>
+	<field name="vigenciaInicial" class="java.util.Date"/>
+	<field name="vigenciaFinal" class="java.util.Date"/>
+	<field name="año" class="java.lang.Integer"/>
+	<field name="compradorNombre" class="java.lang.String"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<field name="insumosList" class="java.util.List"/>
+	<field name="tipoContrato" class="java.lang.String"/>
+	<field name="clausulas" class="java.lang.String"/>
+	<field name="importeLetra" class="java.lang.String"/>
+	<field name="noRupa" class="java.lang.Integer"/>
+	<field name="rcb" class="java.lang.String"/>
+	<field name="oficioSuficienciaPresupuestal" class="java.lang.String"/>
+	<field name="compradorApellidoMaterno" class="java.lang.String"/>
+	<field name="compradorApellido" class="java.lang.String"/>
+	<field name="numeroContrato" class="java.lang.String"/>
+	<field name="notas" class="java.lang.String"/>
+	<field name="numeroConvenio" class="java.lang.String"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="224" splitType="Stretch">
+			<rectangle>
+				<reportElement x="479" y="202" width="84" height="22" uuid="7f751222-453d-4435-a350-95d8cd3bb73d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="8" width="140" height="92" uuid="8f688727-2b0d-4a46-bb2c-ad9070f459d6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="100" width="140" height="124" uuid="e1274ce0-cc82-4ec4-a07a-2fda7abeb311"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="130" y="8" width="177" height="147" uuid="752c1948-6129-4240-b789-a063f9866101"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="307" y="8" width="91" height="147" uuid="457a0530-4fa1-4f36-9ae3-62f4504b55f2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="8" width="81" height="82" uuid="941c7a45-f00f-4841-b6d0-72498c66f349"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="479" y="8" width="84" height="82" uuid="5868b209-7f16-412d-ab1d-21cd14e99011"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="267" y="155" width="131" height="24" uuid="431e9a92-a08a-40b8-a2f7-76a31376e1d3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="90" width="165" height="20" uuid="7be138a1-5360-4ca1-b9d7-2d26bcab9e15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="110" width="165" height="26" uuid="69626589-2043-4dc8-9a18-577e5536b229"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="136" width="165" height="19" uuid="cca99f91-71e0-415f-a24d-69ec20792b6f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="202" width="81" height="22" uuid="a493db68-9222-46ef-a967-2a39c2d4b594">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="155" width="81" height="24" uuid="0421282c-b6b7-43b2-bb2f-e30f07f47faa"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="479" y="155" width="84" height="24" uuid="233b70d7-9c95-4e85-8f1c-3960d6d61d4a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="177" y="10" width="68" height="19" uuid="c3c9b669-281d-4276-9ec4-edac4e21c4a4"/>
+				<text><![CDATA[PROVEEDOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="138" y="30" width="160" height="15" uuid="f65f4d4f-a1c3-4f9c-9533-b215117e2711"/>
+				<textFieldExpression><![CDATA[$F{nombreProveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="138" y="50" width="160" height="80" uuid="27a3bbe9-ca20-44bb-8ef2-18a755f0f682"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="312" y="10" width="80" height="23" uuid="a1b7c68c-457d-41ea-b84b-79cfbf735caa"/>
+				<text><![CDATA[NO. CONTRATO]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="313" y="45" width="79" height="30" uuid="8f82f761-e462-4d90-b220-3746ea7b54bc"/>
+				<textFieldExpression><![CDATA[$F{numeroContrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="81" width="79" height="19" uuid="5515915f-0666-4c67-b910-9ecd644a70ad"/>
+				<textFieldExpression><![CDATA[$F{tipoContrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="30" width="54" height="30" uuid="5cc9cc99-cacd-4d64-b718-fa4771b86e9f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["PAGINA " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="533" y="30" width="30" height="30" uuid="741d5fde-a45c-4920-a690-6becff0058f8"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" DE " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="40" width="72" height="30" uuid="3d4eab26-5ee2-4605-9874-4934ec4b8210"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaContrato})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="417" y="16" width="42" height="18" uuid="28e018c9-eb1a-432f-b58a-e6b2023ace6c"/>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-4" y="100" width="120" height="59" uuid="1d1bad90-7ce8-4fd8-9d08-56cb9b863677"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACIÓN SUBDIRECCIÓN DE PROGRAMACIÓN Y PRESUPUESTO  (NOMBRE,FIRMA Y SELLO)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="130" y="155" width="137" height="24" uuid="1cb2c9f6-565d-405b-bd0e-43173593aee5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="130" y="179" width="137" height="45" uuid="ae7579a3-9369-4f51-86da-8172e4791bb9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="138" y="155" width="100" height="31" uuid="084289cc-280c-4141-80c3-08e35020bd68"/>
+				<text><![CDATA[PARTIDA PRESUPUESTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="271" y="158" width="100" height="18" uuid="e986b85b-a068-4730-a2ba-bcd433e559e4"/>
+				<textFieldExpression><![CDATA[$F{partida}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="267" y="179" width="131" height="45" uuid="744c7c92-c0eb-4a89-869b-1264d72dc66e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="138" y="186" width="120" height="31" uuid="d8b9ab3e-f721-471a-b5ba-bfbd1f221a80"/>
+				<text><![CDATA[NO DE PROCEDIMIENTO Y FUNDAMENTO LEGAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="271" y="180" width="122" height="19" uuid="4870b65f-0be5-4559-8222-804dc786b372"/>
+				<textFieldExpression><![CDATA[$F{numeroProcedimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="271" y="199" width="100" height="18" uuid="14d87e3f-b6f5-44f3-b3c6-1f4064c7eb5d"/>
+				<textFieldExpression><![CDATA[$F{fundamentoLegal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="453" y="92" width="54" height="15" uuid="6871a1b1-3fce-45d5-92b0-b1fdd06f9866"/>
+				<text><![CDATA[VIGENCIA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="430" y="113" width="100" height="14" uuid="3ece7160-0fe6-4f6a-9a2a-ff3a3a90b1d4"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{vigenciaInicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="136" width="79" height="15" uuid="a9894e2c-29bc-4259-9650-d9d26e0c0034"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{vigenciaFinal})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="424" y="160" width="28" height="14" uuid="030d2980-c80a-4ada-9ded-1f2e22018da8"/>
+				<text><![CDATA[AÑO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="495" y="160" width="52" height="14" uuid="abaccab6-7d71-4e7f-9491-7e48edb611df"/>
+				<textFieldExpression><![CDATA[$F{año}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="402" y="202" width="72" height="18" uuid="eff80fe2-35c4-4c37-aaf9-aed69c6aa1fb"/>
+				<text><![CDATA[COMPRADOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="484" y="202" width="75" height="18" uuid="44dc8a14-1650-476c-aaec-a2ce2cb62d16"/>
+				<textFieldExpression><![CDATA[$F{compradorNombre}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="398" y="179" width="81" height="23" uuid="9b929ee5-0b3d-4b5a-8577-5261c5a4de60"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="479" y="179" width="84" height="23" uuid="14cd87da-8bf3-42f6-a32c-75589fdfb8e8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="400" y="179" width="79" height="22" uuid="7857facc-8241-4ca5-ad1e-fd7600891423"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REQUICISIÓN DE COMPRA DE BINES NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="137" width="50" height="15" uuid="144bb2f6-8794-4b8d-aba0-9630c9d42be4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NO RUPA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="190" y="137" width="74" height="12" uuid="300cf32a-22ae-41c6-a718-94f5cfe596b0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noRupa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="178" width="78" height="24" uuid="cc668291-b852-4734-b870-d0f865e59cff"/>
+				<textFieldExpression><![CDATA[$F{rcb}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="312" y="104" width="80" height="23" uuid="2e35c3f3-d5d1-43f8-a01b-91fec000a811"/>
+				<text><![CDATA[NO. CONVENIO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="313" y="129" width="80" height="23" uuid="6e248563-9df4-475b-a941-4ac811ceae4d"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroConvenio}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="-4" y="16" width="124" height="76" uuid="026d4c0d-c36b-4418-9336-2aba1b4f9b6a"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="363" splitType="Stretch">
+			<frame>
+				<reportElement x="-11" y="0" width="574" height="350" uuid="eec6bc73-c437-496a-a0eb-bba912b78b76"/>
+				<rectangle>
+					<reportElement x="1" y="0" width="572" height="336" uuid="e1fbb58d-d45d-4371-a141-c0fb8af1dcd9"/>
+				</rectangle>
+				<subreport>
+					<reportElement x="3" y="0" width="568" height="300" uuid="46d5c806-afa0-46bb-972f-d7fa98b5b545"/>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{insumosList})]]></dataSourceExpression>
+					<subreportExpression><![CDATA["subInsumos.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<textField>
+				<reportElement x="50" y="305" width="511" height="31" uuid="ef44254e-1dd4-48bc-903f-a821d7ccd8db"/>
+				<textFieldExpression><![CDATA[$F{notas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-8" y="314" width="48" height="13" uuid="e26e78bc-61c0-4cfe-816c-40eebf8e826d"/>
+				<text><![CDATA[NOTAS:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="214" splitType="Stretch">
+			<rectangle>
+				<reportElement x="27" y="106" width="252" height="20" uuid="6ce870b4-8e38-4c65-a424-c1ae8fda297b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="1" width="573" height="26" uuid="8fba177a-593a-4a96-8d11-a93fcf82c70c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="489" y="1" width="73" height="26" uuid="9f911588-4bb2-463d-859a-2c519599a56c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="31" width="252" height="20" uuid="0bdcb8d8-0873-433c-ae66-5086f6c7b653"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="51" width="252" height="29" uuid="7bb54971-1fe8-4318-bfa1-78e655e27974"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="80" width="252" height="25" uuid="a82a1621-c7d5-4624-9ba9-480f22893f5a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="28" y="120" width="252" height="-15" uuid="d5e86b3a-c500-4373-a5f3-4182028b8fea"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="28" y="150" width="252" height="-45" uuid="e4b8d456-657a-49b1-8e05-4d9254638348"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="28" y="170" width="252" height="-65" uuid="91d3dd51-c7ab-4f55-9097-c11f6bca3e6f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="280" y="170" width="237" height="-65" uuid="309125ae-c35d-4c19-9855-f9fef0e53115">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="280" y="150" width="237" height="-45" uuid="f4b361b9-c489-4c59-8846-6288f44413ae"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="280" y="120" width="237" height="-15" uuid="d32a69fd-dc37-4527-a0af-1d9752a93e00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="281" y="80" width="237" height="25" uuid="1b5cf2fa-0504-462f-a77a-15ea35c0b917">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="281" y="50" width="237" height="30" uuid="be0521b6-1adc-41be-9e4d-408d8b4e9740"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="281" y="31" width="237" height="20" uuid="52778fdb-5108-4f8f-996d-2c30fd57f607"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="30" y="31" width="72" height="11" uuid="363d918e-d0b5-41eb-b9e8-3edc5219b1a2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Elaboró Comprador]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="107" y="31" width="59" height="18" uuid="76f03aa0-767b-4f7e-949c-f3fd091c306e"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{compradorNombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="31" width="67" height="19" uuid="a48c96b7-e5b6-4a9f-9c11-23a2de5d8b7a"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{compradorApellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="31" width="48" height="20" uuid="17b9670e-834b-4911-8226-8dd4dd7b71b1"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{compradorApellidoMaterno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="32" y="67" width="243" height="10" uuid="715856fa-c259-44ee-8e41-ccd918e6f0b8"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[JEFE DE SERVICIOS DE ADQUICISIÓN DE MEDICAMENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="126" width="31" height="-21" uuid="7f9ecf10-b453-4633-936d-2be7040ab476"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REVISO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="52" width="100" height="18" uuid="553ec55f-f653-4100-9a8e-ac5391206301"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[PROVEEDOR]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-9" y="1" width="69" height="26" backcolor="#C2C2C2" uuid="cebc11c1-0591-4d99-bb5e-b627ba3319fb"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-4" y="3" width="58" height="24" uuid="bfebc289-1ee3-4cb3-9093-641e9de3e931"/>
+				<text><![CDATA[IMPORTE CON LETRA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="6" width="390" height="20" uuid="ab715282-d7a9-4c75-9997-d516524fdf67"/>
+				<textFieldExpression><![CDATA[$F{importeLetra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="495" y="5" width="60" height="20" uuid="4979c5c4-b971-47ba-9b77-940263cf8e23"/>
+				<textFieldExpression><![CDATA["$" + $F{importe} + ".00"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="33" y="53" width="241" height="11" uuid="65095879-4d21-44bb-91d3-716ec426ac85"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Responsable de la elaboración e información contenida en este contrato.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="34" width="204" height="15" uuid="8c38c40f-cb99-4a5d-a8af-2ca2abe343d1"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Representante Legal]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="281" y="127" width="237" height="28" uuid="7b68d56b-e5db-454e-b19b-c0998d460089"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="127" width="252" height="29" uuid="37b629b0-0429-4a79-be84-377952e39a79"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="31" y="142" width="243" height="10" uuid="2e348191-2e69-4cd2-a22d-adec607b27ac"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SUBDIRECTOR DE ABASTOS DE INSUMOS MÉDICOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="281" y="106" width="237" height="20" uuid="0d5d26ea-51a1-4119-a374-b821ef182e92"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="156" width="252" height="25" uuid="f101239f-4993-4888-8f8a-ee9833374ec7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="281" y="156" width="237" height="25" uuid="32046963-0aff-4e09-8d40-88a9e1479b6c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="290" y="110" width="216" height="11" uuid="0ba5594e-3106-42ed-9bf7-d8d11f48fa77"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Autorizó LIC. MINERVA CASTILLO RODRIGUEZ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="134" width="217" height="13" uuid="da6be4f4-d0a0-4127-a252-76bcd5dc92cf"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECTOR DE ADMINISTRACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="33" y="128" width="241" height="11" uuid="3cd9972a-0c3c-4674-91f9-25e256845fef"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Responsable de la elaboración e información contenida en este contrato.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="90" width="41" height="10" uuid="be7af53b-3229-486e-9667-4bffccc39e35"/>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Escritura Públca:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="89" width="47" height="10" uuid="7841f026-f5b6-4a73-9185-2338f2ef7164"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Notaría:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="111" width="225" height="11" uuid="56b7d0c1-4e0f-45a4-8b58-4d2aae51090f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Reviso C. PEDRO LURUEÑA CABALLERO]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="686" splitType="Stretch">
+			<textField>
+				<reportElement x="-5" y="220" width="572" height="460" uuid="076370ee-2579-4135-a05a-5135611b1577"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clausulas}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="484" y="194" width="84" height="22" uuid="e73252b3-8602-4849-91c2-8c2ec3433bcc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-5" y="0" width="140" height="92" uuid="552a81f4-68da-4e82-af22-434c35515ca8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-5" y="92" width="140" height="124" uuid="a2f900d2-48da-4789-b0c5-fa2a633aca99"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="135" y="0" width="177" height="147" uuid="04998b72-d96b-4e9e-9f91-512931c3f65e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="312" y="0" width="91" height="147" uuid="eaced0cc-6384-4e5d-9203-8851894ca15a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="0" width="81" height="82" uuid="97e45159-9449-4f99-afa3-22c682a89629"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="484" y="0" width="84" height="82" uuid="9d603a46-5ee3-46b8-83d0-e54573b77b0b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="272" y="147" width="131" height="24" uuid="3f760cba-ab73-410b-93ec-139901b61063"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="82" width="165" height="20" uuid="c634fb06-a631-4bbc-ad8e-a0493db199b5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="102" width="165" height="26" uuid="64182dde-fffb-4daf-b496-67f09611fd1c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="128" width="165" height="19" uuid="74eb8c70-7b4a-4549-ad89-35441963d22c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="194" width="81" height="22" uuid="2eeececf-275b-44c4-b4fd-be85b9f21d5a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="147" width="81" height="24" uuid="a6e5fcf4-684c-481f-960f-f898054436e7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="484" y="147" width="84" height="24" uuid="1ac7950e-1355-44d2-8737-994fa398e6d7">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="182" y="2" width="68" height="19" uuid="224894ab-9e50-4bce-b46e-980e19e900ff"/>
+				<text><![CDATA[PROVEEDOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="143" y="22" width="160" height="15" uuid="0022d470-9bca-471e-be35-7d453e01d38f"/>
+				<textFieldExpression><![CDATA[$F{nombreProveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="143" y="42" width="160" height="80" uuid="fc3a7ec9-3b5b-449a-bf91-0c420a5b95e9"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="317" y="2" width="80" height="23" uuid="be22c30f-41a3-443e-bfb7-a8f3fc222f65"/>
+				<text><![CDATA[NO CONTRATO]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="318" y="37" width="79" height="30" uuid="9e443187-6432-471e-9016-2f421c629725"/>
+				<textFieldExpression><![CDATA[$F{numeroContrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="73" width="79" height="19" uuid="eaab48af-a27a-4149-a2ed-fbfeff57072c"/>
+				<textFieldExpression><![CDATA[$F{tipoContrato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="22" width="54" height="30" uuid="104e9a85-71a9-4f35-a5d3-ce2e3c961bde"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["PAGINA " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="538" y="22" width="30" height="30" uuid="3f903cbf-b755-4866-9b3a-2e68393ed38f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" DE " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="32" width="72" height="30" uuid="b0b8ece4-1610-44af-9fb0-d96dd29e0d32"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaContrato})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="422" y="8" width="42" height="18" uuid="1f6df51c-6388-429b-ae6a-6b43267282a4"/>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="92" width="120" height="59" uuid="735d964b-5d9e-45a0-84fc-18abb043d2a4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACIÓN SUBDIRECCIÓN DE PROGRAMACIÓN Y PRESUPUESTO  (NOMBRE,FIRMA Y SELLO)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="135" y="147" width="137" height="24" uuid="82f4e504-2667-4ef8-8ebe-cfda86e78d25"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="135" y="171" width="137" height="45" uuid="84201164-8771-482e-a517-0e92aa4eb3a6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="143" y="147" width="100" height="31" uuid="b424929e-5cd4-44f3-b2dd-e63f88f95499"/>
+				<text><![CDATA[PARTIDA PRESUPUESTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="276" y="150" width="100" height="18" uuid="2fb47dd5-ee4c-40be-a9c1-0e8ee63593c2"/>
+				<textFieldExpression><![CDATA[$F{partida}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="272" y="171" width="131" height="45" uuid="9114342b-260e-426a-b7cf-9db408fb3204"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="143" y="178" width="120" height="31" uuid="2e1c1e10-530a-4f17-961c-73eef7afd760"/>
+				<text><![CDATA[NO DE PROCEDIMIENTO Y FUNDAMENTO LEGAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="276" y="172" width="122" height="19" uuid="8ef3279b-4062-4cb6-aebd-5eac7cb072e9"/>
+				<textFieldExpression><![CDATA[$F{numeroProcedimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="276" y="191" width="100" height="18" uuid="a8d67679-2cb6-4a9d-9290-3c7a22afcc6a"/>
+				<textFieldExpression><![CDATA[$F{fundamentoLegal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="458" y="84" width="54" height="15" uuid="1f7ab518-0605-4f2e-a9e0-cd283c99d941"/>
+				<text><![CDATA[VIGENCIA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="435" y="105" width="100" height="14" uuid="b773eebd-a90c-4ab9-a6ed-d0266ea794a2"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{vigenciaInicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="128" width="79" height="15" uuid="859aa773-3ee7-4d70-ae6f-6a7af2e802d2"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{vigenciaFinal})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="429" y="152" width="28" height="14" uuid="d312d1e6-f63d-4bd8-a8c0-e8717db2d5c9"/>
+				<text><![CDATA[AÑO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="500" y="152" width="52" height="14" uuid="a27cb9ab-5d0d-480d-ae86-cbdfa31f66a1"/>
+				<textFieldExpression><![CDATA[$F{año}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="407" y="194" width="72" height="18" uuid="0de7f656-eda7-4ae0-9dcc-ebdf1dcaad2e"/>
+				<text><![CDATA[COMPRADOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="489" y="194" width="75" height="18" uuid="e7fe69ce-675e-4659-85b0-bc78c18a4a68"/>
+				<textFieldExpression><![CDATA[$F{compradorNombre}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="403" y="171" width="81" height="23" uuid="da45dc1e-711f-468f-8593-8f8d161e7e54"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="484" y="171" width="84" height="23" uuid="233ff2a8-950c-43d6-8a3d-e104bf4e408f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="405" y="171" width="79" height="22" uuid="7e168702-eee7-4fe8-b8f9-5bfd0099368f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REQUICISIÓN DE COMPRA DE BINES NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="129" width="50" height="15" uuid="509edc1f-a464-4785-af9c-e7aeac3e8bb1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NO RUPA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="195" y="129" width="74" height="12" uuid="905f685c-5bb7-4473-88ca-a97446d554f9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noRupa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="170" width="78" height="24" uuid="c7b16a40-5ca8-426f-95ef-04876ca1fec4"/>
+				<textFieldExpression><![CDATA[$F{rcb}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="10" y="8" width="102" height="74" uuid="75d6eb2e-9092-4fd2-aa86-dcd64c43b61e"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="318" y="96" width="80" height="23" uuid="1b7ce172-2394-43fe-a08d-c0a39b20ed75"/>
+				<text><![CDATA[NO CONVENIO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="318" y="122" width="80" height="25" uuid="bac68600-11bb-475b-9357-02a8d1d603a8"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroConvenio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

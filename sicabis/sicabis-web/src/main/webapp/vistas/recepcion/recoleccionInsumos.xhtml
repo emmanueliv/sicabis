@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.recoleccionInsumos}">
+                <div id="contenido">
+                    <h:form>
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Recolección de Insumos" url="recoleccionInsumos.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Recolección de insumos</h2>
+                    <b:tabView activeIndex="#{loginBean.tabNuevoActivo}" styleClass="DataTable" >
+                        <b:tab title="Nuevo" rendered="#{!loginBean.accesos.recoleccionInsumosC}">
+                            <h:form id="nuevo">
+                                <br></br>
+                                <p:messages id="idmessages" rendered="#{recoleccionInsumosBean.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                                <b:panelGrid id="selecionarFabricante" colSpans="1,5,4,2">
+                                    <h:outputLabel   value="Unidades médicas"/>                 
+                                    <b:inputText    placeholder="Número de unidad" id="numeroUnidad"  value="#{recoleccionInsumosBean.numeroU}"/>
+                                    <p:selectOneMenu id="unidad"  value="#{recoleccionInsumosBean.numeroUnidad}"  style="width:100%; height: 34px; " filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Selecionar unidad médica" itemValue="-1" />
+                                        <f:selectItems value="#{recoleccionInsumosBean.unidadMedicaList}" var="unidadesMedicas"  itemLabel="#{unidadesMedicas.nombre}" itemValue="#{unidadesMedicas.idUnidadesMedicas}"  />
+                                    </p:selectOneMenu>
+                                    <b:commandButton col-md="12"  look="info" update="selecionarFabricante"  icon="search" iconAlign="right" value="Buscar Unidad Medica" actionListener="#{recoleccionInsumosBean.mostrarFabricante()}"/>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid colSpans="1,3,1,3,1,3">
+                                    <h:outputLabel value="Clave"/>
+                                    <b:inputText id="clave" value="#{recoleccionInsumosBean.clave}"/>
+                                    <h:outputLabel value="Cantidad"/>
+                                    <b:inputText id="cantidad" value="#{recoleccionInsumosBean.cantidad}" />
+                                    <h:outputLabel value="Lote" />
+                                    <b:inputText id="Lote" value="#{recoleccionInsumosBean.lote}"/>
+                                </b:panelGrid>
+                                <b:panelGrid colSpans="1,3,1,3,1,3">
+                                    <h:outputLabel value="Precio Unitario"/>
+                                    <b:inputText id="precio" value="#{recoleccionInsumosBean.precioUnitario}"/>
+                                    <h:outputLabel value="Fecha de Caducidad"/>
+                                    <p:calendar id="fecha" showOn="button" value="#{recoleccionInsumosBean.fechaC}" />
+                                    <h:outputLabel  />
+                                    <h:outputLabel />
+                                </b:panelGrid>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="info" value="Agregar" icon="plus" iconAlign="right" 
+                                                     actionListener="#{recoleccionInsumosBean.guardar()}" update="nuevo" />
+                                </div>
+                                <br></br>
+                                <p:dataTable id="detalleRecoleccion" value="#{recoleccionInsumosBean.detalleRecoleccionList}"
+                                             emptyMessage="No hay registros" var="recoleccion"
+                                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})">
+
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaBitacora" fileName="registroBitacora" />
+                                        </h:commandLink>
+                                    </f:facet>
+
+                                    <p:column headerText="No. Insumo">
+                                        <p:outputLabel value="#{recoleccionInsumosBean.idInsumo}"/>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <p:outputLabel value="#{recoleccion.cantidad}"/>
+                                    </p:column>
+                                    <p:column headerText="Lote">
+                                        <p:outputLabel value="#{recoleccion.lote}"/>
+                                    </p:column>
+                                    <p:column headerText="Precio Unitario">
+                                        <p:outputLabel value="#{recoleccion.precioPromedio}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha de Caducidad">
+                                        <p:outputLabel value="#{recoleccion.fechaCaducidad}">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <b:panelGrid colSpans="2,10">
+                                    <h:outputLabel value="Oficio de recolección" />
+                                    <b:inputText style="width: 38%;" id="oficio" value="#{recoleccionInsumosBean.oficioRecoleccion}"/>
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="primary" value="Guardar" icon="glyphicon-floppy-disk" iconAlign="right" 
+                                                     actionListener="#{recoleccionInsumosBean.guardarRecoleccion()}"  update="nuevo" ></b:commandButton> 
+                                </div>
+                                <p:separator />
+                                <b:panelGrid col-spans="12" rendered="#{recoleccionInsumosBean.verCargaDocumentos}" >
+                                    <h3>Carga de archivos</h3>
+                                </b:panelGrid>
+                                <br></br>
+                                <b:panelGrid col-spans="2,10" rendered="#{recoleccionInsumosBean.verCargaDocumentos}" >
+                                    <h:outputText value="Tipo de documento:" />
+                                    <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                                     value="#{recoleccionInsumosBean.idTipoDocumento}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{recoleccionInsumosBean.listaTipoDocs}" var="tipoDocs"
+                                                       itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                        <p:ajax update="selectTipoDocs" listener="#{recoleccionInsumosBean.cambiaTipoDoc()}"/>
+                                    </p:selectOneMenu>
+                                </b:panelGrid>
+                                <br></br>
+                                <p:fileUpload fileUploadListener="#{recoleccionInsumosBean.guardarArchivos}" mode="advanced" multiple="false" dragDropSupport="true" process="@this, selectTipoDocs"
+                                              uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" update="selectTipoDocs tablaRepoDocs"
+                                              rendered="#{recoleccionInsumosBean.verCargaDocumentos}"  
+                                              />
+                                <br></br>
+                                <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{recoleccionInsumosBean.listaRepoDocsDto}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{recoleccionInsumosBean.verCargaDocumentos}" >                                
+                                    <p:column headerText="Nombre archivo" class="formatoTablas">
+                                        <h:outputText value="#{listaRepoDocs.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                        <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                            <p:fileDownload value="#{listaRepoDocs.file}" />
+                                        </b:commandButton>
+                                        <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                         update="tablaRepoDocs" actionListener="#{recoleccionInsumosBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                        </b:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:separator rendered="#{recoleccionInsumosBean.verCargaDocumentos}"/> 
+                                <br></br>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                                    </p:panelGrid>
+                                    <b:buttonGroup>
+                                        <b:commandButton action="#{recoleccionInsumosBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                        <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                    </b:buttonGroup>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab title="Recolecciones" >
+                            <h:form id="frmNew">
+                                <p:messages id="idmessages2" rendered="#{recoleccionInsumosBean.verMensaje2}" showDetail="false" autoUpdate="true" closable="true"  />
+                                <br></br>
+                                <h4>Consultar recolección</h4>
+                                <br></br>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputLabel value="Oficio de recolección"/>
+                                    <b:inputText id="folio" value="#{recoleccionInsumosBean.oficioRecoleccion}"/>
+                                    <h:outputLabel value=""/>
+                                    <h:outputLabel value=""/>
+                                </b:panelGrid>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton look="info" value="Buscar" icon="search" iconAlign="right" actionListener="#{recoleccionInsumosBean.buscarRecoleccion()}"  update="frmNew" ></b:commandButton> 
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable id="recolecionConsulta" emptyMessage="No existen registros" rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="5,10,15" 
+                                             var="reco" value="#{recoleccionInsumosBean.busquedaList}" >
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="listaOrden" fileName="OrdenSuministro" />
+                                        </h:commandLink>
+                                    </f:facet>
+                                    <p:column style="width:30px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Nombre de unidad médica">
+                                        <h:outputText value="#{reco.nombreUnidad}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{reco.clave}" />
+                                    </p:column>
+                                    <p:column headerText="Caducidad">
+                                        <h:outputText value="#{reco.caducidad}" >
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Cantidad">
+                                        <h:outputText value="#{reco.cantidad}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha">
+                                        <h:outputText value="#{reco.fechaAlta}" >
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Opciones">
+                                        <b:commandButton  ajax="true" style="margin-left: 50%" icon="glyphicon-plus" icon-align="right" look="primary" value="" tooltip="Ver detalle"  id="contestarId" styleClass="primary" action="#{recoleccionInsumosBean.verDettaleRemision}" >   
+                                            <f:setPropertyActionListener value="#{reco}" target="#{recoleccionInsumosBean.recoleccionDTO}"/>
+                                        </b:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid  columns="1" columnClasses="label,value" style="width:300px">
+                                            <f:facet name="header">
+                                                Descripción
+                                            </f:facet>
+                                            <h:outputText value="#{reco.descripcion}" />
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:form>
+                        </b:tab>
+                    </b:tabView>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.recoleccionInsumos}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

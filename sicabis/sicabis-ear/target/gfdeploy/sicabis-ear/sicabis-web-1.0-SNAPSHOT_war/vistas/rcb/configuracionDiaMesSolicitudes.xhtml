@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.configuracionDiaMes}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Configuración Día/Mes Solicitudes Normales" url="configuracionDiaMesSolicitudes.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Configuración del día máximo del mes para solicitudes normales</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConfiguracion">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Año:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id="selectTipoDocs" 
+                                             value="#{configuracionDiaMesSolicitudesBean.anio}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItem itemLabel="#{configuracionDiaMesSolicitudesBean.anioAux}" itemValue="#{configuracionDiaMesSolicitudesBean.anioAux}" />
+                                <f:selectItem itemLabel="#{configuracionDiaMesSolicitudesBean.anioAux+1}" itemValue="#{configuracionDiaMesSolicitudesBean.anioAux+1}" />
+                                <p:ajax event="change" listener="#{configuracionDiaMesSolicitudesBean.cambiaAnio}" process="@this" update="tablaPeriodos" />
+                            </p:selectOneMenu>
+                            <h:outputText value=""/>
+                            <h:outputText value=""/>
+                        </b:panelGrid>
+                        <br></br>
+                        <p:dataTable id="tablaPeriodos" var="listaPeriodos" value="#{configuracionDiaMesSolicitudesBean.listaPeriodoMes}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="12" editable="true" editMode="cell"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     >
+                            <p:ajax event="cellEdit" />
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaPeriodos" fileName="periodos" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column headerText="Mes" class="formatoTablas">
+                                <h:outputText value="#{listaPeriodos.mesLetra}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha de corte" class="formatoTablas">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{listaPeriodos.fechaCorte}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:calendar id="vigInicial" mask="true" showOn="button" 
+                                                    mindate="#{listaPeriodos.fechaInicial}" maxdate="#{listaPeriodos.fechaFinal}" 
+                                                    
+                                                    value="#{listaPeriodos.fechaCorte}" pattern="dd/MM/yyyy" />
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                        </p:dataTable>
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" update=":frmConfiguracion"
+                                                 actionListener="#{configuracionDiaMesSolicitudesBean.guardar}"
+                                                 rendered="#{!loginBean.esConsulta}"/>
+                            </b:buttonGroup>
+                        </div>
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.configuracionDiaMes}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

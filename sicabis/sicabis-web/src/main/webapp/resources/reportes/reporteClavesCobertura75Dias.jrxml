@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-25T17:32:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repoteEntradasDevoluciones" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b214cd72-3a94-4a49-8db1-6dfbb81c7616">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listInfoClaves" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="160" splitType="Stretch">
+			<staticText>
+				<reportElement key="" x="0" y="0" width="100" height="30" uuid="ab4b1a46-15a0-42cb-bb8d-726cb4baf4f0"/>
+				<text><![CDATA[Fecha Elaboración:]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="100" y="0" width="100" height="30" uuid="40bde484-8661-4f68-9af8-507a0910c520"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="618" y="120" width="100" height="30" uuid="d242b74a-4b6c-45cd-a040-0ecf6597c838"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="238" y="120" width="380" height="30" uuid="46e5adf8-c9a0-4fdd-8515-efb93730293a"/>
+				<text><![CDATA[Reporte de claves con cobertura menor de 75 dias, al corte de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="580" height="110" uuid="f2dffcbd-7020-4c4d-81df-e5f354ad0632"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE COORDINACIÓN DE ALMACENES REGIONALES
+DEPARTAMENTO DE ALMACENAJE Y DESTRIBUCIÓN REGIÓN SURESTE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="42" y="33" width="139" height="110" uuid="aeef69e3-99d3-45eb-95b4-c4cac3026494"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="1" y="150" width="800" height="10" backcolor="#A39B9B" uuid="fa52a649-c778-4242-b5db-4210d2e1c455"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="110" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="800" height="110" uuid="22adf50e-4c7e-4c40-ad4b-99bac4de03fc"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoClaves})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteClavesCobertura75Dias.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>SICABIS</title>
+        <h:outputStylesheet library="css" name="main.css"  />
+        <h:outputStylesheet library="css" name="style.css"  />
+        <h:outputStylesheet library="css" name="font-awesome.css" />
+        <h:outputStylesheet library="css" name="custom-theme-primefaces.css" />
+        <h:outputStylesheet name="css/rcb.css" />
+    </h:head>
+    <h:body id="body">
+        <div id="contenido">
+            <h:outputScript library="js" name="jquery.min.js" />
+            <h:outputScript library="js" name="raphael-min.js" />
+            <h:outputScript library="js" name="jquery.mousewheel.min.js" />
+            <h:outputScript library="js" name="jquery.mapael.js" />
+            <h:outputScript library="js" name="index.js" />
+            <h:outputLabel id="listaMapa" styleClass="hide" value="#{mapaBean.datosEstadosFormatoJSON}"/>
+            <!--la seccion con los styleClass maparea2 y map dibujan el mapa-->
+            <h2 style="text-align: center; color: blue" >Disponibilidad Estados al #{mapaBean.fecha}</h2>
+            <br></br>
+            <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+            <b:panelGrid colSpans="8,4" >
+                <b:panelGrid colSpans="12"  styleClass="maparea2">
+                    <b:panelGrid colSpans="12" styleClass="map" />
+                </b:panelGrid>
+                <p:dataTable var="color" style="width: 95%;color: blue" value="#{mapaBean.listacolores}">
+                    <f:facet name="header">
+                        República Mexicana - Disponibilidad Estados
+                    </f:facet>
+                    <p:column headerText="Porcentajes"  > 
+                        <h:outputText value="#{mapaBean.truncar(color.porcentajeInicial)} - #{mapaBean.truncar(color.porcentajeFinal)} %" />
+                    </p:column>
+                    <p:column headerText="Color">
+                        <b:well style=" margin: 0 auto; width: 5px; background-color: #{color.hexColor}" size="sm" />
+                    </p:column>
+                </p:dataTable>
+            </b:panelGrid>
+            <br></br>
+            <br/>
+            <b:panelGrid colSpans="2,2,2,2,2,2" >
+                <h:outputText value="Total claves autorizadas: " />
+                <h:outputText value="#{mapaBean.clavesAut}" style="color: blue;font-weight: bolder">
+                    <f:convertNumber locale="en-US" />
+                </h:outputText>
+                <h:outputText value="Total claves disponibles: " />
+                <h:outputText value="#{mapaBean.clavesDisp}" style="color: blue;font-weight: bolder">
+                    <f:convertNumber locale="en-US" />
+                </h:outputText>
+                <h:outputText value="Total disponibilidad: " />
+                <h:outputText value="#{mapaBean.disponibilidad} %" style="color: blue;font-weight: bolder">
+                    <f:convertNumber locale="en-US" pattern="#0.00" />
+                </h:outputText>
+            </b:panelGrid>
+            <br></br>
+            <h:form id="formaTabla">
+                <p:dataTable var="listaDatosMapa" value="#{mapaBean.listaPorcentajeDel}" style="margin-bottom:40px;"
+                             emptyMessage="#{loginBean.mensajeTablaVacia}" >
+                    <p:column headerText="Delegación" class="formatoTablas"
+                              sortBy="#{listaDatosMapa.idDelegacion.nombreDelegacion}">
+                        <h:outputText value="#{listaDatosMapa.idDelegacion.nombreDelegacion}" >
+                            <f:convertNumber locale="en-US" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Claves autorizadas" class="formatoTablas"
+                              sortBy="#{listaDatosMapa.clavesDPN}">
+                        <h:outputText value="#{listaDatosMapa.clavesDPN}" >
+                            <f:convertNumber locale="en-US" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Claves disponibles" class="formatoTablas"
+                              sortBy="#{listaDatosMapa.clavesEnUMU}">
+                        <h:outputText value="#{listaDatosMapa.clavesEnUMU}" >
+                            <f:convertNumber locale="en-US" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Disponibilidad" class="formatoTablas" 
+                              sortBy="#{listaDatosMapa.porcentaje}">
+                        <h:outputText value="#{listaDatosMapa.porcentaje} %" >
+                            <f:convertNumber locale="en-US" pattern="#0.00" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <br/>
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2018-01-18T19:46:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repoteEntradasDevoluciones" pageWidth="842" pageHeight="1000" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b214cd72-3a94-4a49-8db1-6dfbb81c7616">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaElaboracion" class="java.util.Date"/>
+	<field name="fechaInicial" class="java.util.Date"/>
+	<field name="listInfoClaves" class="java.util.List"/>
+	<field name="rutaLogo" class="java.lang.String"/>
+	<field name="lisInfoClavesSinEntrega" class="java.util.List"/>
+	<field name="lisInfoClavesConEntrega" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="161" splitType="Stretch">
+			<staticText>
+				<reportElement key="" x="10" y="10" width="100" height="30" uuid="ab4b1a46-15a0-42cb-bb8d-726cb4baf4f0"/>
+				<text><![CDATA[Fecha Elaboración:]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="110" y="10" width="100" height="30" uuid="40bde484-8661-4f68-9af8-507a0910c520"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaElaboracion})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="520" y="120" width="100" height="30" uuid="21bbb2c0-9e62-4990-9b4b-6c22620520f0"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="210" y="120" width="310" height="30" uuid="42d5b136-e118-48f7-835b-10e0d874e92b"/>
+				<text><![CDATA[Resumen con corte al]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="10" width="540" height="100" uuid="0ae298d7-8646-4897-83da-709c904e3520"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN
+SUBDIRECCIÓN DE ALMACENES
+JEFATURA DE SERVICIOS DE CORDINACIÓN DE ALMACENES REGIONALES
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="13" y="41" width="140" height="100" uuid="d0ea50f7-409e-4293-9c19-46a072be7e64"/>
+				<imageExpression><![CDATA[$F{rutaLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="150" width="781" height="11" backcolor="#B8B8B8" uuid="db13cc15-2d2f-46b2-9a47-17a24fe74ff2"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="737" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="781" height="217" uuid="6095d8ba-c1e9-4ad7-a7c0-7c233cb89eb0"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listInfoClaves})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteResumenClavesPrincipal.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="217" width="781" height="250" uuid="41fe17cc-0698-41b3-9200-b548971d7c3a"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lisInfoClavesSinEntrega})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteResumenClavesSinEntrega.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="470" width="780" height="260" uuid="4212518b-69db-4fcf-bb45-450ed018c110"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lisInfoClavesConEntrega})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subReporteResumenClavesConEntrega.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

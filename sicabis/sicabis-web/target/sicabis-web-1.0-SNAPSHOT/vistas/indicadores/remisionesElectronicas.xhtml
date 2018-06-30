@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.existenciasSiamSilodisa}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Reporte de entregas a unidades médicas" url="consultaDPN.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Reporte de entregas a unidades médicas </h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <h:form id="frmConsulta">
+                        <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true"/>
+                        <b:panelGrid colSpans="2,4,2,4" id="panelConsulta">
+                            <h:outputText value="Fecha entre:"/>
+                            <b:panelGrid colSpans="6,6" id="panelFechas">
+                                <p:calendar id="effect" value="#{remisionesElectronicasHistoricoBean.fechaInicio}" showOn="button" locale="es" />
+                                <p:calendar id="effect2" value="#{remisionesElectronicasHistoricoBean.fechaFin}" showOn="button" locale="es" />
+                            </b:panelGrid>
+                            <h:outputText value="Delegación"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="delegación" autoWidth="false"
+                                             value="#{remisionesElectronicasHistoricoBean.delegacion}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{remisionesElectronicasHistoricoBean.exitenciaList}" var="delegacion" 
+                                               itemValue="#{delegacion.delegacion}" itemLabel="#{delegacion.delegacion}"/>  
+                            </p:selectOneMenu>
+                            <h:outputText value="Clave"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="clave" autoWidth="false"
+                                             value="#{remisionesElectronicasHistoricoBean.clave}" 
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." /> 
+                                <f:selectItems value="#{remisionesElectronicasHistoricoBean.existeciaInsumosList}" var="clave" 
+                                               itemValue="#{clave.clave}" itemLabel="#{clave.clave}"/>  
+                            </p:selectOneMenu>
+                            <h:outputText value="Folio del pedido"/>
+                            <b:inputText id="folioPedido" value="#{remisionesElectronicasHistoricoBean.folioPedido}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Mes DPN"/>
+                            <b:inputText id="mesDPN" value="#{remisionesElectronicasHistoricoBean.mesDPN}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Tipo de insumo"/>
+                            <b:inputText id="tipo" value="#{remisionesElectronicasHistoricoBean.tipoInsumo}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <h:outputText value="Remisión"/>
+                            <b:inputText id="remision" value="#{remisionesElectronicasHistoricoBean.remision}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Año DPN"/>
+                            <b:inputText id="anodpn" value="#{remisionesElectronicasHistoricoBean.anoDPN}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()" />
+                            <h:outputText value="Tipo pedido"/>
+                            <b:inputText id="tipoP" value="#{remisionesElectronicasHistoricoBean.tipoPedido}" style="text-transform:uppercase;" onblur="value = value.toUpperCase()"/>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                        </b:panelGrid>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" process="panelConsulta"
+                                             actionListener="#{remisionesElectronicasHistoricoBean.buscarRemisionElectronicaByFiltros}" 
+                                             update="tablaDpn" />
+                        </div>
+                        <p:separator/>
+                        <p:dataTable id="tablaDpn" var="existencia" value="#{remisionesElectronicasHistoricoBean.exitenciaList}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="50" paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaDpn" fileName="existencia" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Fecha de inventario" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fecha}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Delegación" class="formatoTablas" >
+                                <h:outputText value="#{existencia.delegacion}" />
+                            </p:column>
+                            <p:column headerText="Número UMU" class="formatoTablas" >
+                                <h:outputText value="#{existencia.umu}" />
+                            </p:column>
+                            <p:column headerText="Presupuestal" class="formatoTablas" >
+                                <h:outputText value="#{existencia.presupuestal}" />
+                            </p:column>
+                            <p:column headerText="Nombre UMU" class="formatoTablas" >
+                                <h:outputText value="#{existencia.nombreUmu}" />
+                            </p:column>
+                            <p:column headerText="Folio pedido" class="formatoTablas" >
+                                <h:outputText value="#{existencia.folioissste}" />
+                            </p:column>
+                            <p:column headerText="Clave" class="formatoTablas" >
+                                <h:outputText value="#{existencia.clave}" />
+                            </p:column>
+                            <p:column headerText="Remisiones" class="formatoTablas" >
+                                <h:outputText value="#{existencia.remision}" />
+                            </p:column>
+                            <p:column headerText="Fecha remisiones" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaRemision}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha llegada de comisión" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechaCamion}" >
+                                    <f:convertNumber pattern="dd/MM/YYYY" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha de certificación" class="formatoTablas" >
+                                <h:outputText value="#{existencia.fechacert}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Tipo" class="formatoTablas" >
+                                <h:outputText value="#{existencia.tipo}" />
+                            </p:column>
+                            <p:column headerText="Lote" class="formatoTablas" >
+                                <h:outputText value="#{existencia.lote}" />
+                            </p:column>
+                            <p:column headerText="Cantidad solicitada" class="formatoTablas" >
+                                <h:outputText value="#{existencia.solicitada}" />
+                            </p:column>
+                            <p:column headerText="Cantidad entregada" class="formatoTablas" >
+                                <h:outputText value="#{existencia.entregada}" />
+                            </p:column>
+                            <p:column headerText="Importe" class="formatoTablas" >
+                                <h:outputText value="#{existencia.importe}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Mes DPN" class="formatoTablas" >
+                                <h:outputText value="#{existencia.dpnMes}" />
+                            </p:column>
+                            <p:column headerText="Tipo de surtimiento" class="formatoTablas" >
+                                <h:outputText value="#{existencia.tipo}" />
+                            </p:column>
+                            <p:column headerText="Tipo de pedido" class="formatoTablas" >
+                                <h:outputText value="#{existencia.tipopedido}" />
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{existencia.descripcionClave}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                        <br></br>
+                    </h:form>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.existenciasSiamSilodisa}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

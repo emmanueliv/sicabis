@@ -1,0 +1,362 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.generacionPreOrdenSuministro || loginBean.accesos.ordenesSuministro}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Orden Suministro" url="ordenSuministro.xhtml" disabled="true" />
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>#{ordenSuministroBean.bpreorden ? 'Pre orden de suministro' : 'Orden de suministro'}</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <b:tabView activeIndex="#{ordenSuministroBean.tabActivo}" >
+                        <b:tab id="tabNew" title="Nuevo" rendered="#{!loginBean.accesos.ordenesSuministroC}">
+                            <br></br>
+                            <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{ordenSuministroBean.messageGuardar}" />
+                            <h:form id="formOrden">
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Número orden:"/>
+                                    <b:inputText value="#{ordenSuministroBean.numeroOrden}" style="width: 100%; text-transform: uppercase" onblur="value = value.toUpperCase()" update="idmensaje" >
+                                        <f:ajax event="blur" listener="#{ordenSuministroBean.existeNumeroOrden}" />
+                                    </b:inputText>
+                                    <h:outputText value="Estatus:"/>
+                                    <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectEstatus" disabled="#{ordenSuministroBean.bpreorden}"
+                                                     value="#{ordenSuministroBean.idEstatus}" >
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{ordenSuministroBean.listaEstatus}" var="estatus"
+                                                       itemValue="#{estatus.idEstatus}"  itemLabel="#{estatus.nombre}"/>
+                                    </p:selectOneMenu>
+
+                                    <h:outputText value="Fecha de orden"/>
+                                    <p:calendar id="fechaOrden" style="width: 100%; height: 34px;" value="#{ordenSuministroBean.ordenSuministro.fechaOrden}" 
+                                                pattern="dd/MM/yyyy" mask="true" showOn="button" />
+                                    <h:outputText />
+                                    <h:outputText />
+                                </b:panelGrid>
+                                <br/>
+                                <b:panelGrid colSpans="2,4,2,4">
+                                    <h:outputText value="Clave:"/>
+                                    <b:inputText style="width: 100%" value="#{ordenSuministroBean.claveInsumo}" />
+                                    <p:outputLabel for="selectArea" value="Área:" />   
+                                    <p:selectOneMenu id ="selectArea" value="#{ordenSuministroBean.idArea}" style="width: 100%; height: 34px;" 
+                                                     styleClass="" autoWidth="false" disabled="#{ordenSuministroBean.bareas}">
+                                        <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                        <f:selectItems value="#{ordenSuministroBean.listaAreas}" var="area"
+                                                       itemValue="#{area.idArea}"  itemLabel="#{area.nombreArea}"/>
+                                    </p:selectOneMenu> 
+                                </b:panelGrid>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="tablaClaves"
+                                                     actionListener="#{ordenSuministroBean.obtenerClaves}" />
+                                </div>
+                                <br/>
+                                <p:dataTable id="tablaClaves" var="contratoOrden" value="#{ordenSuministroBean.listaInsumosDisp}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                             filteredValue="#{ordenSuministroBean.listaInsumosDispFilter}"
+                                             rows="10" editable="true" editMode="cell"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} " 
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="10,15,20">
+                                    <p:column style="width:30px"> 
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Clave" class="formatoTablas" filterBy="#{contratoOrden.claveInsumo}" filterMatchMode="contains" > 
+                                        <h:outputText value="#{contratoOrden.claveInsumo}" />
+                                    </p:column>
+                                    <p:column headerText="Existencias" class="formatoTablas" filterBy="#{contratoOrden.disponible}" filterMatchMode="contains" >
+                                        <h:outputText value="#{contratoOrden.existencias}" />
+                                    </p:column>
+                                    <p:column headerText="Cantidad disponible" class="formatoTablas" filterBy="#{contratoOrden.disponible}" filterMatchMode="contains" >
+                                        <h:outputText value="#{contratoOrden.disponible}" />
+                                    </p:column>
+                                    <p:column headerText="Cantidad a solicitar" class="formatoTablas" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{contratoOrden.cantidadSuministrar}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:inputNumber decimalPlaces="0" maxValue="#{contratoOrden.disponible}" minValue="0"
+                                                               value="#{contratoOrden.cantidadSuministrar}" />
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                        <div>
+                                            <b:commandButton id="btnAgregar" value="" look="info" icon="plus" iconAlign="right" tooltip="Agregar clave"
+                                                             update="formOrden" actionListener="#{ordenSuministroBean.agregaClave(contratoOrden)}"
+                                                             rendered="#{contratoOrden.bopcion}"/>
+                                        </div>                                                                       
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{contratoOrden.descripcionInsumo}" />
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                                <p:separator/>
+                                <p:messages id="idmensajeTabla" showDetail="false" autoUpdate="true" closable="true" />
+                                <p:remoteCommand name="onCellEdit" update="tablaDetalleOrden" />
+                                <p:dataTable id="tablaDetalleOrden" var="detalleOrden" value="#{ordenSuministroBean.listaContratoOrdenDTO}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                             filteredValue="#{ordenSuministroBean.listaContratoOrdenDTOFilter}"
+                                             rowKey="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idFalloProcedimientoRcb}"
+                                             rows="10" editable="true" editMode="cell"
+                                             paginator="true" 
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="10,15,20">
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaDetalleOrden" fileName="ordenLista" />
+                                        </h:commandLink>                                
+                                    </f:facet>
+                                    <p:ajax event="cellEdit" listener="#{ordenSuministroBean.validaCampos}" oncomplete="onCellEdit()" update=":formOrden:idmensajeTabla" />
+                                    <p:column style="width:30px"> 
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="Id" class="formatoTablas" width="3%">
+                                        <h:outputText value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idFalloProcedimientoRcb}" />
+                                    </p:column>
+                                    <p:column headerText="Clave" class="formatoTablas" width="8%">
+                                        <h:outputText value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" />
+                                    </p:column>
+                                    <p:column headerText="Proveedor" class="formatoTablas" >
+                                        <p:commandButton id="movieBtn" value="Ver" type="button" />
+                                        <p:overlayPanel id="moviePanel" for="movieBtn" hideEffect="fade" dynamic="true" modal="true" style="width:400px">
+                                            <p:fieldset style="margin-bottom:20px; " >
+                                                <b:panelGrid colSpans="2,4,2,4">
+                                                    <h:outputText value="Nombre proveedor:"/>
+                                                    <b:inputText id="nomProv" value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" disabled="true" />
+                                                    <h:outputText value="R.F.C.:"/>
+                                                    <b:inputText id="rfcProv" value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.rfc}" disabled="true" />
+
+                                                    <h:outputText value="Dirección:"/>
+                                                    <b:inputText id="dirProv" value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.direccion}" disabled="true" />
+                                                    <h:outputText value="Teléfono:"/>
+                                                    <b:inputText id="telProv" value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProveedor.numero}" disabled="true" />
+                                                </b:panelGrid>
+                                            </p:fieldset>
+                                        </p:overlayPanel>
+                                    </p:column>
+                                    <p:column headerText="Contrato" class="formatoTablas" >
+                                        <p:commandButton id="contBtn" value="Ver" type="button" />
+                                        <p:overlayPanel id="contPanel" for="contBtn" hideEffect="fade" dynamic="true" modal="true" style="width:400px">
+                                            <p:fieldset style="margin-bottom:20px; " >
+                                                <b:panelGrid colSpans="2,4,2,4">
+                                                    <h:outputText value="Número Contrato"/>
+                                                    <b:inputText id="numCont" value="#{detalleOrden.contratoFalloProcedimientoRcb.idContrato.numeroContrato}" disabled="true" />
+                                                    <h:outputText value="Fecha Contrato"/>
+                                                    <h:outputText value="#{detalleOrden.contratoFalloProcedimientoRcb.idContrato.fechaContrato}" >
+                                                        <f:convertDateTime pattern="dd/MM/YYYY" />
+                                                    </h:outputText>
+                                                </b:panelGrid>
+                                            </p:fieldset>
+                                        </p:overlayPanel>
+                                    </p:column>
+                                    <p:column headerText="Cantidad contrato" class="formatoTablas" width="8%">
+                                        <h:outputText value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.cantidadModificada + detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.cantidadAgregadaConvenio}" />
+                                    </p:column>
+                                    <p:column headerText="Cantidad suministrada del contrato" class="formatoTablas" width="8%">
+                                        <h:outputText value="#{detalleOrden.detalleOrdenSuministro.cantidadSuministrada}" />
+                                    </p:column>
+                                    <p:column headerText="Disponible del contrato" class="formatoTablas" width="7%">
+                                        <h:outputText value="#{detalleOrden.detalleOrdenSuministro.totalCancelado}" />
+                                    </p:column>
+                                    <p:column headerText="Precio unitario" class="formatoTablas" width="7%">
+                                        <h:outputText value="#{detalleOrden.detalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Cantidad a suministrar" class="formatoTablas" width="8%">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{detalleOrden.detalleOrdenSuministro.cantidadSuministrar}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:inputNumber decimalPlaces="0" maxValue="#{detalleOrden.detalleOrdenSuministro.totalCancelado}" minValue="1"
+                                                               value="#{detalleOrden.detalleOrdenSuministro.cantidadSuministrar}" />
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Importe total" class="formatoTablas" width="8%">
+                                        <h:outputText value="#{detalleOrden.detalleOrdenSuministro.importe}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Fecha inicial" class="formatoTablas" width="10%">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{detalleOrden.detalleOrdenSuministro.fechaEntregaInicial}" >
+                                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:calendar id="vigInicial" mask="true" showOn="button" 
+                                                            mindate="#{detalleOrden.fechaInicialContrato}"
+                                                            maxdate="#{detalleOrden.fechaFinalContrato}"
+                                                            value="#{detalleOrden.detalleOrdenSuministro.fechaEntregaInicial}" pattern="dd/MM/yyyy" />
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Fecha final" class="formatoTablas" width="10%">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{detalleOrden.detalleOrdenSuministro.fechaEntregaFinal}" >
+                                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:calendar id="vigFinal" mask="true" showOn="button" 
+                                                            mindate="#{detalleOrden.fechaInicialContrato}"
+                                                            maxdate="#{detalleOrden.fechaFinalContrato}"
+                                                            value="#{detalleOrden.detalleOrdenSuministro.fechaEntregaFinal}" pattern="dd/MM/yyyy" />
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                        <div>
+                                            <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Quitar"
+                                                             update="formOrden" actionListener="#{ordenSuministroBean.quitarClaves(detalleOrden)}"/>
+                                        </div>                                                                       
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                            <h:panelGrid columns="1" >
+                                                <h:outputText value="#{detalleOrden.contratoFalloProcedimientoRcb.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.descripcion}" />
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                                <p:separator/>
+                                <div style="display:block; text-align:right">
+                                    <b:buttonGroup>
+                                        <b:commandButton value="Guardar" icon="floppy-disk" iconAlign="right" look="primary" 
+                                                         rendered="#{ordenSuministroBean.botonGuardar}" ajax="true" update="formDialog"
+                                                         actionListener="#{ordenSuministroBean.validaGuardado}" />
+                                        <b:commandButton value="Limpiar" look="danger" icon="remove" 
+                                                         iconAlign="right" actionListener="#{ordenSuministroBean.limpiar}" />
+                                    </b:buttonGroup>
+                                </div>
+                            </h:form>
+                            <h:form id="formDialog">
+                                <p:dialog header="Confirmación" widgetVar="dlg1" minHeight="70" modal="true">
+                                    <p:panelGrid>
+                                        <h:outputLabel value="Se generarán #{ordenSuministroBean.listaProv.size()} órdenes de suministro ¿Esta seguro de guardar la(s) orden(es) de suministro?"/>
+                                    </p:panelGrid>
+                                    <p:separator/>
+                                    <div style="display:block; text-align:right">
+                                        <b:buttonGroup>
+                                            <b:commandButton action="#{ordenSuministroBean.guardaOrden}" look="primary" 
+                                                             value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg1').hide();" />
+                                            <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg1').hide();"/>
+                                        </b:buttonGroup>
+                                    </div>
+                                </p:dialog>
+                            </h:form>
+                        </b:tab>
+                        <b:tab id="tabProc" title="Órdenes de suministro" >
+                            <br></br>
+                            <h:form id="formOrdenB">
+                                <b:panelGrid col-spans="2,4,2,4">
+                                    <h:outputText value="No. Orden"/>
+                                    <b:inputText id="numeroOrdenB" value="#{ordenSuministroBean.numeroOrden}" style="text-transform:uppercase;" />
+                                    <h:outputText value="No. Contrato"/>
+                                    <b:inputText id="numeroContratoB" value="#{ordenSuministroBean.numeroContrato}" style="text-transform:uppercase;"/>
+                                </b:panelGrid>
+                                <br></br>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="formOrdenB" >
+                                        <f:ajax listener="#{ordenSuministroBean.obtenerOrdenes}" execute="numeroOrdenB, numeroContratoB" />
+                                    </b:commandButton>
+                                </div>
+                                <p:separator/>
+                                <br></br>
+                                <p:dataTable id="tablaOrdenes" var="ordenSuministro" value="#{ordenSuministroBean.listaOrdenSuministro}"
+                                             emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                             currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                             {totalRecords}, Página: {currentPage}/{totalPages})"
+                                             rowsPerPageTemplate="10,15,20" >
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage name="images/excel.png" width="24"/>
+                                            <p:dataExporter type="xls" target="tablaOrdenes" fileName="OrdenesLista" />
+                                        </h:commandLink>                                
+                                    </f:facet>                                
+                                    <p:column headerText="Id Orden" class="formatoTablas">
+                                        <h:outputText value="#{ordenSuministro.idOrdenSuministro}" />
+                                    </p:column>
+                                    <p:column headerText="No. Orden" class="formatoTablas"> 
+                                        <h:outputText value="#{ordenSuministro.numeroOrden}" />
+                                    </p:column>
+                                    <p:column headerText="No. Contrato" class="formatoTablas">
+                                        <h:outputText value="#{ordenSuministro.idContrato.numeroContrato}" />
+                                    </p:column>
+                                    <p:column headerText="Importe total" class="formatoTablas" >
+                                        <h:outputText value="#{ordenSuministro.importe}" >
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Estatus" class="formatoTablas" >
+                                        <h:outputText value="#{ordenSuministro.idEstatus.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Tipo de orden" class="formatoTablas" >
+                                        <h:outputText value="#{ordenSuministro.preOrden == 1 ? 'Sistema' : 'Manual'}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha orden" class="formatoTablas" >
+                                        <h:outputText value="#{ordenSuministro.fechaOrden}" >
+                                            <f:convertDateTime pattern="dd/MM/YYYY" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                        <div>
+                                            <b:commandButton  ajax="true" value="" look="info" icon="search" iconAlign="right" 
+                                                              tooltip="Ver Detalle" update="tablaOrdenes"
+                                                              action="#{ordenSuministroBean.verDetalleOrden}" >
+                                                <f:setPropertyActionListener value="#{ordenSuministro}" target="#{ordenSuministroBean.ordenSuministro}"/>
+                                            </b:commandButton>
+                                        </div>                                                                       
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form> 
+                        </b:tab>
+                    </b:tabView>
+                    <br/>
+                    <p:messages id="idmessages" showDetail="false" autoUpdate="true" closable="true" rendered="#{ordenSuministroBean.mensajeBorrar}" />
+                </div>
+            </c:if>
+            <c:if test="${!(loginBean.accesos.generacionPreOrdenSuministro || loginBean.accesos.ordenesSuministro)}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

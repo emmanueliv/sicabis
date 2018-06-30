@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido">
+                <h2>Rescisiones</h2>
+                <p:separator />
+                <b:tabView activeIndex="#{perfilesBean.tabActivo}" styleClass="DataTable" >
+                    <b:tab title="Nuevo">
+                        <h:form id="nuevo">
+                            <br></br>
+                            <p:messages id="idmessages" rendered="#{verRescisionBean.verMensaje}" showDetail="false" autoUpdate="true" closable="true"  />
+                            <b:panelGrid col-spans="2,10">
+                                <h:outputLabel value="Orden Suministro"/>
+                                <b:inputText style="width: 38%;" value="#{verRescisionBean.criterioBusqueda}" />
+                            </b:panelGrid>
+                            <div style="display:block; text-align:right">
+                                <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" update="nuevo"  actionListener="#{verRescisionBean.selecciona()}"></b:commandButton>
+                            </div>
+                            <br></br>
+                            <p:dataTable id="canjePermuta" emptyMessage="No existen registros" rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                         {RowsPerPageDropdown} {Exporters}"
+                                         currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                         {totalRecords}, Página: {currentPage}/{totalPages})"
+                                         rowsPerPageTemplate="5,10,15" 
+                                         var="reco" value="#{verRescisionBean.cancelacionRescisionList}" >
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink immediate="true">
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="canjePermuta" fileName="OrdenSuministro" />
+                                    </h:commandLink>
+                                </f:facet>
+                                <p:column headerText="Clave">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.clave}" />
+                                </p:column>
+                                <p:column headerText="No. Orden">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}" />
+                                </p:column>
+                                <p:column headerText="Importe total">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.cantidadSuministrar * reco.idDetalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario}" />
+                                </p:column>
+                                <p:column headerText="Proveedor">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" />
+                                </p:column>
+
+                                <p:column headerText="Fecha de inicio de entrega">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.fechaEntregaInicial}" >
+                                        <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Fecha final de entrega">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.fechaEntregaFinal}" >
+                                        <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Contrato">
+                                    <h:outputText value="#{reco.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                                </p:column>
+                                <p:column headerText="Opciones">
+                                    <b:commandButton  ajax="true" style="margin-left: 50%" icon="glyphicon-plus" icon-align="right" look="primary" value="" tooltip="Ver detalle"  id="contestarId" styleClass="primary" action="#{verRescisionBean.verDettaleCncelacionRescision()}" >   
+                                        <f:setPropertyActionListener value="#{reco}" target="#{verRescisionBean.rescisiones}"/>
+                                    </b:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:separator/>
+                        </h:form>    
+                    </b:tab>
+                </b:tabView> 
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

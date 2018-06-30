@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.contratos}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Cancelación y resciciónes" url="cancelacionRescision.xhtml" />
+                            <p:menuitem value="Detalle cancelación y resciciónes" url="detalleCancelacionRescision.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Detalle cancelación y rescisión</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <br></br>
+                    <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" />
+                    <h:form id="formCancRes">
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Id Contrato:"/>
+                            <b:inputText disabled="true" id="idContrato" value="#{detalleCancelacionRecisionBean.contratos.idContrato}" />
+                            <h:outputText value="No. Contrato:"/>
+                            <b:inputText id="numContrato" value="#{detalleCancelacionRecisionBean.numContrato}" disabled="true" />
+                        </b:panelGrid>
+
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="Condición de pago:"/>
+                            <b:inputText id="condPago" value="#{detalleCancelacionRecisionBean.contratos.condicionPago}" disabled="true" />
+                            <h:outputLabel value="Vigencia inicial:"/>
+                            <p:calendar id="vigInicial" style="width: 100%; height: 34px;" mask="true" showOn="button" disabled="true"
+                                        value="#{detalleCancelacionRecisionBean.contratos.vigenciaInicial}" pattern="dd/MM/yyyy" />
+                            <h:outputLabel value="Vigencia final:"/>
+                            <p:calendar id="vigFinal" style="width: 100%; height: 34px;" mask="true" showOn="button" disabled="true"
+                                        value="#{detalleCancelacionRecisionBean.contratos.vigenciaFinal}" pattern="dd/MM/yyyy" />
+                            <h:outputText value="Importe:"/>
+                            <b:inputText id="importe" value="#{detalleCancelacionRecisionBean.contratos.importe}" disabled="true" >
+                                <f:convertNumber type="currency"  />
+                            </b:inputText>
+                            <h:outputText value="Estatus del contrato:" rendered="#{detalleCancelacionRecisionBean.contratos.idEstatus.idEstatus == 58}"/>
+                            <b:inputText id="estatusContrato" value="Rescindido" disabled="true" rendered="#{detalleCancelacionRecisionBean.contratos.idEstatus.idEstatus == 58}" />
+                        </b:panelGrid>
+                        <br></br>
+                        <p:remoteCommand name="onCellEdit" update="tablaCancelaciones, idmensaje" />
+                        <p:dataTable id="tablaCancelaciones" var="can" value="#{detalleCancelacionRecisionBean.cancelacionRescisionList}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="No. orden suministro" class="formatoTablas"> 
+                                <h:outputText value="#{can.idOrdenSuministro.numeroOrden}" />
+                            </p:column>
+                            <p:column headerText="Cantidad programada" class="formatoTablas"> 
+                                <h:outputText value="#{can.cantidadSuministrar}" />
+                            </p:column>
+                            <p:column headerText="Cantidad entregada" class="formatoTablas"> 
+                                <h:outputText value="#{can.cantidadSuministrada}" />
+                            </p:column>
+                            <p:column headerText="Cantidad pendiente" class="formatoTablas"> 
+                                <h:outputText value="#{can.cantidadSuministrar - can.cantidadSuministrada}" />
+                            </p:column>
+                            <p:column headerText="Procedimiento" class="formatoTablas"> 
+                                <h:outputText value="#{can.idFalloProcedimientoRcb.idProcedimientoRcb.idProcedimiento.numeroProcedimiento}" />
+                            </p:column>
+                            <p:column headerText="Fecha de inicio de entrega">
+                                <h:outputText value="#{can.fechaEntregaInicial}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha final de entrega">
+                                <h:outputText value="#{can.fechaEntregaFinal}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estatus" class="formatoTablas"> 
+                                <h:outputText value="#{can.usuarioAlta}" />
+                            </p:column>
+                            <p:column headerText="Opciones" class="formatoTablas" width="7%" >
+                                <div>
+                                    <b:commandButton value="" look="primary" icon="check" iconAlign="right" 
+                                                     tooltip="Iniciar proceso de cancelación" 
+                                                     update="tablaCancelaciones "
+                                                     actionListener="#{detalleCancelacionRecisionBean.actualizarPosibleCancelacion(can)}"
+                                                     oncomplete="onCellEdit()" ajax="true" process="@this"
+                                                     rendered="#{can.usuarioBaja.length() == 12}" >
+                                    </b:commandButton>
+                                    <b:commandButton value="" look="primary" icon="check" iconAlign="right" 
+                                                     update="tablaCancelaciones"
+                                                     tooltip="Cancelar" 
+                                                     actionListener="#{detalleCancelacionRecisionBean.actualizarCancelacion(can)}"
+                                                     oncomplete="onCellEdit()" ajax="true" process="@this"
+                                                     rendered="#{can.idOrdenSuministro.idEstatus.idEstatus == 75}" >
+                                    </b:commandButton>
+                                </div>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{can.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <br></br>
+                        <b:commandButton  value="Iniciar proceso de rescisión" look="primary" icon="check" 
+                                          iconAlign="left" tooltip="Posible rescisión" 
+                                          class="pull-right"
+                                          update="formCancRes tablaCancelaciones"
+                                          actionListener="#{detalleCancelacionRecisionBean.actualizarPosibleRescision()}" ajax="true"
+                                          rendered="#{detalleCancelacionRecisionBean.posibleRescion == 1}" >
+                        </b:commandButton>
+                        <b:commandButton  value="Rescindir" look="primary" icon="check" 
+                                          iconAlign="left" tooltip="Rescisión" 
+                                          class="pull-right"
+                                          update="formCancRes tablaCancelaciones"
+                                          actionListener="#{detalleCancelacionRecisionBean.actualizarRescision()}" ajax="true"
+                                          rendered="#{detalleCancelacionRecisionBean.rescision == 1}" >
+                        </b:commandButton>
+                    </h:form>
+
+                </div>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

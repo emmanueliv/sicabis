@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.procedimientos}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Procedimientos" url="procedimiento.xhtml" />
+                            <p:menuitem value="Detalle Procedimientos" url="detalleProcedimiento.xhtml" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h2>Procedimientos</h2>
+                    <br></br>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusSpinner" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="images/loader.gif" />
+                    </p:dialog>
+                    <p:messages id="idmensaje" showDetail="false" autoUpdate="true" closable="true" rendered="#{detalleProcedimientoBean.messageGuardar}" />
+                    <h:form id="formProc">
+                        <b:panelGrid col-spans="2,10">
+                            <h:outputText value="Tipo de compra:"/>
+                            <p:selectOneMenu disabled="#{detalleProcedimientoBean.bTipoCompra}" style="width: 38%; height: 34px;" id="selectTipoCompra" 
+                                             value="#{detalleProcedimientoBean.tipoCompra}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaTipoCompra}" var="tipoCompra"
+                                               itemValue="#{tipoCompra.idTipoCompra}"  itemLabel="#{tipoCompra.nombre}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <div style="display:block; text-align:right">
+                            <p:commandButton value="Agregar claves" icon="fa fa-floppy-o" action="#{detalleProcedimientoBean.abredialogo}"
+                                             update=":formDialog" styleClass="btn btn-info" />
+                        </div>
+                        <br></br>
+                        <p:dataTable id="tablaRcbInsumo" var="listaProcRcb" value="#{detalleProcedimientoBean.listaProcRcb}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"
+                                     filteredValue="#{detalleProcedimientoBean.listaProcRcbFilter}"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaRcbInsumo" fileName="rcbDetalle" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column style="width:30px"> 
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="RCB" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.idRcb.idRcb}" filterMatchMode="contains">
+                                <h:outputText value="#{listaProcRcb.idRcbInsumos.idRcb.idRcb}" />
+                            </p:column>
+                            <p:column headerText="Renglón" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.idInsumo.idInsumo}" filterMatchMode="contains"> 
+                                <h:outputText value="#{listaProcRcb.idRcbInsumos.idInsumo.idInsumo}" />
+                            </p:column>
+                            <p:column headerText="Clave" class="formatoTablas" filterBy="#{listaProcRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains">
+                                <h:outputText value="#{listaProcRcb.idRcbInsumos.claveInsumo}" />
+                            </p:column>
+                            <p:column headerText="Descripción" class="formatoTablas" >
+                                <h:outputText value="#{listaProcRcb.idRcbInsumos.descripcionInsumo.substring(0,20)}" />
+                            </p:column>
+                            <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{listaProcRcb.cantidadPiezas}" filterMatchMode="contains">
+                                <h:outputText value="#{listaProcRcb.cantidadPiezas}" />
+                            </p:column>
+                            <p:column headerText="Tipo de compra" class="formatoTablas" >
+                                <h:outputText value="#{listaProcRcb.idProcedimiento.idTipoCompra.nombre}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{listaProcRcb.precioUnitario}" filterMatchMode="contains">
+                                <h:outputText value="#{listaProcRcb.precioUnitario}" >
+                                    <f:convertNumber type="currency"  />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Precio máximo de referencia" class="formatoTablas">
+                                <h:outputText value="#{listaProcRcb.precioUnitario}" >
+                                    <f:convertNumber type="currency"  />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Importe total" class="formatoTablas" filterBy="#{listaProcRcb.importe}" filterMatchMode="contains">
+                                <h:outputText value="#{listaProcRcb.importe}" >
+                                    <f:convertNumber type="currency"  />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center"> 
+                                <div>
+                                    <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Quitar"
+                                                     update="formProc" actionListener="#{detalleProcedimientoBean.quitarClaves(listaProcRcb)}" 
+                                                     rendered="#{detalleProcedimientoBean.bcompleta and !loginBean.accesos.procedimientosC}"/>
+                                    <b:commandButton value=""
+                                                     tooltip="Ver Detalle Adjudicacion" 
+                                                     look="info" 
+                                                     icon="search" 
+                                                     iconAlign="right" 
+                                                     action="#{detalleProcedimientoBean.irRcbDetalleAdjudicacion(listaProcRcb.idRcbInsumos.idRcb.idRcb)}" 
+                                                     process="@this" />
+                                </div>                                                                       
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{listaProcRcb.idRcbInsumos.descripcionInsumo}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <br></br>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="ID del procedimiento:"/>
+                            <b:inputText disabled="true" id="idProc" value="#{detalleProcedimientoBean.procedimientos.idProcedimiento}" />
+                            <h:outputText value="Estatus:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectEstatus" disabled="#{!detalleProcedimientoBean.bcompleta}"
+                                             value="#{detalleProcedimientoBean.idEstatus}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaEstatusProc}" var="estatus"
+                                               itemValue="#{estatus.idEstatus}"  itemLabel="#{estatus.nombre}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputText value="No. procedimiento:"/>
+                            <b:inputText id="numeroProc" value="#{detalleProcedimientoBean.procedimientos.numeroProcedimiento}" 
+                                         update="idmensaje" disabled="#{!detalleProcedimientoBean.bcompleta}" >
+                                <f:ajax event="blur" listener="#{detalleProcedimientoBean.existeNumeroProcedimiento()}" />
+                            </b:inputText>
+                            <h:outputText value="Clasificación del procedimiento:"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectClasificacion" disabled="#{!detalleProcedimientoBean.bcompleta}"
+                                             value="#{detalleProcedimientoBean.idClasificacionProcedimiento}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaClasificacionProc}" var="clasificacion"
+                                               itemValue="#{clasificacion.idClasificacionProcedimiento}"  itemLabel="#{clasificacion.descripcion}"/>
+                            </p:selectOneMenu>
+                            <h:outputLabel value="Fecha del procedimiento"/>
+                            <p:calendar id="fechaProc" style="width: 100%; height: 34px;" disabled="#{!detalleProcedimientoBean.bcompleta}" 
+                                        value="#{detalleProcedimientoBean.procedimientos.fechaProcedimiento}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value="Importe del Procedimiento"/>
+                            <b:inputText style="width: 100%;" disabled="true" id="importeProc" 
+                                         value="#{detalleProcedimientoBean.importeTotal}">
+                                <f:convertNumber type="currency"  />
+                            </b:inputText>
+                            <h:outputLabel value="Tipo del procedimiento"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectTipo" disabled="#{!detalleProcedimientoBean.bcompleta}"
+                                             value="#{detalleProcedimientoBean.idTipoProcedimiento}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaTipoProc}" var="tipo"
+                                               itemValue="#{tipo.idTipoProcedimiento}"  itemLabel="#{tipo.descripcion}"/>
+                            </p:selectOneMenu>
+                            <h:outputLabel value="Carácter del procedimiento"/>
+                            <p:selectOneMenu style="width: 100%; height: 34px;" id ="selectCaracter" disabled="#{!detalleProcedimientoBean.bcompleta}"
+                                             value="#{detalleProcedimientoBean.idCaracterProcedimiento}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaCaracterProc}" var="caracter"
+                                               itemValue="#{caracter.idCaracterProcedimiento}"  itemLabel="#{caracter.descripcion}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br></br>
+                        <b:panelGrid col-spans="12" rendered="#{!detalleProcedimientoBean.bcompleta}" >
+                            <h3>Fechas convocatorias.</h3>
+                        </b:panelGrid>
+                        <br></br>
+                        <b:panelGrid colSpans="2,4,2,4" rendered="#{!detalleProcedimientoBean.bcompleta}" >
+                            <h:outputLabel value="Fecha de elaboración de convocatoria"/>
+                            <p:calendar id="fechaElaCon" style="width: 100%; height: 34px;"  
+                                        value="#{detalleProcedimientoBean.procedimientos.elaboracionConvocatoria}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value="Fecha de publicación de convocatoria"/>
+                            <p:calendar id="fechaPubCon" style="width: 100%; height: 34px;"  
+                                        value="#{detalleProcedimientoBean.procedimientos.publicacionConvocatoria}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value="Fecha de invitación a cuando menos 3 personas"/>
+                            <p:calendar id="fechaInv" style="width: 100%; height: 34px;"
+                                        value="#{detalleProcedimientoBean.procedimientos.invitacion3Per}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value="Fecha de inicio junta aclaraciones a la convocatoria"/>
+                            <p:calendar id="fechaIniCon" style="width: 100%; height: 34px;"  
+                                        value="#{detalleProcedimientoBean.procedimientos.juntaAclaracionesConvocatoria}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value="Fecha de conclusión junta aclaraciones a la convocatoria"/>
+                            <p:calendar id="fechaConCon" style="width: 100%; height: 34px;" 
+                                        value="#{detalleProcedimientoBean.procedimientos.juntaConclusionAclaracionesConvocatoria}" pattern="dd/MM/yyyy" mask="true" showOn="button"  />
+                            <h:outputLabel value=""/>
+                            <h:outputLabel value=""/>
+                        </b:panelGrid>
+                        <br></br>
+                        <b:panelGrid col-spans="12" rendered="#{!detalleProcedimientoBean.bcompleta}" >
+                            <h3>Carga de archivos</h3>
+                        </b:panelGrid>
+                        <br></br>
+                        <b:panelGrid col-spans="2,10" rendered="#{!detalleProcedimientoBean.bcompleta}" >
+                            <h:outputText value="Tipo de documento:" />
+                            <p:selectOneMenu style="width: 38%; height: 34px;" id="selectTipoDocs" 
+                                             value="#{detalleProcedimientoBean.idTipoDocumento}" >
+                                <f:selectItem itemValue="-1" itemLabel="Selecciona ..." />
+                                <f:selectItems value="#{detalleProcedimientoBean.listaTipoDocs}" var="tipoDocs" 
+                                               itemValue="#{tipoDocs.idTipoDocumento}"  itemLabel="#{tipoDocs.nombre}"/>
+                                <p:ajax event="change" listener="#{detalleProcedimientoBean.cambiaTipoDoc}"/>
+                            </p:selectOneMenu>
+                        </b:panelGrid>
+                        <br></br>
+                        <p:fileUpload fileUploadListener="#{detalleProcedimientoBean.guardarArchivos}" mode="advanced" 
+                                      dragDropSupport="true" process="@this, selectTipoDocs tablaRepoDocs"
+                                      uploadLabel="Guardar archivo(s)" label="Selecciona archivo(s)" cancelLabel="Borrar archivo(s)" 
+                                      update="selectTipoDocs tablaRepoDocs"
+                                      multiple="false" rendered="#{!detalleProcedimientoBean.bcompleta and !loginBean.esConsulta}" />
+
+                        <br></br>
+                        <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{detalleProcedimientoBean.listaRepoDocsDto}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}" rendered="#{!detalleProcedimientoBean.bcompleta}" >                                
+                            <p:column headerText="Nombre del archivo" class="formatoTablas">
+                                <h:outputText value="#{listaRepoDocs.nombre}" />
+                            </p:column>
+                            <p:column headerText="Tipo de documento" class="formatoTablas">
+                                <h:outputText value="#{listaRepoDocs.idTipoDocumento.nombre}" />
+                            </p:column>
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                 look="success" icon="download" iconAlign="right">
+                                    <p:fileDownload value="#{listaRepoDocs.file}" />
+                                </b:commandButton>
+                                <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar" 
+                                                 rendered="#{!loginBean.esConsulta}" update="tablaRepoDocs"
+                                                 actionListener="#{detalleProcedimientoBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                </b:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:separator/>
+                        <div style="display:block; text-align:right">
+                            <b:buttonGroup>
+                                <b:commandButton action="#{detalleProcedimientoBean.validarGuardado()}" look="primary" 
+                                                 rendered="#{detalleProcedimientoBean.bcompleta and !loginBean.accesos.procedimientosC}"
+                                                 value="Actualizar" icon="floppy-disk" iconAlign="right"
+                                                 oncomplete="PF('dlg1').hide();"  update="formDialog" />
+                                <b:commandButton action="#{detalleProcedimientoBean.actualizarCamposConvocatoria}" look="primary" 
+                                                 rendered="#{!detalleProcedimientoBean.bcompleta and !loginBean.accesos.procedimientosC}"
+                                                 value="Actualizar Fechas" icon="floppy-disk" iconAlign="right"/>
+                            </b:buttonGroup>
+                        </div>
+                        
+                    </h:form>
+                    <h:form id="formDialog">
+                        <p:dialog header="Confirmación" widgetVar="dlg1" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea guardar el procedimiento con estatus seguimiento? Ya no podrá editarlo después"/>
+                            </p:panelGrid>
+                            <b:buttonGroup>
+                                <b:commandButton action="#{detalleProcedimientoBean.guardarActualizarProcedimiento}" look="primary" 
+                                                 value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg1').hide();" />
+                                <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg1').hide();"/>
+                            </b:buttonGroup>
+                        </p:dialog>
+                        <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                            </p:panelGrid>
+                            <b:buttonGroup>
+                                <b:commandButton action="#{detalleProcedimientoBean.borrarArchivo}" look="primary" value="Si" icon="check" 
+                                                 iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                            </b:buttonGroup>
+                        </p:dialog>
+                        <p:dialog id="dlg3" header="Agregar claves" widgetVar="dlg3" height="500" width="95%" minHeight="70" modal="true">
+                            <br></br>
+                            <b:panelGrid colSpans="2,10">
+                                <h:outputText value="RCB:"/>
+                                <b:inputText style="width: 35%;text-transform:uppercase;" value="#{detalleProcedimientoBean.numeroRCB}"/>
+                            </b:panelGrid>
+                            <div style="display:block; text-align:right">
+                                <b:commandButton value="Buscar" look="info" icon="search" iconAlign="right" 
+                                                 actionListener="#{detalleProcedimientoBean.obtenerClaves}" update="tablaRcbInsumo2" />
+                            </div>
+                            <p:separator/>
+                            <br></br>
+                            <p:dataTable id="tablaRcbInsumo2" var="rcbInsumo" value="#{detalleProcedimientoBean.listaRcbInsumosA}"
+                                         selection="#{detalleProcedimientoBean.listaRcbInsumosSelectA}" rowKey="#{rcbInsumo.idRcbInsumos}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                         filteredValue="#{detalleProcedimientoBean.listaRcbInsumosFilterA}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                                         rowsPerPageTemplate="10,15,20">
+                                <p:column style="width:30px"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                                <p:column headerText="ID" class="formatoTablas" filterBy="#{rcbInsumo.idInsumo.idInsumo}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{rcbInsumo.idInsumo.idInsumo}" />
+                                </p:column>
+                                <p:column headerText="Clave" class="formatoTablas" filterBy="#{rcbInsumo.claveInsumo}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{rcbInsumo.claveInsumo}" />
+                                </p:column>
+                                <p:column headerText="Descripción" class="formatoTablas"> 
+                                    <h:outputText value="#{rcbInsumo.descripcionInsumo.substring(0,20)}" />
+                                </p:column>
+                                <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{rcbInsumo.cantidadPiezas}" filterMatchMode="contains" >
+                                    <h:outputText value="#{rcbInsumo.cantidadPiezas}" />
+                                </p:column>
+                                <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{rcbInsumo.precioUnitario}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{rcbInsumo.precioUnitario}" >
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Importe total" class="formatoTablas" filterBy="#{rcbInsumo.importe}" filterMatchMode="contains" >
+                                    <h:outputText value="#{rcbInsumo.importe}" >
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:rowExpansion >
+                                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{rcbInsumo.descripcionInsumo}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                            <br></br>
+                            <h:outputText value="Listado de claves en procedimiento y desiertas." />
+                            <p:dataTable id="tablaProcRcb" var="procRcb" value="#{detalleProcedimientoBean.listaProcRcbA}"
+                                         selection="#{detalleProcedimientoBean.listaProcRcbSelectA}" rowKey="#{procRcb.idRcbInsumos.idRcbInsumos}"
+                                         emptyMessage="#{loginBean.mensajeTablaVacia}" 
+                                         filteredValue="#{detalleProcedimientoBean.listaProcRcbFilterA}"
+                                         rows="10"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "
+                                         rowsPerPageTemplate="10,15,20">
+                                <p:column style="width:30px"> 
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                                <p:column headerText="ID" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.idInsumo.idInsumo}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{procRcb.idRcbInsumos.idInsumo.idInsumo}" />
+                                </p:column>
+                                <p:column headerText="Clave" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.claveInsumo}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{procRcb.idRcbInsumos.claveInsumo}" />
+                                </p:column>
+                                <p:column headerText="Descripción" class="formatoTablas"> 
+                                    <h:outputText value="#{procRcb.idRcbInsumos.descripcionInsumo.substring(0,20)}" />
+                                </p:column>
+                                <p:column headerText="Cantidad" class="formatoTablas" filterBy="#{procRcb.cantidadPiezas}" filterMatchMode="contains" >
+                                    <h:outputText value="#{procRcb.cantidadPiezas}" />
+                                </p:column>
+                                <p:column headerText="Precio unitario" class="formatoTablas" filterBy="#{rcbInsumo.precioUnitario}" filterMatchMode="contains" > 
+                                    <h:outputText value="#{procRcb.idRcbInsumos.precioUnitario}" >
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Importe total" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                                    <h:outputText value="#{procRcb.idRcbInsumos.importe}" >
+                                        <f:convertNumber type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="No.Procedimiento" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                                    <h:outputText value="#{procRcb.idProcedimiento.numeroProcedimiento}" />
+                                </p:column>
+                                <p:column headerText="En procedimiento / Desierta / No Desierta" class="formatoTablas" filterBy="#{procRcb.idRcbInsumos.importe}" filterMatchMode="contains" >
+                                    <h:outputText value="#{(procRcb.desierta == 0 and procRcb.desiertaParcial == 0)? 'En procedimiento' : (procRcb.desierta == 1 ? 'Desierta' : 'Desierta Parcial' ) }" />
+                                </p:column>
+                                <p:rowExpansion >
+                                    <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                        <h:panelGrid columns="1" >
+                                            <h:outputText value="#{procRcb.idRcbInsumos.descripcionInsumo}" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                            <p:separator/>
+                            <div style="display:block; text-align:right">
+                                <b:buttonGroup>
+                                    <b:commandButton value="Aceptar" look="primary" icon="ok" iconAlign="right" update="formProc"
+                                                     actionListener="#{detalleProcedimientoBean.agregarClaves}" />
+                                </b:buttonGroup>
+                            </div>
+                        </p:dialog>
+                    </h:form>
+                    <script type="text/javascript">
+                        function start() {
+                            PF('statusSpinner').show();
+                        }
+
+                        function stop() {
+                            PF('statusSpinner').hide();
+                        }
+                    </script>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.procedimientos}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

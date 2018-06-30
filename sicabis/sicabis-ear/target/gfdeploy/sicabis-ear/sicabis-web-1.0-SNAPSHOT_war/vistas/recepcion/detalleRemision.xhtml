@@ -1,0 +1,378 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <c:if test="${loginBean.accesos.recepcionDocumental}">
+                <div id="contenido">
+                    <h:form id="breadCrumb">
+                        <p:breadCrumb>
+                            <p:menuitem value="Inicio" url="../menuInicio.xhtml" />
+                            <p:menuitem value="Recepción Documental" url="recepcionDocumental.xhtml"/>
+                            <p:menuitem value="Remisiones" disabled="true"/>
+                        </p:breadCrumb>
+                    </h:form>
+                    <h:form id="nuevo"> 
+                        <h2>Remisiones</h2>
+                        <b:panelGrid colSpans="2,4,2,4">
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Registro de control"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.registroControl}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Fecha de remisión"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.fechaRemision}"  >
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </b:inputText>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Proveedor"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.proveedor}"/>
+                        </b:panelGrid>
+                        <b:panelGrid colSpans="2,4,2,4" >
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Plazo de entrega"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.fechaEntregaInicial}">
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </b:inputText>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Al"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.fechaEnetregaFinal}">
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </b:inputText>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Lugar de entrega"/>
+                            <b:inputTextarea disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.lugarEntrega}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="R.F.C."/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.rfc}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Partida presupuestal"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.partidaPresupuestal}"/>
+                            <h:outputLabel  rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Grupo"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.grupo}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="Estatus"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verRecepcionDocumental}" value="#{detalleRemisionBean.estatus}"/>
+                        </b:panelGrid>
+                        <h4>Clave</h4>
+                        <p:dataTable rendered="#{detalleRemisionBean.verRecepcionDocumental}" id="insumos" emptyMessage="No existen registros"  rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="5,10,15" var="insumosR" value="#{detalleRemisionBean.remisionList}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="insumos" fileName="claves" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column headerText="Descripción" style="width:30px">
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Renglón">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idInsumo.idInsumo}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}"/>
+                                <h:outputText value="#{insumosR.idCanjePermuta.idInsumoCanje.idInsumo}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}"/>
+                            </p:column>
+                            <p:column headerText="Clave">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.claveInsumo}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}"/>
+                                <h:outputText value="#{insumosR.idCanjePermuta.idInsumoCanje.clave}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}"/>
+                            </p:column>
+                            <p:column headerText="Unidad" rendered="#{!detalleRemisionBean.verUnidad}">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.idUnidadPieza.descripcion}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}"/>
+                                <h:outputText value="#{insumosR.idCanjePermuta.idInsumoCanje.idUnidadPieza.descripcion}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}"/>
+                            </p:column>
+                            <p:column headerText="Unidad" rendered="#{detalleRemisionBean.verUnidad}">
+                                <h:outputText value="#{insumosR.unidadPiezaConvenio}" />
+                            </p:column>
+                            <p:column headerText="Precio unitario">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}">
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                                <h:outputText value="#{insumosR.idCanjePermuta.precioCanjePermuta}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}">
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.cantidadSuministrar}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}">
+                                    <f:convertNumber pattern="###,###,###" />
+                                </h:outputText>
+                                <h:outputText value="#{insumosR.idCanjePermuta.cantidadInsumoCanje}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}">
+                                    <f:convertNumber pattern="###,###,###" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Importe">
+                                <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.precioUnitario * insumosR.idDetalleOrdenSuministro.cantidadSuministrar}" 
+                                              rendered="#{insumosR.idCanjePermuta == null}">
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                                <h:outputText value="#{insumosR.idCanjePermuta.precioCanjePermuta * insumosR.idCanjePermuta.cantidadInsumoCanje}" 
+                                              rendered="#{insumosR.idCanjePermuta != null}">
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panel id="basic" header="Descripción completa" style="margin-bottom:20px;width: 100%">
+                                    <h:panelGrid columns="1" >
+                                        <h:outputText value="#{insumosR.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idRcbInsumos.descripcionInsumo}" 
+                                                      rendered="#{insumosR.idCanjePermuta == null}"/>
+                                        <h:outputText value="#{insumosR.idCanjePermuta.idInsumoCanje.descripcion}" 
+                                                      rendered="#{insumosR.idCanjePermuta != null}"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <h4>Lotes de la remisión</h4>
+                        <p:dataTable rendered="#{detalleRemisionBean.verRecepcionDocumental}" id="lotes" emptyMessage="No existen registros"  rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="5,10,15" var="lote" value="#{detalleRemisionBean.loteList}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="lotes" fileName="Lotes" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column  headerText="Lote">
+                                <h:outputText value="#{lote.lote}" />
+                            </p:column>
+                            <p:column  headerText="Código de barras">
+                                <h:outputText value="#{lote.codigoBarrasLote}" />
+                            </p:column>
+                            <p:column  headerText="Cantidad de lotes">
+                                <h:outputText value="#{lote.cantidadLote}" >
+                                    <f:convertNumber pattern="###,###,###" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Fecha de fabricación">
+                                <h:outputText value="#{lote.fechaFabricacion}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Fecha de caducidad">
+                                <h:outputText value="#{lote.fechaCaducidad}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Cantidad de muestra recibida"  rendered="#{detalleRemisionBean.verControlCalidadAndBienes}">
+                                <h:outputText value="#{lote.cantidadRecibidaControlCalidad}" >
+                                    <f:convertNumber pattern="###,###,###" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <p:panelGrid rendered="#{!detalleRemisionBean.verCanjes}" >
+                            <h4>Orden de Suministro</h4>
+                        </p:panelGrid>
+                        <p:dataTable rendered="#{detalleRemisionBean.verRecepcionDocumental and !detalleRemisionBean.verCanjes}" id="orden" emptyMessage="No existen registros"  rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="5,10,15" var="remision" value="#{detalleRemisionBean.remisionList}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="orden" fileName="Orden" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column  headerText="Id">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idOrdenSuministro.idOrdenSuministro}" />
+                            </p:column>
+                            <p:column  headerText="No.orden">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idOrdenSuministro.numeroOrden}" />
+                            </p:column>
+                            <p:column  headerText="Fecha de la orden">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idOrdenSuministro.fechaOrden}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Proveedor">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProveedor.nombreProveedor}" />
+                            </p:column>
+                            <p:column  headerText="Fecha de entrega inicial">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.fechaEntregaInicial}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Fecha de entrega final">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.fechaEntregaFinal}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  headerText="Contrato">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idOrdenSuministro.idContrato.numeroContrato}" />
+                            </p:column>
+                            <p:column  headerText="Procedimiento">
+                                <h:outputText value="#{remision.idDetalleOrdenSuministro.idFalloProcedimientoRcb.idProcedimientoRcb.idProcedimiento.numeroProcedimiento}" />
+                            </p:column>
+                            <p:column  headerText="Estatus">
+                                <h:outputText value="#{remision.idEstatus.nombre}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:panelGrid rendered="#{detalleRemisionBean.verCanjes}" >
+                            <h4>Canjes / Permutas</h4>
+                        </p:panelGrid>
+                        <p:dataTable id="tablaCanjePermuta" emptyMessage="#{loginBean.mensajeTablaVacia}" rows="10"
+                                     paginator="true" rendered="#{detalleRemisionBean.verCanjes}"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="5,10,15" 
+                                     var="canjePermuta" value="#{detalleRemisionBean.listaCanjes}" >
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaCanjePermuta" fileName="CanjePermuta" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column colspan="5" headerText="Entregado" />
+                                    <p:column colspan="5" headerText="Recibido" />
+                                    <p:column rowspan="2" headerText="Canje / Permuta" />
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="Clave" />
+                                    <p:column headerText="Cantidad" />
+                                    <p:column headerText="Lote" />
+                                    <p:column headerText="Precio" />
+                                    <p:column headerText="Fecha de caducidad" />
+
+                                    <p:column headerText="Clave" />
+                                    <p:column headerText="Cantidad" />
+                                    <p:column headerText="Lote" />
+                                    <p:column headerText="Precio" />
+                                    <p:column headerText="Fecha de caducidad" />
+                                </p:row>
+                            </p:columnGroup> 
+
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.idInsumo.clave}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.cantidadInsumoOriginal}" >
+                                    <f:convertNumber pattern="###,###,###" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.lote}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.precio}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.fechaCaducidad}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.idInsumoCanje.clave}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.cantidadInsumoCanje}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.loteEntregado}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.precioCanjePermuta}" >
+                                    <f:convertNumber type="currency" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.fechaCaducidadCanje}" >
+                                    <f:convertDateTime pattern="dd/MM/YYYY" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{canjePermuta.tipoCanje}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br></br>
+                        <b:panelGrid  colSpans="2,4,2,4">
+                            <h:outputLabel rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="Número del fabricante"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="#{detalleRemisionBean.numeroFabricante}"/>
+                            <h:outputLabel  rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="Fabricante"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="#{detalleRemisionBean.fabricante}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="Registro sanitario"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="#{detalleRemisionBean.registroSanitario}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="Denominación"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="#{detalleRemisionBean.denominacion}"/>
+                            <h:outputLabel rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="Presentación comercial"/>
+                            <b:inputText disabled="true" rendered="#{detalleRemisionBean.verControlCalidadAndBienes}" value="#{detalleRemisionBean.presentacion}"/>
+                        </b:panelGrid>
+                        <br></br>
+                        <div style="display:block; text-align:right">
+                            <b:commandButton look="primary" value="Imprimir remisión" icon="print" iconAlign="right" 
+                                             actionListener="#{detalleRemisionBean.descargarRemision}"
+                                             rendered="#{!detalleRemisionBean.bcanjes}"/>
+                            <b:commandButton look="primary" value="Imprimir canje" icon="print" iconAlign="right" 
+                                             actionListener="#{detalleRemisionBean.descargarRemision}" 
+                                             rendered="#{detalleRemisionBean.bcanjes}">
+                                <p:fileDownload value="#{detalleRemisionBean.file}" />
+                            </b:commandButton>
+                        </div>
+                        <br></br>
+                        <p:separator/>
+                        <h3>Archivos</h3>
+                        <p:dataTable id="tablaRepoDocs" var="listaRepoDocs" value="#{detalleRemisionBean.listaRepoDocsDto}"
+                                     emptyMessage="#{loginBean.mensajeTablaVacia}"  >                                
+                            <p:column headerText="Nombre del archivo" class="formatoTablas">
+                                <h:outputText value="#{listaRepoDocs.nombre}" />
+                            </p:column>
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center">
+                                <b:commandButton value="" tooltip="Descargar" onclick="PrimeFaces.monitorDownload(start, stop);" look="success" icon="download" iconAlign="right">
+                                    <p:fileDownload value="#{listaRepoDocs.file}" />
+                                </b:commandButton>
+                                <b:commandButton id="btnQuitar" value="" look="danger" icon="remove" iconAlign="right" tooltip="Eliminar"
+                                                 update="tablaRepoDocs" actionListener="#{detalleRemisionBean.validaBorrarArchivo(listaRepoDocs)}" >                               
+                                </b:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <p:separator/> 
+                    <br></br>
+                    <h:form id="formDialog">
+                        <p:dialog header="Confirmación" widgetVar="dlg2" minHeight="70" modal="true">
+                            <p:panelGrid>
+                                <h:outputLabel value="¿Desea eliminar el archivo?"/>
+                            </p:panelGrid>
+                            <b:buttonGroup>
+                                <div style="display:block; text-align:right">
+                                    <b:commandButton action="#{detalleRemisionBean.borrarArchivo}" look="primary" value="Si" icon="check" iconAlign="right" oncomplete="PF('dlg2').hide();" />
+                                    <b:commandButton look="danger" value="No" icon="remove" iconAlign="right" oncomplete="PF('dlg2').hide();"/>
+                                </div>
+                            </b:buttonGroup>
+                        </p:dialog>
+                    </h:form>
+                    <br></br>
+                </div>
+            </c:if>
+            <c:if test="${!loginBean.accesos.recepcionDocumental}">
+                <h:form id="formlogin">
+                    <b:panel styleClass="panel-central" style="width: 430px; height: 40%; padding-top: 15px;" >
+                        <h:panelGrid columns="1" styleClass="panel-central">
+                            <h:outputLabel value="No tienes acceso a este módulo" style="padding-right: 10px" />
+                        </h:panelGrid>
+                    </b:panel>
+                </h:form>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

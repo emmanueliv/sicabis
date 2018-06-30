@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/templates/main.xhtml">
+        <ui:define name="content">
+            <div id="contenido" class="ui-fluid">
+                <h2>Consulta de solicitudes de unidades médicas</h2>
+
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="images/loader.gif" />
+                </p:dialog>
+
+                <h:form id='formSolicitud' style="width:100%; height: 100%" > 
+                    <p:separator />                 
+
+
+                    <h:panelGrid  columns="1" style="width: 100%;">
+
+                        <h:panelGroup style="display:block; text-align:right">
+                            <b:commandButton value="Actualizar" actionListener="#{consultaSolicitudesBean.init()}" look="info" 
+                                             update="formSolicitud"
+                                             icon="refresh"
+                                             />
+                        </h:panelGroup>
+                        <h:outputText id="lblSolMensuales" value="Lista de solicitudes mensuales y extraordinarias:" />
+                    </h:panelGrid>
+                    <br></br>
+                    <h:panelGrid id="pnlTableSol" columns="2">
+                        <p:dataTable id="tablaSolicitudMensual" var="solicitudMensual" value="#{consultaSolicitudesBean.listSolicitudesMensuales}"
+                                     filteredValue="#{consultaSolicitudesBean.listSolicitudesMensualesFilter}"
+                                     widgetVar="wvTablaSolicitudMensual"
+                                     emptyMessage="No hay registros."
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaSolicitudMensual" fileName="solicitudMensual" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column filterBy="#{solicitudMensual.numeroSolicitud}"   
+                                      filterMatchMode="contains" headerText="Número" class="formatoTablas"> 
+                                <h:outputText value="#{solicitudMensual.numeroSolicitud}" />
+                            </p:column>
+                            <p:column filterBy="#{solicitudMensual.idUnidadesMedicas.nombre}"   
+                                      filterMatchMode="contains" headerText="Unidad médica" 
+                                      class="formatoTablas">
+                                <h:inputHidden value="#{solicitudMensual.idSolicitud}" />
+                                <h:outputText value="#{solicitudMensual.idUnidadesMedicas.nombre}" />
+                            </p:column>
+                            <p:column filterBy="#{solicitudMensual.idUnidadesMedicas.idDelegacion.nombreDelegacion}"   
+                                      filterMatchMode="contains" headerText="Delegación" class="formatoTablas"> 
+                                <h:outputText value="#{solicitudMensual.idUnidadesMedicas.idDelegacion.nombreDelegacion}" />
+                            </p:column>
+                            <p:column headerText="Tipo de solicitud" class="formatoTablas" 
+                                      filterBy="#{solicitudMensual.idTipoSolicitud.descripcion}"   
+                                      filterMatchMode="contains"
+                                      > 
+                                <h:outputText value="#{solicitudMensual.idTipoSolicitud.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Periodo " class="formatoTablas" > 
+                                <h:outputText value="#{solicitudMensual.periodoSolicitar}" />
+                            </p:column>      
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center" class="" exportable="false">                                 
+                                <b:commandButton value=""
+                                                 tooltip="Ver detalle" 
+                                                 look="info" 
+                                                 icon="search" 
+                                                 iconAlign="right" 
+                                                 action="#{consultaSolicitudesBean.irSolicitudSeleccionadaDetalle(solicitudMensual)}" process="@this" update="tablaSolicitudMensual" />
+                            </p:column>
+                        </p:dataTable>  
+                    </h:panelGrid>  
+                    
+                    <br></br>
+                    <br></br>
+                    <h:panelGrid  columns="1" style="width: 100%;">
+                        <h:outputText id="lblSolSoporte" value="Lista de solicitudes por soporte de vida" />
+                    </h:panelGrid>
+                    <br></br>
+                    
+                    <h:panelGrid id="pnlTableSolSop" columns="2">
+                        <p:dataTable id="tablaSolicitudSoporte" var="solicitudSoporte" value="#{consultaSolicitudesBean.listSolicitudesSoporte}"
+                                     filteredValue="#{consultaSolicitudesBean.listSolicitudesSoporteFilter}"
+                                     widgetVar="wvTablaSolicitudSoporte"
+                                     emptyMessage="No hay registros."
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="(Mostrando {startRecord} - {endRecord} de 
+                                     {totalRecords}, Página: {currentPage}/{totalPages})"
+                                     rowsPerPageTemplate="10,15,20">   
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage name="images/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tablaSolicitudSoporte" fileName="solicitudMensual" />
+                                </h:commandLink>                                
+                            </f:facet>
+                            <p:column filterBy="#{solicitudSoporte.numeroSolicitud}"   
+                                      filterMatchMode="contains" headerText="Número" class="formatoTablas"> 
+                                <h:outputText value="#{solicitudSoporte.numeroSolicitud}" />
+                            </p:column>
+                            <p:column filterBy="#{solicitudSoporte.idUnidadesMedicas.nombre}"   
+                                      filterMatchMode="contains" headerText="Unidad médica" 
+                                      class="formatoTablas">
+                                <h:inputHidden value="#{solicitudSoporte.idSolicitud}" />
+                                <h:outputText value="#{solicitudSoporte.idUnidadesMedicas.nombre}" />
+                            </p:column>
+                            <p:column filterBy="#{solicitudSoporte.idUnidadesMedicas.idDelegacion.nombreDelegacion}"   
+                                      filterMatchMode="contains" headerText="Delegación" class="formatoTablas"> 
+                                <h:outputText value="#{solicitudSoporte.idUnidadesMedicas.idDelegacion.nombreDelegacion}" />
+                            </p:column>
+                            <p:column headerText="Tipo de solicitud" class="formatoTablas" > 
+                                <h:outputText value="#{solicitudSoporte.idTipoSolicitud.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Periodo " class="formatoTablas" > 
+                                <h:outputText value="#{solicitudSoporte.periodoSolicitar}" />
+                            </p:column>      
+                            <p:column headerText="Opciones" colspan="2" style="text-align: center" class="" exportable="false">                                 
+                                <b:commandButton value=""                                                  
+                                                 tooltip="Ver detalle" 
+                                                 look="info" 
+                                                 icon="search" 
+                                                 iconAlign="right" 
+                                                 action="#{consultaSolicitudesBean.irSolicitudSeleccionadaDetalle(solicitudSoporte)}" process="@this" update="tablaSolicitudSoporte" />
+                            </p:column>
+                        </p:dataTable>  
+                    </h:panelGrid>                           
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
